@@ -7,7 +7,7 @@ public class Itinerary {
     //type of user, if true, user is a student, if false, user is a guest
     private ArrayList<DayItinerary> ItinerariesForDays;
     private Date startDate;
-    priavte int lengthOfStay;
+    private int lengthOfStay;
 
 
     public Itinerary(boolean student, Date startDate, int lengthOfStay)
