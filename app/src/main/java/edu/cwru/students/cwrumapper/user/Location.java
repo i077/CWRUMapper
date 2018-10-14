@@ -5,25 +5,21 @@ public class Location {
     private double latitude;
     private double longitude;
 
-    public Location(String name, double latitude, double longitude)
-    {
+    public Location(String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return longitude;
     }
 }
