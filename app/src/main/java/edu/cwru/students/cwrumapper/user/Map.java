@@ -23,11 +23,10 @@ public class Map {
     }
 
     public static void Route() {
-        Router.Route();
 
     }
 
-    public static void Display() {
+    public static void DisplayEventDetails() {
 
     }
 
