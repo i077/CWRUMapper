@@ -9,36 +9,37 @@ public class Itinerary {
     private Date startDate;
     private int lengthOfStay;
 
-
-    public Itinerary(boolean student, Date startDate, int lengthOfStay)
-    {
-        this.student = student;
-        if(student)
-        {
-            ItinerariesForDays = new ArrayList<DayItinerary>(7);
-            for(int i = 1; i<=8; i++)
-            {
-                DayItinerary filler = new DayItinerary(i);
-                ItinerariesForDays.add(filler);
-            }
-
-        }
-        else
-        {
-
+    public Itinerary() {
+        student = true;
+        startDate = new Date();
+        ItinerariesForDays = new ArrayList<DayItinerary>(7);
+        for(int i = 1; i<=7; i++) {
+            DayItinerary filler = new DayItinerary(i);
+            ItinerariesForDays.add(filler);
         }
     }
 
-    public boolean addDay()
-    {
-
+    public Itinerary(Date startDate, int lengthOfStay) {
+        student = false;
+        this.startDate = startDate;
+        this.lengthOfStay = lengthOfStay;
+        ItinerariesForDays = new ArrayList<DayItinerary>(lengthOfStay);
+        for(int i = 1; i<=lengthOfStay; i++) {
+            DayItinerary filler = new DayItinerary(i);
+            ItinerariesForDays.add(filler);
+        }
     }
-    public boolean editStartDay()
-    {
 
+    public boolean addDay() {
+        //placeholder
+        return true;
     }
-    public boolean editDay(int dayNumber)
-    {
-
+    public boolean editStartDay() {
+        //placeholder
+        return true;
+    }
+    public boolean editDay(int dayNumber) {
+        //placeholder
+        return true;
     }
 }
