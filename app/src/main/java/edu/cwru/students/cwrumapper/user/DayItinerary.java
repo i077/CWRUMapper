@@ -5,11 +5,9 @@ import java.util.Collections;
 
 public class DayItinerary {
     private ArrayList<Event> events;
-    private int dayOfWeek;
 
-    public DayItinerary(int dayOfWeek) {
+    public DayItinerary() {
         events = new ArrayList<Event>();
-        this.dayOfWeek = dayOfWeek;
     }
 
     public boolean editEvent(int index, Location newLocation, int newLength, int newRoomNumber, int newHour, int newMin, int newSec) {
@@ -48,6 +46,10 @@ public class DayItinerary {
             }
         }
         return true;
+    }
+
+    public ArrayList<Event> getEvents(){
+        return events;
     }
 
 }
