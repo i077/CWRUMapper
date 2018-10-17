@@ -2,6 +2,10 @@ package edu.cwru.students.cwrumapper.user;
 
 public class Map {
 
+    public static void LoadData() {
+        FileManager.Load();
+    }
+
     public static void LocateMe() {
 
     }
@@ -19,10 +23,15 @@ public class Map {
     }
 
     public static void Route() {
+        Router.Route();
 
     }
 
     public static void Display() {
+
+    }
+
+    public static void Help() {
 
     }
 
