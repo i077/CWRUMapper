@@ -1,9 +1,13 @@
 package edu.cwru.students.cwrumapper.user;
 
+import android.arch.persistence.room.Embedded;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class DayItinerary {
+
+    @Embedded
     private ArrayList<Event> events;
 
     public DayItinerary() {

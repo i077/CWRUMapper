@@ -1,6 +1,10 @@
 package edu.cwru.students.cwrumapper.user;
 
+import android.arch.persistence.room.Embedded;
+
 public class Event implements Comparable<Event>{
+
+    @Embedded
     private Location location;
     private int length;
     private int roomNumber;

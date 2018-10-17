@@ -1,10 +1,14 @@
 package edu.cwru.students.cwrumapper.user;
+import android.arch.persistence.room.Embedded;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Itinerary {
     private boolean student;
     //type of user, if true, user is a student, if false, user is a guest
+
+    @Embedded
     private ArrayList<DayItinerary> itinerariesForDays;
     private Calendar startDate;
     private int lengthOfStay;
