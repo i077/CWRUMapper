@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CWRUMapper</string>
+    <string name="google_maps_api_key">AIzaSyDNbP-3OzqyB2PfR4_XElCfdhAtRCfNC2o</string>
 </resources>
