@@ -10,35 +10,29 @@ public class Itinerary {
     private int lengthOfStay;
 
 
-    public Itinerary(boolean student, Date startDate, int lengthOfStay)
-    {
+    public Itinerary(boolean student, Date startDate, int lengthOfStay) {
         this.student = student;
-        if(student)
-        {
+        if(student) {
             ItinerariesForDays = new ArrayList<DayItinerary>(7);
-            for(int i = 1; i<=8; i++)
-            {
+            for(int i = 1; i<=8; i++) {
                 DayItinerary filler = new DayItinerary(i);
                 ItinerariesForDays.add(filler);
             }
-
-        }
-        else
-        {
+        } else {
 
         }
     }
 
-    public boolean addDay()
-    {
+    public boolean addDay() {
 
+        return false;
     }
-    public boolean editStartDay()
-    {
+    public boolean editStartDay() {
 
+        return false;
     }
-    public boolean editDay(int dayNumber)
-    {
+    public boolean editDay(int dayNumber) {
 
+        return false;
     }
 }

@@ -7,8 +7,11 @@ public class Event {
     private int hour;
     private int min;
     private int sec;
+    private int endHour;
+    private int endMin;
+    private int endSec;
 
-    public Event(Location location, double length, int roomNumber, int hour, int min, int sec) {
+    public Event(Location location, int length, int roomNumber, int hour, int min, int sec) {
         this.location = location;
         this.length = length;
         this.roomNumber = roomNumber;
@@ -26,28 +29,28 @@ public class Event {
         this.sec = sec;
     }
 
-    public double getHour() {
+    public int getHour() {
         return hour;
     }
 
-    public double getMin() {
+    public int getMin() {
         return min;
     }
 
-    public double getSec() {
+    public int getSec() {
         return sec;
     }
 
-    public Location getLocation() {
-        return location;
-    }
+    public int getEndHour() { return endHour; }
 
-    public double getEventLength() {
-        return length;
-    }
+    public int getEndMin() { return endMin; }
 
-    public double getRoomNumber() {
-        return roomNumber;
-    }
+    public int getEndSec() { return endSec; }
+
+    public Location getLocation() { return location; }
+
+    public double getEventLength() { return length; }
+
+    public double getRoomNumber() { return roomNumber; }
 
 }
