@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">CWRUMapper</string>
     <string name="google_maps_api_key">AIzaSyDNbP-3OzqyB2PfR4_XElCfdhAtRCfNC2o</string>
-    <string name="ipsum">
+    <string name="ipsum">Lorem ipsum</string>
+    <string name="ipsum5">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nec cursus ex. Praesent tincidunt cursus lorem, eu ornare ipsum hendrerit et. Cras a magna lorem. Vestibulum condimentum eros enim, quis lobortis elit feugiat et. Mauris id arcu porta erat lobortis congue. Quisque hendrerit dignissim cursus. Maecenas erat mauris, fringilla sed placerat a, ullamcorper vel felis. Fusce pellentesque odio bibendum ultricies euismod. Maecenas quis urna odio.
 
         Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris in lorem non nisi ornare elementum. Curabitur quam sem, accumsan vel rhoncus eget, gravida egestas purus. Sed metus ante, mollis suscipit varius eu, tristique nec felis. Ut quis arcu tempor, rhoncus lorem et, tempor mi. Proin sodales luctus nisi, a convallis tortor semper ut. Aenean vel condimentum nisi, sit amet eleifend diam. Mauris ac rutrum diam, mollis finibus ante. Mauris vestibulum pharetra libero. Nulla porta vulputate luctus. Maecenas gravida arcu ac bibendum aliquet. Mauris sed fringilla massa. Nullam accumsan sodales nisi, et auctor lacus commodo vitae. Integer non risus sem. Etiam et ipsum ligula.
