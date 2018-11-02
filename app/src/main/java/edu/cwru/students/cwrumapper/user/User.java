@@ -22,10 +22,10 @@ public class User {
     @PrimaryKey
     private int id;
     private String name;
-    private boolean student;
+    public boolean student;
 
     @Embedded
-    private ArrayList<Itinerary> itineraries;
+    public ArrayList<Itinerary> itineraries;
 
     //Used for creating Users for first time
     /*
