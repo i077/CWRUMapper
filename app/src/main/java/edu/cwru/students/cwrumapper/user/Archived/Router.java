@@ -1,16 +1,19 @@
-package edu.cwru.students.cwrumapper.user;
+package edu.cwru.students.cwrumapper.user.Archived;
 
 import java.util.Calendar;
+
+import edu.cwru.students.cwrumapper.user.DayItinerary;
+import edu.cwru.students.cwrumapper.user.User;
 
 public class Router {
 
 
 
-    public static void Route(DayItinerary dayItin){
+    public static void route(DayItinerary dayItin){
 
     }
 
-    public static void Route(DayItinerary dayItin, User user){
+    public static void route(DayItinerary dayItin, User user){
 
     }
 

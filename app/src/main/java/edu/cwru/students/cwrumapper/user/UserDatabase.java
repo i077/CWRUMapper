@@ -4,6 +4,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+
+/**
+ * This class abstracts the user database and allows functionality of the room database.
+ * This is used to create a database, and ensure it functions as a singleton.
+ */
 @Database(entities = {User.class},version = 1, exportSchema = false)
 public abstract class UserDatabase extends RoomDatabase {
     public abstract DaoAccess daoAccess();
