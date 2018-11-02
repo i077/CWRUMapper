@@ -43,6 +43,7 @@ public class DayItinerary {
         //calls internal check to see if the new event is valid
         if(isValid(newEvent)){
             events.add(index,newEvent);
+            Collections.sort(events);
             return true;
         } else {
             events.add(index,oldEvent);
@@ -97,6 +98,9 @@ public class DayItinerary {
             if(event.isConflict(temp)) {
                 return false;
             }
+        }
+        if(!event.isRealTime()) {
+            return false;
         }
         return true;
     }
