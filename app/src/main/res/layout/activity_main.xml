@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -20,4 +20,58 @@
         map:zOrderOnTop="false"
         tools:context="edu.cwru.students.cwrumapper.MapActivity" />
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        app:elevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/backWhite">
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16sp"
+                android:fontFamily="sans-serif-light"
+                android:textAlignment="center"
+                android:textColor="@color/gray5"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/next_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4sp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textAlignment="center"
+                android:text="@string/next_event_sample"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4sp"
+                android:text="@string/next_event_loc_sample"
+                android:textAlignment="center"
+                android:textColor="@color/gray5"
+                android:textAllCaps="true"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16sp"
+                android:text="@string/ipsum5" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

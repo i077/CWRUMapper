@@ -1,6 +1,7 @@
 package edu.cwru.students.cwrumapper;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +31,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -67,6 +71,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (checkGooglePlayServices()) {
             getLocationPermission();
         }
+
+        // Fill bottom sheet
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_SETTLING);
+        bottomSheetBehavior.setPeekHeight(600);
+
+        mCurrentDate = Calendar.getInstance().getTime();
+
+        // Inflate contents of bottom sheet
+        TextView textView = findViewById(R.id.date_text);
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
+        textView.setText(dateFormat.format(mCurrentDate));
+
     }
 
     private boolean checkGooglePlayServices() {
@@ -148,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public View getInfoWindow(Marker marker) {
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View window = inflater.inflate(R.layout.info_window, null);
-                TextView info = (TextView) window.findViewById(R.id.info_window_content);
+                TextView info = window.findViewById(R.id.info_window_content);
                 info.setText(Html.fromHtml(marker.getSnippet()));
                 return window;
             }
