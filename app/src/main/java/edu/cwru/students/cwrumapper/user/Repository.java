@@ -3,18 +3,18 @@ package edu.cwru.students.cwrumapper.user;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
+import android.arch.lifecycle.LiveData;
 
 public class Repository {
 
     private DaoAccess mDaoAccess;
 
-    Repository(Application application, int userID) {
+    Repository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mDaoAccess = db.daoAccess();
     }
 
-    public void update (User user){
+    public void update(User user){
         new updateAsyncTask(mDaoAccess).execute(user);
     }
 
@@ -22,7 +22,7 @@ public class Repository {
         return mDaoAccess.fetchUserbyID(userID);
     }
 
-    public void insert (User user) {
+    public void insert(User user) {
         new insertAsyncTask(mDaoAccess).execute(user);
     }
 
