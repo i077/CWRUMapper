@@ -1,31 +1,136 @@
 package edu.cwru.students.cwrumapper.user;
 
+import android.arch.persistence.room.Embedded;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
+/**
+ * This is an important class that holds a user's day itinerary. This is contains
+ * a list of events for the day. This can then be used to create a route. Event manipulation
+ * also takes place here.
+ */
 public class DayItinerary {
-    private ArrayList<Event> events;
-    private int dayOfWeek;
 
-    public DayItinerary(int dayOfWeek) {
+    @Embedded
+    private ArrayList<Event> events;
+
+    /**
+     * This is the constructor, which just creates an array list of events, but does not fill this list
+     */
+    public DayItinerary() {
         events = new ArrayList<Event>();
-        this.dayOfWeek = dayOfWeek;
     }
 
-    public boolean addEvent() {
-        if (isValid()) {
+    /**
+     * This method is called to edit an event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new event is valid. If it is not
+     * the event will not be valid, and false would be returned.
+     * @param name the new name of the even
+     * @param index the index of the event within the list
+     * @param newLocation the new location of the event
+     * @param newLength the new length of the event
+     * @param newRoomNumber the new room number of the event
+     * @param newHour the new starting hour of the event
+     * @param newMin the new starting minute of the event
+     * @param newSec the new starting second of the event
+     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     */
+    public boolean editEvent(String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
+        Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
+        Event oldEvent = events.remove(index);
 
+        //calls internal check to see if the new event is valid
+        if(isValid(newEvent)){
+            events.add(index,newEvent);
+            Collections.sort(events);
+            return true;
         } else {
+            events.add(index,oldEvent);
             return false;
         }
 
-    }
-
-    public boolean deleteEvent() {
 
     }
+    /**
+     * This method is called to edit an event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new event is valid. If it is not
+     * the event will not be valid, and false would be returned.
+     * @param name the new name of the even
+     * @param newLocation the new location of the event
+     * @param newLength the new length of the event
+     * @param newRoomNumber the new room number of the event
+     * @param newHour the new starting hour of the event
+     * @param newMin the new starting minute of the event
+     * @param newSec the new starting second of the event
+     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     */
+    public boolean addEvent(String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
+        Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
+        if (isValid(newEvent)) {
+            events.add(newEvent);
 
-    public boolean isValid() {
-
+            //Since events is comparable, this list can be sorted after addition
+            Collections.sort(events);
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    /**
+     * Method used to delte an event, removes the event from the array
+     * @param index index of teh event that is desired to be deleted
+     */
+    public void deleteEvent(int index) {
+        events.remove(index);
+    }
+
+    /**
+     * Checks to see if the event is valid. It makes sure no conflicts exist between
+     * the event and any events stored in the array.
+     * @param event the event being checked against the current arraylist
+     * @return returns false if the event is not real or conflicts with an event from
+     * the arraylist
+     */
+    private boolean isValid(Event event) {
+        for(Event temp : events) {
+            if(event.isConflict(temp)) {
+                return false;
+            }
+        }
+        if(!event.isRealTime()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Getter method for retreiving the arry list
+     * @return returns the arraylist of events
+     */
+    public ArrayList<Event> getEvents(){
+        return events;
+    }
+
+    /**
+     * Getter method for retrieving a particular event from the arraylist
+     * @param index the index at which the desired event is within the arraylist
+     * @return returns the event
+     */
+    public Event getEvent(int index) {return events.get(index);}
+
+    /**
+     * Used for getting a list of all the locations for the day
+     * @return returns a list of all the locations for the day
+     */
+    public ArrayList<Location> getLocation() {
+        ArrayList<Location> routeLocations = new ArrayList<>();
+        for (Event event : events) {
+            routeLocations.add(event.getLocation());
+        }
+        return routeLocations;
+    }
+
 
 }
