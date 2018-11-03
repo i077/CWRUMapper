@@ -115,6 +115,7 @@ public class Event implements Comparable<Event>{
         return hour;
     }
 
+
     /**
      * Getter method fot the minute
      * @return returns the starting minute
@@ -130,7 +131,7 @@ public class Event implements Comparable<Event>{
     public int getSec() {
         return sec;
     }
-
+  
     /**
      * Getter method for the ending hour
      * @return returns the hour in which the event ends

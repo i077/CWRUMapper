@@ -13,6 +13,7 @@ public class Itinerary {
     private boolean student;
     //type of user, if true, user is a student, if false, user is a guest
 
+
     @Embedded
     private ArrayList<DayItinerary> itinerariesForDays;
     private Calendar startDate;
@@ -78,6 +79,19 @@ public class Itinerary {
         this.startDate = newStartDate;
     }
 
+    public boolean addDay() {
+
+        return false;
+    }
+    public boolean editStartDay() {
+
+        return false;
+    }
+    public boolean editDay(int dayNumber) {
+
+        return false;
+    }
+  
     /**
      * Allows the user to delete a day from teh itinerary as long as teh user is a guest
      * and has more than 1 days in his itinerary currently
