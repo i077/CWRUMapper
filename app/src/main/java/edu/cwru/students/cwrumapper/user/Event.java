@@ -51,6 +51,6 @@ public class Event {
 
     public double getEventLength() { return length; }
 
-    public double getRoomNumber() { return roomNumber; }
+    public int getRoomNumber() { return roomNumber; }
 
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -75,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Fill bottom sheet
         View bottomSheet = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_SETTLING);
         bottomSheetBehavior.setPeekHeight(600);
+
+        View mapView = findViewById(R.id.map);
 
         mCurrentDate = Calendar.getInstance().getTime();
 
@@ -85,6 +88,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
         textView.setText(dateFormat.format(mCurrentDate));
+
+        // Set edit button's onClick
+        Button editButton = findViewById(R.id.button_edit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditItineraryActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
 
     }
 
