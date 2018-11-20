@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -172,5 +173,137 @@ public class User {
             return itinerary.getItinerariesForDays().get(day).getLocation();
         }
 
+    }
+
+    @NonNull
+    public ArrayList<Event> getTodayEvents() {
+        Itinerary itinerary = itineraries.get(0);
+        int day;
+        if(student) {
+            Calendar today = Calendar.getInstance();
+            day = today.get(Calendar.DAY_OF_WEEK);
+            return itinerary.getItinerariesForDays().get(day - 1).getEvents();
+        }
+        else{
+            Calendar today = Calendar.getInstance();
+            if(today.after(itinerary.getStartDate())){
+                int dayTemp = (today.get(Calendar.DAY_OF_WEEK)-itinerary.getStartDate().get(Calendar.DAY_OF_WEEK));
+                if(dayTemp<0){
+                    day = dayTemp +7;
+                }
+                else{
+                    day = dayTemp;
+                }
+            }
+            else{
+                day = 0;
+            }
+            return itinerary.getItinerariesForDays().get(day).getEvents();
+        }
+    }
+
+    @NonNull
+    public ArrayList<Event> getEvents(int day) {
+        Itinerary itinerary = itineraries.get(0);
+        if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
+            return itinerary.getItinerariesForDays().get(0).getEvents();
+        }
+        if (student && (day > 6 || day < 0) ){
+            return itinerary.getItinerariesForDays().get(0).getEvents();
+        }
+        return itinerary.getItinerariesForDays().get(day).getEvents();
+    }
+    /**
+     * This method is called to edit an event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new event is valid. If it is not
+     * the event will not be valid, and false would be returned.
+     * @param day the day of the week or day of the event that the itinerary is being modified for
+     * @param name the new name of the even
+     * @param index the index of the event within the list
+     * @param newLocation the new location of the event
+     * @param newLength the new length of the event
+     * @param newRoomNumber the new room number of the event
+     * @param newHour the new starting hour of the event
+     * @param newMin the new starting minute of the event
+     * @param newSec the new starting second of the event
+     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     */
+    public boolean editEvent(int day, String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
+        if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
+            return false;
+        }
+        if (student && (day > 6 || day < 0) ){
+            return false;
+        }
+
+        return itineraries.get(0).getItinerariesForDays().get(day).editEvent(name, index, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
+    }
+
+    /**
+     * This method is called to edit an event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new event is valid. If it is not
+     * the event will not be valid, and false would be returned.
+     * @param day the day of the week or day of the event that the itinerary is being modified for
+     * @param name the new name of the even
+     * @param newLocation the new location of the event
+     * @param newLength the new length of the event
+     * @param newRoomNumber the new room number of the event
+     * @param newHour the new starting hour of the event
+     * @param newMin the new starting minute of the event
+     * @param newSec the new starting second of the event
+     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     */
+    public boolean addEvent(int day, String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
+        if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
+            return false;
+        }
+        if (student && (day > 6 || day < 0) ){
+            return false;
+        }
+
+        return itineraries.get(0).getItinerariesForDays().get(day).addEvent(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
+    }
+
+    /**
+     * Method used to delte an event, removes the event from the array
+     * @param day the day of the week or day of the event that the itinerary is being modified for
+     * @param index index of the event that is desired to be deleted
+     * @return Returns true if the deleted event day and event index is valid. If not no change occurs and false is returned.
+     */
+    public boolean deleteEvent(int day, int index) {
+        if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
+            return false;
+        }
+        if (student && (day > 6 || day < 0) ){
+            return false;
+        }
+
+        return itineraries.get(0).getItinerariesForDays().get(day).deleteEvent(index);
+    }
+
+
+    /**
+     * A method used to add a new day to the itinerary, only works for guests, and only
+     * if there are less than 7 days in the itinerary.
+     * @return returns true if the the day itinerary has been added successfully, false if not
+     */
+    public boolean addDay() {
+        return itineraries.get(0).addDay();
+    }
+    /**
+     * Allows the user the change the start date to the one requested
+     * @param newStartDate the new start date for the itinerary
+     */
+    public void editStartDay(Calendar newStartDate) {
+        itineraries.get(0).editStartDay(newStartDate);
+    }
+
+    /**
+     * Allows the user to delete a day from teh itinerary as long as teh user is a guest
+     * and has more than 1 days in his itinerary currently
+     * @return returns true if the method was able to delete a day successfully
+     */
+    public boolean deleteDay() {
+        return itineraries.get(0).deleteDay();
     }
 }
