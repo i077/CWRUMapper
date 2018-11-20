@@ -114,4 +114,6 @@ public class Itinerary {
     public ArrayList<DayItinerary> getItinerariesForDays(){
         return itinerariesForDays;
     }
+
+
 }

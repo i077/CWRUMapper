@@ -93,7 +93,8 @@ public class Event implements Comparable<Event>{
         int tempOtherStartTime = other.getHour()*3600+other.getMin()*60+other.getSec();
         int tempThisEndTime = this.endHour*3600+this.endMin*60+this.endSec;
         int tempOtherEndTime = other.getEndHour()*3600+other.getEndMin()*60+other.getEndSec();
-        return ((tempOtherEndTime > tempThisStartTime && tempOtherEndTime < tempThisEndTime)||(tempOtherStartTime > tempThisStartTime && tempOtherStartTime < tempThisEndTime));
+        return(!((tempOtherStartTime < tempThisStartTime && tempOtherEndTime < tempThisStartTime)||(tempOtherEndTime > tempThisEndTime && tempOtherStartTime > tempThisStartTime)));
+        //return ((tempOtherEndTime > tempThisStartTime && tempOtherEndTime < tempThisEndTime)||(tempOtherStartTime > tempThisStartTime && tempOtherStartTime < tempThisEndTime));
     }
 
     /**

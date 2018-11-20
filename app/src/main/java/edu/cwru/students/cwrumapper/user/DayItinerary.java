@@ -39,6 +39,9 @@ public class DayItinerary {
     public boolean editEvent(String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
         Event oldEvent = events.remove(index);
+        if (index >= events.size() || index < 0) {
+            return false;
+        }
 
         //calls internal check to see if the new event is valid
         if(isValid(newEvent)){
@@ -81,9 +84,14 @@ public class DayItinerary {
     /**
      * Method used to delte an event, removes the event from the array
      * @param index index of teh event that is desired to be deleted
+     * @return Returns true if the index is valid, if not, false is returned
      */
-    public void deleteEvent(int index) {
+    public boolean deleteEvent(int index) {
+        if (index >= events.size() || index < 0) {
+            return false;
+        }
         events.remove(index);
+        return true;
     }
 
     /**
