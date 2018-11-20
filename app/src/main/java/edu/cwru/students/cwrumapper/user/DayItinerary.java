@@ -18,17 +18,15 @@ public class DayItinerary {
     private Route routeInfo;
     private boolean isRouteUpdated;
 
-    public DayItinerary(int dayOfWeek) {
-        events = new ArrayList<>();
-        this.dayOfWeek = dayOfWeek;
 
-        routeInfo = null;
-        isRouteUpdated = false;
     /**
      * This is the constructor, which just creates an array list of events, but does not fill this list
      */
     public DayItinerary() {
         events = new ArrayList<Event>();
+
+        routeInfo = null;
+        isRouteUpdated = false;
     }
 
     /**
@@ -88,7 +86,6 @@ public class DayItinerary {
         } else {
             return false;
         }
-        return false;
     }
 
     /**
@@ -138,12 +135,6 @@ public class DayItinerary {
      */
     public Event getEvent(int index) {return events.get(index);}
 
-    }
-
-    public ArrayList<Event> getEvents() {
-        return events;
-    }
-
     public Route getRouteInfo() {
         return routeInfo;
     }
@@ -162,6 +153,10 @@ public class DayItinerary {
             routeLocations.add(event.getLocation());
         }
         return routeLocations;
+    }
+
+    public boolean getRouteUpdated(){
+        return isRouteUpdated;
     }
 
 }

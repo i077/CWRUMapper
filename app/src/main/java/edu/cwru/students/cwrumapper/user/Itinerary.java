@@ -78,19 +78,6 @@ public class Itinerary {
     public void editStartDay(Calendar newStartDate) {
         this.startDate = newStartDate;
     }
-
-    public boolean addDay() {
-
-        return false;
-    }
-    public boolean editStartDay() {
-
-        return false;
-    }
-    public boolean editDay(int dayNumber) {
-
-        return false;
-    }
   
     /**
      * Allows the user to delete a day from teh itinerary as long as teh user is a guest
