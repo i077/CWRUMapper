@@ -18,17 +18,15 @@ public class DayItinerary {
     private Route routeInfo;
     private boolean isRouteUpdated;
 
-    public DayItinerary(int dayOfWeek) {
-        events = new ArrayList<>();
-        this.dayOfWeek = dayOfWeek;
 
-        routeInfo = null;
-        isRouteUpdated = false;
     /**
      * This is the constructor, which just creates an array list of events, but does not fill this list
      */
     public DayItinerary() {
         events = new ArrayList<Event>();
+
+        routeInfo = null;
+        isRouteUpdated = false;
     }
 
     /**
@@ -48,6 +46,9 @@ public class DayItinerary {
     public boolean editEvent(String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
         Event oldEvent = events.remove(index);
+        if (index >= events.size() || index < 0) {
+            return false;
+        }
 
         //calls internal check to see if the new event is valid
         if(isValid(newEvent)){
@@ -85,15 +86,19 @@ public class DayItinerary {
         } else {
             return false;
         }
-        return false;
     }
 
     /**
      * Method used to delete an event, removes the event from the array
      * @param index index of teh event that is desired to be deleted
+     * @return Returns true if the index is valid, if not, false is returned
      */
-    public void deleteEvent(int index) {
+    public boolean deleteEvent(int index) {
+        if (index >= events.size() || index < 0) {
+            return false;
+        }
         events.remove(index);
+        return true;
     }
 
     /**
@@ -130,12 +135,6 @@ public class DayItinerary {
      */
     public Event getEvent(int index) {return events.get(index);}
 
-    }
-
-    public ArrayList<Event> getEvents() {
-        return events;
-    }
-
     public Route getRouteInfo() {
         return routeInfo;
     }
@@ -154,6 +153,10 @@ public class DayItinerary {
             routeLocations.add(event.getLocation());
         }
         return routeLocations;
+    }
+
+    public boolean getRouteUpdated(){
+        return isRouteUpdated;
     }
 
 }
