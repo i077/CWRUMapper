@@ -15,6 +15,15 @@ public class DayItinerary {
     @Embedded
     private ArrayList<Event> events;
 
+    private Route routeInfo;
+    private boolean isRouteUpdated;
+
+    public DayItinerary(int dayOfWeek) {
+        events = new ArrayList<>();
+        this.dayOfWeek = dayOfWeek;
+
+        routeInfo = null;
+        isRouteUpdated = false;
     /**
      * This is the constructor, which just creates an array list of events, but does not fill this list
      */
@@ -79,10 +88,11 @@ public class DayItinerary {
         } else {
             return false;
         }
+        return false;
     }
 
     /**
-     * Method used to delte an event, removes the event from the array
+     * Method used to delete an event, removes the event from the array
      * @param index index of teh event that is desired to be deleted
      * @return Returns true if the index is valid, if not, false is returned
      */
@@ -128,6 +138,20 @@ public class DayItinerary {
      */
     public Event getEvent(int index) {return events.get(index);}
 
+    }
+
+    public ArrayList<Event> getEvents() {
+        return events;
+    }
+
+    public Route getRouteInfo() {
+        return routeInfo;
+    }
+
+    public void updateRouteInfo(Route newRouteInfo) {
+        routeInfo = newRouteInfo;
+        isRouteUpdated = true;
+    }
     /**
      * Used for getting a list of all the locations for the day
      * @return returns a list of all the locations for the day
@@ -139,6 +163,5 @@ public class DayItinerary {
         }
         return routeLocations;
     }
-
 
 }
