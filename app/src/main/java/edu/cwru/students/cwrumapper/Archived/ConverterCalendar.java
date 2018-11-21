@@ -1,4 +1,4 @@
-package edu.cwru.students.cwrumapper.user;
+package edu.cwru.students.cwrumapper.Archived;
 
 import android.arch.persistence.room.TypeConverter;
 

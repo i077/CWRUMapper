@@ -18,6 +18,8 @@ public class Repository {
         mDaoAccess = db.daoAccess();
     }
 
+    /*
+
     public void update(User user){
         new updateAsyncTask(mDaoAccess).execute(user);
     }
@@ -74,5 +76,6 @@ public class Repository {
             return null;
         }
     }
+    */
 
 }

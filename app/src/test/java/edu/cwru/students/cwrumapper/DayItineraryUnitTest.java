@@ -1,5 +1,6 @@
 package edu.cwru.students.cwrumapper;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,15 +18,14 @@ public class DayItineraryUnitTest {
 
     DayItinerary temp;
 
-    @BeforeClass
-    public static void setup(){
+    @Before
+    public void setup(){
+        temp = new DayItinerary();
+
     }
 
     @Test
     public void eventsCreated() {
-        //check constructor
-        temp = new DayItinerary();
-
         ArrayList<Event> events = temp.getEvents();
         assertNotNull(events);
     }
@@ -86,6 +86,25 @@ public class DayItineraryUnitTest {
         temp.editEvent("LunchNew",0,tomlinson,3600,"B100" ,15,30,0);
         assertEquals(3,temp.getEvents().size());
         assertEquals("LunchNew", temp.getEvent(2).getName());
+
+        Route routeInfo = temp.getRouteInfo();
+
+        boolean check = temp.getRouteUpdated();
+        temp.updateRouteInfo(routeInfo);
+        boolean check2 = temp.getRouteUpdated();
+
+        ArrayList<Location> locations = temp.getLocation();
+        temp.setId(1);
+        temp.setItineraryID(2);
+        int id = temp.getId();
+        int itineraryID = temp.getItineraryID();
+        ArrayList<Event> events = temp.getEvents();
+        temp = new DayItinerary(1,1,events,routeInfo,false);
+
+        assertEquals(1,id);
+        assertEquals(2,itineraryID);
+        assertNotNull(events);
+
 
     }
 

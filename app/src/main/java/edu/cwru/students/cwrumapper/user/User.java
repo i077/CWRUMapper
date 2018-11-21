@@ -1,5 +1,4 @@
 package edu.cwru.students.cwrumapper.user;
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -8,8 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
+
+import edu.cwru.students.cwrumapper.Archived.ConverterItinerary;
 
 /**
  * Most vital class for the backend. Each user has one of these objects. Can be a guest
@@ -27,9 +26,8 @@ public class User {
     private int id;
     private String name;
     public boolean student;
-
-    @Embedded
-    public ArrayList<Itinerary> itineraries;
+    @Ignore
+    private ArrayList<Itinerary> itineraries;
 
     //Used for creating Users for first time
     /*
@@ -70,7 +68,6 @@ public class User {
      * @param id The id of the student returned by the sign in process.
      * @param name the name of the student.
      */
-    @Ignore
     public User(int id, String name){
         itineraries = new ArrayList<>();
         itineraries.add(new Itinerary());
@@ -80,10 +77,11 @@ public class User {
 
     }
 
-    public User(int id, String name, ArrayList<Itinerary> itineraries){
+    public User(int id, String name, ArrayList<Itinerary> itineraries, boolean student){
         this.id = id;
         this.name = name;
         this.itineraries = itineraries;
+        this.student = student;
     }
 
     public void setName(String newName){name = newName;}
@@ -126,11 +124,13 @@ public class User {
      * Creates a new itinerary. Only works for students as it creates a default itienrary.
      * Sets the itinerary as active.
      */
-    public void newItinerary(){
+    public boolean newItinerary(){
         if(student) {
             Itinerary firstItin = new Itinerary();
             itineraries.add(0, firstItin);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -139,11 +139,13 @@ public class User {
      * @param startDate the start date of the visit
      * @param lengthOfStay the length of the visit
      */
-    public void newItinerary(Calendar startDate, int lengthOfStay){
+    public boolean newItinerary(Calendar startDate, int lengthOfStay){
         if(!student) {
             Itinerary firstItin = new Itinerary(startDate,lengthOfStay);
             itineraries.add(0, firstItin);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -320,4 +322,6 @@ public class User {
     public boolean deleteDay() {
         return itineraries.get(0).deleteDay();
     }
+
+    public void setId(int id) {this.id = id;}
 }

@@ -36,6 +36,7 @@ import edu.cwru.students.cwrumapper.user.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 
@@ -91,12 +92,12 @@ public class RepositoryTest {
     @Test
     public void insertTwoUsers() throws Exception {
 
-       // User user2 = new User(1, "Tim");
-        //mUserDao.insert(user2);
+        User user2 = new User(1, "Tim");
+        mUserDao.insert(user2);
         User userTest = mUserDao.fetchUserbyID(1);
-        assertEquals(user.getName(), userTest.getName());;
+        assertNotEquals(user.getName(), userTest.getName());;
     }
-
+/*
     @Test
     public void updateUser() throws Exception {
         user.setName("Imran");

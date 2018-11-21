@@ -1,5 +1,7 @@
 package edu.cwru.students.cwrumapper.user;
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
@@ -10,12 +12,14 @@ import java.util.Calendar;
  * of stay if the user who has this class is a guest. It also contains student to check
  * if the user is a student or not.
  */
-@TypeConverters(ConverterDayItinerary.class)
+@Entity
 public class Itinerary {
+    private int userID;
     private boolean student;
     //type of user, if true, user is a student, if false, user is a guest
 
-
+    @PrimaryKey
+    private int id;
 
     private ArrayList<DayItinerary> itinerariesForDays;
     private Calendar startDate;
@@ -59,6 +63,15 @@ public class Itinerary {
             itinerariesForDays.add(filler);
         }
     }
+
+    public Itinerary(int id, int userID, ArrayList<DayItinerary> dayItineraries, boolean student, Calendar cal, int lengthOfStay) {
+        this.id = id;
+        this.userID = userID;
+        this.itinerariesForDays = dayItineraries;
+        this.student = student;
+        this.startDate = cal;
+        this.lengthOfStay = lengthOfStay;
+    }
     /**
      * A method used to add a new day to the itinerary, only works for guests, and only
      * if there are less than 7 days in the itinerary.
@@ -91,6 +104,7 @@ public class Itinerary {
             return false;
         }
         itinerariesForDays.remove(itinerariesForDays.size()-1);
+        lengthOfStay--;
         return true;
     }
 
@@ -117,6 +131,14 @@ public class Itinerary {
     public ArrayList<DayItinerary> getItinerariesForDays(){
         return itinerariesForDays;
     }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
+
+    public int getUserID() {return userID;}
+
+    public void setUserID(int id) {this.userID = id;}
 
 
 }

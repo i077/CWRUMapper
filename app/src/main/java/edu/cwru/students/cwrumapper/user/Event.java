@@ -1,7 +1,9 @@
 package edu.cwru.students.cwrumapper.user;
 
 import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+//import android.arch.persistence.room.TypeConverters;
 
 /**
  * This class serves to be used as an object that holds a few key details that are
@@ -9,9 +11,12 @@ import android.arch.persistence.room.TypeConverters;
  * the length of the event, the start time, and the end time. Getter methods can be
  * called to retrieve information.
  */
-@TypeConverters(ConverterEvent.class)
+@Entity
 public class Event implements Comparable<Event>{
 
+    private int dayItineraryID;
+    @PrimaryKey
+    private int id;
     @Embedded
     private Location location;
     private int length;
@@ -41,11 +46,43 @@ public class Event implements Comparable<Event>{
         this.hour = hour;
         this.min = min;
         this.sec = sec;
+        int startTime = sec+min*60+hour*3600;
+        int endTime = startTime+length;
 
         //finds the end time
-        this.endHour = hour + (sec+length)/3600;
-        this.endMin = min + ((sec+length)%3600)/60;
-        this.endSec = ((sec+length)%60);
+        this.endHour = endTime/3600;
+        this.endMin = (endTime/60)%60;
+        this.endSec = endTime%60;
+        this.name = name;
+    }
+
+    /**
+     * The constructor is used for storing purposes
+     * @param id id of event for storing purposes
+     * @param name The name of the event
+     * @param location The location of the event
+     * @param length The length of the event
+     * @param roomNumber The room number
+     * @param hour The starting hour
+     * @param min The starting minute
+     * @param sec The starting second
+     */
+    public Event(int id, int dayItineraryId, String name, Location location, int length, String roomNumber, int hour, int min, int sec) {
+        this.id = id;
+        this.dayItineraryID = dayItineraryId;
+        this.location = location;
+        this.length = length;
+        this.roomNumber = roomNumber;
+        this.hour = hour;
+        this.min = min;
+        this.sec = sec;
+        int startTime = sec+min*60+hour*3600;
+        int endTime = startTime+length;
+
+        //finds the end time
+        this.endHour = endTime/3600;
+        this.endMin = (endTime/60)%60;
+        this.endSec = endTime%60;
         this.name = name;
     }
 
@@ -62,11 +99,11 @@ public class Event implements Comparable<Event>{
         if(hourT != 0){
             return hourT;
         } else{
-            int minT = Integer.compare(this.hour, other.getMin());
+            int minT = Integer.compare(this.min, other.getMin());
             if(minT != 0) {
                 return minT;
             } else {
-                int secT = Integer.compare(this.hour, other.getSec());
+                int secT = Integer.compare(this.sec, other.getSec());
                 if(secT != 0) {
                     return secT;
                 }else{
@@ -95,7 +132,7 @@ public class Event implements Comparable<Event>{
         int tempOtherStartTime = other.getHour()*3600+other.getMin()*60+other.getSec();
         int tempThisEndTime = this.endHour*3600+this.endMin*60+this.endSec;
         int tempOtherEndTime = other.getEndHour()*3600+other.getEndMin()*60+other.getEndSec();
-        return(!((tempOtherStartTime < tempThisStartTime && tempOtherEndTime < tempThisStartTime)||(tempOtherEndTime > tempThisEndTime && tempOtherStartTime > tempThisStartTime)));
+        return(!((tempOtherStartTime <= tempThisStartTime && tempOtherEndTime <= tempThisStartTime)||(tempOtherEndTime >= tempThisEndTime && tempOtherStartTime >= tempThisEndTime)));
         //return ((tempOtherEndTime > tempThisStartTime && tempOtherEndTime < tempThisEndTime)||(tempOtherStartTime > tempThisStartTime && tempOtherStartTime < tempThisEndTime));
     }
 
@@ -167,7 +204,7 @@ public class Event implements Comparable<Event>{
      * Getter method for the length of the event
      * @return returns the length of the even
      */
-    public double getEventLength() {
+    public int getEventLength() {
         return length;
     }
 
@@ -183,5 +220,13 @@ public class Event implements Comparable<Event>{
      * @return returns the name of the event
      */
     public String getName() { return name; }
+
+    public int getId() {return id;}
+
+    public int getDayItineraryID() {return dayItineraryID;}
+
+    public void setId(int id) {this.id = id;}
+
+    public void setDayItineraryID(int id) {this.dayItineraryID = id;}
 
 }

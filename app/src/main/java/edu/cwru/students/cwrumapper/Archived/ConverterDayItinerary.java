@@ -1,4 +1,4 @@
-package edu.cwru.students.cwrumapper.user;
+package edu.cwru.students.cwrumapper.Archived;
 
 import android.arch.persistence.room.TypeConverter;
 
@@ -7,6 +7,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import edu.cwru.students.cwrumapper.user.DayItinerary;
+import edu.cwru.students.cwrumapper.user.Itinerary;
 
 public class ConverterDayItinerary {
     @TypeConverter
