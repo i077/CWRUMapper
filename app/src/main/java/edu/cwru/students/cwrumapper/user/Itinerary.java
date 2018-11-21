@@ -1,5 +1,6 @@
 package edu.cwru.students.cwrumapper.user;
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,12 +10,13 @@ import java.util.Calendar;
  * of stay if the user who has this class is a guest. It also contains student to check
  * if the user is a student or not.
  */
+@TypeConverters(ConverterDayItinerary.class)
 public class Itinerary {
     private boolean student;
     //type of user, if true, user is a student, if false, user is a guest
 
 
-    @Embedded
+
     private ArrayList<DayItinerary> itinerariesForDays;
     private Calendar startDate;
     private int lengthOfStay;

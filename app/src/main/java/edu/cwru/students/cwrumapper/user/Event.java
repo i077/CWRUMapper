@@ -1,6 +1,7 @@
 package edu.cwru.students.cwrumapper.user;
 
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.TypeConverters;
 
 /**
  * This class serves to be used as an object that holds a few key details that are
@@ -8,6 +9,7 @@ import android.arch.persistence.room.Embedded;
  * the length of the event, the start time, and the end time. Getter methods can be
  * called to retrieve information.
  */
+@TypeConverters(ConverterEvent.class)
 public class Event implements Comparable<Event>{
 
     @Embedded

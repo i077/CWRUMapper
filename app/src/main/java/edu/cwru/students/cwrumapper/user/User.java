@@ -1,7 +1,9 @@
 package edu.cwru.students.cwrumapper.user;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -17,7 +19,8 @@ import java.util.Date;
  * having an index of 0. The class is also used to store into database, and is used
  * by the repository and UserDatabase.
  */
-@Entity
+@Entity(tableName = "user_table")
+@TypeConverters(ConverterItinerary.class)
 public class User {
 
     @PrimaryKey
@@ -51,6 +54,8 @@ public class User {
      * @param startDate the start date of the itinerary.
      * @param lengthOfStay the length of stay for the guest
      */
+
+    @Ignore
     public User(Calendar startDate, int lengthOfStay) {
         itineraries = new ArrayList<>();
         itineraries.add(new Itinerary(startDate, lengthOfStay));
@@ -65,6 +70,7 @@ public class User {
      * @param id The id of the student returned by the sign in process.
      * @param name the name of the student.
      */
+    @Ignore
     public User(int id, String name){
         itineraries = new ArrayList<>();
         itineraries.add(new Itinerary());
@@ -73,6 +79,14 @@ public class User {
         this.student = true;
 
     }
+
+    public User(int id, String name, ArrayList<Itinerary> itineraries){
+        this.id = id;
+        this.name = name;
+        this.itineraries = itineraries;
+    }
+
+    public void setName(String newName){name = newName;}
 
     /**
      * A getter method to retrieve the student id

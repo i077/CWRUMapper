@@ -16,6 +16,7 @@ package edu.cwru.students.cwrumapper;
  * limitations under the License.
  */
 
+import android.app.Application;
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.persistence.room.Room;
 import android.content.Context;
@@ -52,10 +53,13 @@ public class RepositoryTest {
 
     private DaoAccess mUserDao;
     private UserDatabase mDb;
+    private Repository repo;
+    public User user;
 
     @Before
     public void createDb() {
         Context context = InstrumentationRegistry.getTargetContext();
+
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
         mDb = Room.inMemoryDatabaseBuilder(context, UserDatabase.class)
@@ -63,6 +67,8 @@ public class RepositoryTest {
                 .allowMainThreadQueries()
                 .build();
         mUserDao = mDb.daoAccess();
+        user = new User(1,"Amrish");
+        mUserDao.insert(user);
     }
 
     @After
@@ -72,24 +78,18 @@ public class RepositoryTest {
 
     @Test
     public void insertAndGetUser() throws Exception {
-        User user = new User(1, "Amrish");
-        mUserDao.insert(user);
         User userTest = mUserDao.fetchUserbyID(1);
         assertEquals(user.getName(), userTest.getName());
     }
 
     @Test
     public void insertAndGetWrongUser() throws Exception {
-        User user = new User(1, "Amrish");
-        mUserDao.insert(user);
         User userTest = mUserDao.fetchUserbyID(0);
         assertNull(userTest);
     }
 
     @Test
     public void insertTwoUsers() throws Exception {
-        User user = new User(1, "Amrish");
-        mUserDao.insert(user);
 
        // User user2 = new User(1, "Tim");
         //mUserDao.insert(user2);
@@ -99,13 +99,15 @@ public class RepositoryTest {
 
     @Test
     public void updateUser() throws Exception {
-        User user = new User(1, "Amrish");
-        mUserDao.insert(user);
+        user.setName("Imran");
+        //user.newItinerary();
+        mUserDao.updateUser(user);
         User userTest = mUserDao.fetchUserbyID(1);
-        userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
+        //userTest.newItinerary();
+        //userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+        //        -81.607163), 100, "100", 9, 0, 0);
 
-        int a =  mUserDao.updateUser(userTest);
+        int a =  mUserDao.updateUser(user);
         User userTest2 = mUserDao.fetchUserbyID(1);
         assertEquals(userTest.getEvents(0).get(0).getName(), userTest2.getEvents(0).get(0).getName());
     }
