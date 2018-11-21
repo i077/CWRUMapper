@@ -17,9 +17,13 @@ import android.support.v4.content.ContextCompat;
 import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
         GoogleMap.OnMarkerClickListener {
 
+    private static final String TAG = "MainActivity";
+
     private static final int ERROR_REQUEST_CODE = 9001;
 
     private static final int LOCATION_PERMISSIONS_REQUEST_CODE = 1111;
@@ -69,12 +75,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Repository dataRepo;
 
+    private RecyclerView mItineraryRecyclerView;
+    private RecyclerView.Adapter mItineraryAdapter;
+    private RecyclerView.LayoutManager mItineraryLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
+        // Initialize repository structure from persistent storage
+        dataRepo = new Repository(getApplication());
+        User user = dataRepo.fetchUser(0).getValue();
+        if (user == null) {
+            // TODO Throw to SignInActivity since there is no user
+            user = new User(0, "Tester");
+            user.student = true;
+        }
 
         // set strict mode to enable API calls
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -84,20 +102,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             getLocationPermission();
         }
 
-        // Fill bottom sheet
+        // Inflate bottom sheet
         View bottomSheet = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(600);
 
-        View mapView = findViewById(R.id.map);
-
-        mCurrentDate = Calendar.getInstance().getTime();
+        Calendar mCalendar = Calendar.getInstance();
+        mCurrentDate = mCalendar.getTime();
+        mCurrentDayItinerary = user.getItineraries().get(0)
+                .getItinerariesForDays()
+                .get(mCalendar.get(Calendar.DAY_OF_WEEK));
 
         // Inflate contents of bottom sheet
         TextView textView = findViewById(R.id.date_text);
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
         textView.setText(dateFormat.format(mCurrentDate));
+
+        // Inflate RecyclerView for Itinerary
+        mItineraryRecyclerView = findViewById(R.id.recyclerview_itinerary);
+        // Each event will take up the same space
+        mItineraryRecyclerView.setHasFixedSize(true);
+        // Use a linear layout manager to inflate recycler view
+        mItineraryLayoutManager = new LinearLayoutManager(this);
+        mItineraryRecyclerView.setLayoutManager(mItineraryLayoutManager);
+        // Add adapter to plug event set to RecyclerView
+
 
         // Set edit button's onClick listener
         Button editButton = findViewById(R.id.button_edit);
