@@ -1,5 +1,6 @@
 package edu.cwru.students.cwrumapper;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Itinerary;
 
 /**
- * Class to feed datg to itinerary recycler view in main activity.
+ * Class to feed data to itinerary recycler view in main activity.
  * This object creates ItemEventMain views for each event in the current day's itinerary
  * and recycles views when not visible.
  */
@@ -69,16 +70,23 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
      * @param holder ViewHolder to reference said view
      * @param pos New position of view in layout
      */
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ItineraryMainViewHolder holder, int pos) {
         // TODO
         LinearLayout linearLayout = holder.mLinearLayout;
         Event newEvent = mEventList.get(pos);
 
+        // Add leading zeros if necessary
+        String properStartHour = String.format("%02d", newEvent.getHour());
+        String properStartMin = String.format("%02d", newEvent.getMin());
+        String properEndHour = String.format("%02d", newEvent.getEndHour());
+        String properEndMin = String.format("%02d", newEvent.getEndMin());
+
         // Fill layout children
-        String startTimeStr = newEvent.getHour() + ":" + newEvent.getMin();
+        String startTimeStr = properStartHour + ":" + properStartMin;
         holder.mStartTimeText.setText(startTimeStr);
-        String endTimeStr = newEvent.getEndHour() + ":" + newEvent.getEndMin();
+        String endTimeStr = properEndHour + ":" + properEndMin;
         holder.mEndTimeText.setText(endTimeStr);
         holder.mEventNameText.setText(newEvent.getName());
         StringBuilder eventLocTextBuilder = new StringBuilder()

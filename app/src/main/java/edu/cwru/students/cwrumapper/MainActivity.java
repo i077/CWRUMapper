@@ -2,7 +2,6 @@ package edu.cwru.students.cwrumapper;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -49,10 +46,8 @@ import java.util.Locale;
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 
-import edu.cwru.students.cwrumapper.user.Itinerary;
 import edu.cwru.students.cwrumapper.user.Repository;
 import edu.cwru.students.cwrumapper.user.User;
-import edu.cwru.students.cwrumapper.user.UserDatabase;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
@@ -97,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // TODO Throw to SignInActivity since there is no user
             user = new User(0, "Tester");
             user.student = true;
+//            dataRepo.insert(user);
         }
 
         // set strict mode to enable API calls
@@ -124,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mCurrentDayItinerary = user.getItineraries().get(0)
                 .getItinerariesForDays()
-                .get(mCalendar.get(Calendar.DAY_OF_WEEK));
+                .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
         mCurrentDayItinerary.addEvent(one);
         mCurrentDayItinerary.addEvent(two);
         mCurrentDayItinerary.addEvent(three);
@@ -259,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMyLocationClick(@NonNull Location location) { }
 
-    public void showRoute(DayItinerary dayItin) {
+    private void showRoute(DayItinerary dayItin) {
         ArrayList<LatLng> routePoints = dayItin.getRouteInfo().getPoints();
 //        ArrayList<Event> events = dayItin.getEvents();
 

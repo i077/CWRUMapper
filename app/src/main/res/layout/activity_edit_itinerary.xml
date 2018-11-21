@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:menu="@menu/menu_edit_itinerary"
     tools:context=".EditItineraryActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -30,11 +31,5 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_action_add_fab" />
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
 
 </android.support.design.widget.CoordinatorLayout>
