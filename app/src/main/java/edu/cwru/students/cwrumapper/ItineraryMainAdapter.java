@@ -2,8 +2,10 @@ package edu.cwru.students.cwrumapper;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -24,10 +26,16 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
      */
     public class ItineraryMainViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout mLinearLayout;
+        public TextView mStartTimeText, mEndTimeText, mEventNameText, mEventLocText;
 
         public ItineraryMainViewHolder(LinearLayout layout) {
             super(layout);
+            // Build references to layout children to inflate in adapter
             mLinearLayout = layout;
+            mStartTimeText = layout.findViewById(R.id.event_start_time);
+            mEndTimeText = layout.findViewById(R.id.event_end_time);
+            mEventNameText = layout.findViewById(R.id.event_name);
+            mEventLocText = layout.findViewById(R.id.event_location);
         }
     }
 
@@ -39,16 +47,24 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
         mEventList = eventList;
     }
 
+    /**
+     * Create new view for events.
+     * Used by the layout manager when not enough view holders exist to hold events on screen.
+     * @param parent The parent view
+     * @param viewType
+     * @return A new ViewHolder holding what will be event information
+     */
     @NonNull
     @Override
-    public ItineraryMainViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        // TODO
+    public ItineraryMainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Create a new view
-        return null;
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_event_main, parent, false);
+        return new ItineraryMainViewHolder(linearLayout);
     }
 
     /**
-     * (Re-)inflate contents of generated view for new event.
+     * (Re-)inflate contents of generated view with new event data.
      * Used by layout manager when view becomes (nearly) visible.
      * @param holder ViewHolder to reference said view
      * @param pos New position of view in layout
@@ -56,6 +72,20 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
     @Override
     public void onBindViewHolder(@NonNull ItineraryMainViewHolder holder, int pos) {
         // TODO
+        LinearLayout linearLayout = holder.mLinearLayout;
+        Event newEvent = mEventList.get(pos);
+
+        // Fill layout children
+        String startTimeStr = newEvent.getHour() + ":" + newEvent.getMin();
+        holder.mStartTimeText.setText(startTimeStr);
+        String endTimeStr = newEvent.getEndHour() + ":" + newEvent.getEndMin();
+        holder.mEndTimeText.setText(endTimeStr);
+        holder.mEventNameText.setText(newEvent.getName());
+        StringBuilder eventLocTextBuilder = new StringBuilder()
+                .append(newEvent.getLocation().getName())
+                .append(" ")
+                .append(newEvent.getRoomNumber());
+        holder.mEventLocText.setText(eventLocTextBuilder);
     }
 
     /**

@@ -23,6 +23,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -85,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
+        // Get current time
+        Calendar mCalendar = Calendar.getInstance();
+        mCurrentDate = mCalendar.getTime();
+
         // Initialize repository structure from persistent storage
         dataRepo = new Repository(getApplication());
         User user = dataRepo.fetchUser(0).getValue();
@@ -107,17 +112,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(600);
 
-        Calendar mCalendar = Calendar.getInstance();
-        mCurrentDate = mCalendar.getTime();
+        // TODO Remove hardcoded test events
+        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 12, 0, 0);
+        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+                -81.602553), 100, "410", 15, 0, 0);
+        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
+                -81.600249), 100, "100", 21, 0, 0);
+
         mCurrentDayItinerary = user.getItineraries().get(0)
                 .getItinerariesForDays()
                 .get(mCalendar.get(Calendar.DAY_OF_WEEK));
+        mCurrentDayItinerary.addEvent(one);
+        mCurrentDayItinerary.addEvent(two);
+        mCurrentDayItinerary.addEvent(three);
+        mCurrentDayItinerary.addEvent(four);
 
         // Inflate contents of bottom sheet
-        TextView textView = findViewById(R.id.date_text);
+        TextView mDateTextView = findViewById(R.id.date_text);
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
-        textView.setText(dateFormat.format(mCurrentDate));
+        mDateTextView.setText(dateFormat.format(mCurrentDate));
 
         // Inflate RecyclerView for Itinerary
         mItineraryRecyclerView = findViewById(R.id.recyclerview_itinerary);
@@ -126,8 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Use a linear layout manager to inflate recycler view
         mItineraryLayoutManager = new LinearLayoutManager(this);
         mItineraryRecyclerView.setLayoutManager(mItineraryLayoutManager);
-        // Add adapter to plug event set to RecyclerView
-
+        refreshItinerary();
 
         // Set edit button's onClick listener
         Button editButton = findViewById(R.id.button_edit);
@@ -301,6 +317,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             sb.append(String.format(Locale.getDefault(), "%02d", s));
         }
         return sb.toString();
+    }
+
+    /**
+     * Refresh Itinerary RecyclerView with list of remaining events for today.
+     * Called when activity starts or resumes (from editing the itinerary).
+     */
+    private void refreshItinerary() {
+        ArrayList<Event> eventsFromNow = new ArrayList<>();
+
+        // Get remaining events for day
+        for (Event e : mCurrentDayItinerary.getEvents()) {
+            // Get time for event's current day's instance
+            Calendar eventInstance = Calendar.getInstance();
+            eventInstance.set(Calendar.HOUR, e.getHour());
+            eventInstance.set(Calendar.MINUTE, e.getMin());
+            Date eventInstanceTime = eventInstance.getTime();
+
+            // Compare to current time, and add to event set (for RecyclerView) if after
+            if (eventInstanceTime.after(mCurrentDate)) {
+                eventsFromNow.add(e);
+                Log.v(TAG, "Added event " + e.getName());
+            }
+        }
+
+        // Update adapter to plug new event set to RecyclerView,
+        // passing in all events for today from now
+        mItineraryAdapter = new ItineraryMainAdapter(eventsFromNow);
+        mItineraryRecyclerView.setAdapter(mItineraryAdapter);
+        // Hide placeholder if necessary
+        if (eventsFromNow.size() > 0) {
+            TextView mPlaceholderText = findViewById(R.id.text_placeholder_itinerary);
+            ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
+        }
     }
 
     @Override
