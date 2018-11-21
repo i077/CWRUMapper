@@ -28,14 +28,14 @@ public class Router {
 
         // test: Taft -> Millis Schmitt -> Alumni -> Kusch
         ArrayList<Event> routeEvents = new ArrayList<>();
-        Event one = new Event(new Location("Taft", 41.512771,
-                -81.607163), 100, 100, 9, 0, 0);
-        Event two = new Event(new Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, 0, 12, 0, 0);
-        Event three = new Event(new Location("Alumni", 41.500547 ,
-                -81.602553), 100, 410, 15, 0, 0);
-        Event four = new Event(new Location("Kusch", 41.500787,
-                -81.600249), 100, 100, 21, 0, 0);
+        Event one = new Event("Jolly", new Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        Event two = new Event("Beans",new Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 12, 0, 0);
+        Event three = new Event("Class",new Location("Alumni", 41.500547 ,
+                -81.602553), 100, "410", 15, 0, 0);
+        Event four = new Event("Lunch", new Location("Kusch", 41.500787,
+                -81.600249), 100, "100", 21, 0, 0);
         routeEvents.add(one);
         routeEvents.add(two);
         routeEvents.add(three);

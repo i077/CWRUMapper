@@ -20,13 +20,16 @@ public class UserUnitTest {
 
     @Test
     public void testStudentCases(){
-        user = new User(15,"Amrish");
+        user = new User(1,"Amrish");
         //constructor testing for student
 
         assertEquals("Amrish", user.getName());
-        assertEquals(15,user.getId());
+        user.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        assertEquals(1,user.getId());
         assertTrue(user.isStudent());
         assertEquals(7,user.getItineraries().get(0).getItinerariesForDays().size());
+        assertEquals("Jolly", user.getEvents(0).get(0).getName());
     }
 
     @Test

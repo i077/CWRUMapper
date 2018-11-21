@@ -13,12 +13,12 @@ public class Repository {
         UserDatabase db = UserDatabase.getDatabase(application);
         mDaoAccess = db.daoAccess();
     }
-
+/*
     public void update(User user){
         new updateAsyncTask(mDaoAccess).execute(user);
     }
-
-    public LiveData<User> fetchUser(int userID) {
+*/
+    public User fetchUser(int userID) {
         return mDaoAccess.fetchUserbyID(userID);
     }
 
@@ -26,6 +26,11 @@ public class Repository {
         new insertAsyncTask(mDaoAccess).execute(user);
     }
 
+    public void delete(User user) {
+        mDaoAccess.deleteUser(user);
+    }
+
+    /*
     private static class updateAsyncTask extends AsyncTask<User, Void, Void> {
 
         private DaoAccess mAsyncTaskDao;
@@ -40,7 +45,7 @@ public class Repository {
             return null;
         }
     }
-
+*/
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private DaoAccess mAsyncTaskDao;

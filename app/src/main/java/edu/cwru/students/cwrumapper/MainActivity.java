@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         // test
-        DayItinerary test = new DayItinerary(0);    // placeholder
+        DayItinerary test = new DayItinerary();    // placeholder
         Router.findRoute(test, mainContext);    // hardcoded test case in here
         showRoute(test);
     }
@@ -199,14 +199,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // test: Taft -> Millis Schmitt -> Alumni -> Kusch
         ArrayList<Event> events = new ArrayList<>();
-        Event one = new Event(new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, 100, 9, 0, 0);
-        Event two = new Event(new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, 0, 12, 0, 0);
-        Event three = new Event(new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                -81.602553), 100, 410, 15, 0, 0);
-        Event four = new Event(new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                -81.600249), 100, 100, 21, 0, 0);
+        Event one = new Event("Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        Event two = new Event("Beans",new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 12, 0, 0);
+        Event three = new Event("Class",new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+                -81.602553), 100, "410", 15, 0, 0);
+        Event four = new Event("Lunch", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
+                -81.600249), 100, "100", 21, 0, 0);
         events.add(one);
         events.add(two);
         events.add(three);

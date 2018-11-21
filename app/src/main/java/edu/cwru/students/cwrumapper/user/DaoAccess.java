@@ -19,10 +19,10 @@ public interface DaoAccess {
     void insert(User user);
 
     @Query("SELECT * FROM User WHERE id = :userID")
-    LiveData<User> fetchUserbyID(int userID);
+    User fetchUserbyID(int userID);
 
-    @Update
-    void updateUser(User user);
+//    @Update
+//    int updateUser(User user);
 
     @Delete
     void deleteUser(User user);
