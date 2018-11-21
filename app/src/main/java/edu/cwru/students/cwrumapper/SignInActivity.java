@@ -62,14 +62,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class SignInActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,
         GoogleApiClient.OnConnectionFailedListener, OnClickListener {
 
-
-
-
     private static final String TAG = "SignInActivity";
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
 
     //Request Code to make sure sign-in error validation is complete
     private static final int OUR_REQUEST_CODE = 49404;
@@ -107,10 +100,25 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView( R.layout.activity_sign_in);
 
+        // Connect sign in button
+        // TODO: sign out and disconnect buttons.
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                Snackbar.make(v, "Sign in clicked!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+                //Show dialog while signing in
+                mConnectionProgressDialog.show();
+
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, OUR_REQUEST_CODE);
+            }
+        });
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -121,43 +129,20 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this /* Context */)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this /* FragmentActivity */,
+                        this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        // Connect sign in button
-        // TODO: sign out and disconnect buttons.
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Log.v(TAG, "Sign-in tapped");
 
-                //Show dialog while signing in
-                mConnectionProgressDialog.show();
 
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, OUR_REQUEST_CODE);
-            }
-        });
         //findViewById(R.id.sign_out_button).setOnClickListener(this);
         //findViewById(R.id.sign_out_button).setVisibility(View.INVISIBLE);
 
         // Configure the ProgressDialog (only shown if there is a delay between screens)
         mConnectionProgressDialog = new ProgressDialog(this);
         mConnectionProgressDialog.setMessage("Signing in...");
-
-        //mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
 
@@ -169,12 +154,7 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            setContentView( R.layout.activity_main);
-        }
-        else {
-            setContentView( R.layout.activity_sign_in);
-        }
+
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
@@ -232,7 +212,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
 
             case R.id.sign_in_button:
                 Log.v(TAG, "Sign-in tapped");
-
                 //Show dialog while signing in
                 mConnectionProgressDialog.show();
 
@@ -257,9 +236,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         return password.length() > 4;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -293,6 +271,8 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -310,6 +290,10 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+
+
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -318,23 +302,25 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
 
+
+
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(SignInActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(SignInActivity.this, android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
         mEmailView.setAdapter(adapter);
     }
+
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -346,10 +332,32 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         int IS_PRIMARY = 1;
     }
 
+
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * Helper method to trigger retrieving the server auth code if we've signed in.
+     * @param result
      */
+    private void handleSignInResult(GoogleSignInResult result ) {
+        if (result.isSuccess()) {
+            GoogleSignInAccount acct = result.getSignInAccount();
+            // If you don't already have a server session, you can now send this code to your
+            // server to authenticate on the backend.
+            String authCode = acct.getServerAuthCode();
+
+            /**
+             * Hide the sign in buttons, show the sign out button.
+             */
+            findViewById(R.id.sign_in_button).setVisibility(View.INVISIBLE);
+            /*TODO:findViewById(R.id.sign_out_button)
+                    .setVisibility(View.VISIBLE);
+            findViewById(R.id.revoke_access_button).setVisibility(
+                    View.VISIBLE);*/
+        }
+    }
+
+
+
+
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -400,22 +408,6 @@ public class SignInActivity extends AppCompatActivity implements LoaderCallbacks
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
-        }
-    }
-
-    //Helper method to trigger retrieving the server auth code if we've signed in.
-    private void handleSignInResult(GoogleSignInResult result ) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            // If you don't already have a server session, you can now send this code to your
-            // server to authenticate on the backend.
-            String authCode = acct.getServerAuthCode();
-            // Hide the sign in buttons, show the sign out button.
-            findViewById(R.id.sign_in_button).setVisibility(View.INVISIBLE);
-            /*TODO:findViewById(R.id.sign_out_button)
-                    .setVisibility(View.VISIBLE);
-            findViewById(R.id.revoke_access_button).setVisibility(
-                    View.VISIBLE);*/
         }
     }
 }
