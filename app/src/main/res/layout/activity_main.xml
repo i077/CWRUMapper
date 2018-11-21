@@ -20,90 +20,95 @@
         map:zOrderOnTop="false"
         tools:context="edu.cwru.students.cwrumapper.MapActivity" />
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.CardView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="true"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
         android:outlineProvider="bounds"
-        app:elevation="6dp">
-
-        <LinearLayout
+        map:cardElevation="16dp">
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/backWhite">
-
-            <TextView
-                android:id="@+id/date_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="16sp"
-                android:fontFamily="sans-serif-light"
-                android:textAlignment="center"
-                android:textColor="@color/gray5"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/next_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4sp"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textAlignment="center"
-                android:text="@string/next_event_sample"/>
-
-            <TextView
-                android:id="@+id/next_event_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4sp"
-                android:text="@string/next_event_loc_sample"
-                android:textAlignment="center"
-                android:textColor="@color/gray5"
-                android:textAllCaps="true"
-                android:textSize="16sp" />
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/backWhite">
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/date_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16sp"
                     android:paddingTop="16sp"
-                    android:paddingEnd="16sp"
-                    android:text="@string/up_next_text"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="sans-serif-light"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray5"
+                    android:textSize="16sp" />
 
-                <View android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/button_edit"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/next_event"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_action_edit"
+                    android:paddingTop="4sp"
                     android:textColor="@color/black"
-                    android:paddingVertical="3sp"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:text="@string/button_edit_text" />
+                    android:textSize="30sp"
+                    android:textAlignment="center"
+                    android:text="@string/next_event_sample"/>
+
+                <TextView
+                    android:id="@+id/next_event_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4sp"
+                    android:text="@string/next_event_loc_sample"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray5"
+                    android:textAllCaps="true"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16sp"
+                        android:paddingTop="16sp"
+                        android:paddingEnd="16sp"
+                        android:text="@string/up_next_text"
+                        android:textColor="@color/black"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <View android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/button_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_action_edit"
+                        android:textColor="@color/black"
+                        android:paddingVertical="3sp"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:text="@string/button_edit_text" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16sp"
+                    android:text="@string/ipsum5" />
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16sp"
-                android:text="@string/ipsum5" />
 
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v7.widget.CardView>
 
 </android.support.design.widget.CoordinatorLayout>

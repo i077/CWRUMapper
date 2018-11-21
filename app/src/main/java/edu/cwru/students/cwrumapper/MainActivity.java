@@ -2,6 +2,7 @@ package edu.cwru.students.cwrumapper;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,9 @@ import java.util.Locale;
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 
+import edu.cwru.students.cwrumapper.user.Itinerary;
+import edu.cwru.students.cwrumapper.user.Repository;
+import edu.cwru.students.cwrumapper.user.User;
 import edu.cwru.students.cwrumapper.user.UserDatabase;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -63,11 +67,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Date mCurrentDate;
     private DayItinerary mCurrentDayItinerary;
 
+    private Repository dataRepo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainContext = getApplicationContext();
         setContentView(R.layout.activity_main);
+
 
         // set strict mode to enable API calls
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
         textView.setText(dateFormat.format(mCurrentDate));
 
-        // Set edit button's onClick
+        // Set edit button's onClick listener
         Button editButton = findViewById(R.id.button_edit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         // test
-        DayItinerary test = new DayItinerary(0);    // placeholder
+        DayItinerary test = new DayItinerary();    // placeholder
         Router.findRoute(test, mainContext);    // hardcoded test case in here
         showRoute(test);
     }
@@ -212,14 +219,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // test: Taft -> Millis Schmitt -> Alumni -> Kusch
         ArrayList<Event> events = new ArrayList<>();
-        Event one = new Event(new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, 100, 9, 0, 0);
-        Event two = new Event(new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, 0, 12, 0, 0);
-        Event three = new Event(new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                -81.602553), 100, 410, 15, 0, 0);
-        Event four = new Event(new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                -81.600249), 100, 100, 21, 0, 0);
+        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 12, 0, 0);
+        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+                -81.602553), 100, "410", 15, 0, 0);
+        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
+                -81.600249), 100, "100", 21, 0, 0);
         events.add(one);
         events.add(two);
         events.add(three);

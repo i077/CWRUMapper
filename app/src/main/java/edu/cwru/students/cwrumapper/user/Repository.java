@@ -9,7 +9,7 @@ public class Repository {
 
     private DaoAccess mDaoAccess;
 
-    Repository(Application application) {
+    public Repository(Application application) {
         UserDatabase db = UserDatabase.getDatabase(application);
         mDaoAccess = db.daoAccess();
     }

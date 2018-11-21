@@ -77,6 +77,15 @@ public class DayItinerary {
      */
     public boolean addEvent(String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
+        return addEvent(newEvent);
+    }
+
+    /**
+     * Add an Event to the DayItinerary.
+     * @param newEvent structure containing the event to add
+     * @return true if added event is valid, and if not no change occurs
+     */
+    public boolean addEvent(Event newEvent) {
         if (isValid(newEvent)) {
             events.add(newEvent);
 
