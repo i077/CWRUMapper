@@ -147,7 +147,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 //Show dialog while signing in
                 mConnectionProgressDialog.show();
                  Intent guestSignInIntent = new Intent(SignInActivity.this, GuestSignInActivity.class);
-                 startActivity(guestSignInIntent);
+                 startActivityForResult(guestSignInIntent, OUR_REQUEST_CODE);
                 break;
 
             //TODO: the same but with a sign-out button
