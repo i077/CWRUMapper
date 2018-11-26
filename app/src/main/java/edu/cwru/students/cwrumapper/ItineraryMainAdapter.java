@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Itinerary;
@@ -70,18 +71,15 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
      * @param holder ViewHolder to reference said view
      * @param pos New position of view in layout
      */
-    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ItineraryMainViewHolder holder, int pos) {
-        // TODO
-        LinearLayout linearLayout = holder.mLinearLayout;
         Event newEvent = mEventList.get(pos);
 
         // Add leading zeros if necessary
-        String properStartHour = String.format("%02d", newEvent.getHour());
-        String properStartMin = String.format("%02d", newEvent.getMin());
-        String properEndHour = String.format("%02d", newEvent.getEndHour());
-        String properEndMin = String.format("%02d", newEvent.getEndMin());
+        String properStartHour = String.format(Locale.getDefault(), "%02d", newEvent.getHour());
+        String properStartMin = String.format(Locale.getDefault(), "%02d", newEvent.getMin());
+        String properEndHour = String.format(Locale.getDefault(), "%02d", newEvent.getEndHour());
+        String properEndMin = String.format(Locale.getDefault(), "%02d", newEvent.getEndMin());
 
         // Fill layout children
         String startTimeStr = properStartHour + ":" + properStartMin;
