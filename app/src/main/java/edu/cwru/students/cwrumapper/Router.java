@@ -21,7 +21,7 @@ import edu.cwru.students.cwrumapper.user.Route;
 
 public class Router {
 
-    public static void findRoute(DayItinerary dayItin, Context context) {
+    public static void findRoute(DayItinerary dayItin, String apiKey) {
 
         StringBuilder urlBuilder = new StringBuilder();
 //        ArrayList<Event> routeEvents = dayItin.getEvents();
@@ -68,8 +68,7 @@ public class Router {
         }
 
         // key (RESTRICT KEY AFTER FINISHED TESTING!)
-//        urlBuilder.append("key=" + context.getResources().getString(R.string.google_maps_api_key));
-        urlBuilder.append("key=AIzaSyDNbP-3OzqyB2PfR4_XElCfdhAtRCfNC2o");
+        urlBuilder.append("key=" + apiKey);
 
         // read JSON file from URL
         try (InputStream stream = new URL(urlBuilder.toString()).openStream()) {
