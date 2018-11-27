@@ -59,11 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final int LOCATION_PERMISSIONS_REQUEST_CODE = 1111;
     private static final LatLngBounds CWRU_CAMPUS_BOUNDS = new LatLngBounds(
-            new LatLng(41.499185, -81.613768), new LatLng(41.517084, -81.602976));
+            new LatLng(41.499054, -81.615440), new LatLng(41.515922, -81.598960));
     private static final LatLng CWRU_CAMPUS_CENTER = CWRU_CAMPUS_BOUNDS.getCenter();
-
-    private Context mainContext;
-    private boolean mLocationPermissionsGranted = false;
 
     private GoogleMap mMap;
     private Date mCurrentDate;
@@ -78,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
         // Get current time
@@ -172,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), permissions[0]) ==
                 PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionsGranted = true;
             initializeMap();
         } else {
             ActivityCompat.requestPermissions(this, permissions,
@@ -187,11 +182,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case LOCATION_PERMISSIONS_REQUEST_CODE: {
                 for (int i : grantResults) {
                     if (i != PackageManager.PERMISSION_GRANTED) {
-                        mLocationPermissionsGranted = false;
                         return;
                     }
                 }
-                mLocationPermissionsGranted = true;
                 initializeMap();
             }
         }
@@ -245,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // test
         DayItinerary test = new DayItinerary();    // placeholder
-        Router.findRoute(test, mainContext);    // hardcoded test case in here
+        Router.findRoute(test, getResources().getString(R.string.google_maps_api_key));    // hardcoded test case in here
         showRoute(test);
     }
 
