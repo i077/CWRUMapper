@@ -38,9 +38,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
@@ -248,8 +250,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMyLocationClick(@NonNull Location location) { }
 
-    private void showRoute(DayItinerary dayItin) {
-        ArrayList<LatLng> routePoints = dayItin.getRouteInfo().getPoints();
+    private void showRoute(@NonNull DayItinerary dayItin) {
+        ArrayList<Double> lats = dayItin.getRouteLatitudes();
+        ArrayList<Double> longs = dayItin.getRouteLongitudes();
 //        ArrayList<Event> events = dayItin.getEvents();
 
         // test: Taft -> Millis Schmitt -> Alumni -> Kusch
@@ -262,16 +265,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 -81.602553), 100, "410", 15, 0, 0);
         Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
                 -81.600249), 100, "100", 21, 0, 0);
+        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 22, 0, 0);
         events.add(one);
         events.add(two);
         events.add(three);
         events.add(four);
+        events.add(five);
 
         // draw route
-        LatLng start = routePoints.get(0);
+        LatLng start = new LatLng(lats.get(0), longs.get(0));
         LatLng end;
-        for (int i = 1; i < routePoints.size(); i++) {
-            end = routePoints.get(i);
+        for (int i = 1; i < lats.size(); i++) {
+            end = new LatLng(lats.get(i), longs.get(i));
             mMap.addPolyline(new PolylineOptions()
                     .add(start, end)
                     .width(5).color(Color.BLUE).geodesic(false));
@@ -283,15 +289,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setupMarkers(@NonNull ArrayList<Event> events) {
+        HashMap<LatLng, MarkerOptions> markerMap = new HashMap<>();
+
         for (int i = 0; i < events.size(); i++) {
             Event current = events.get(i);
-            String content = "<big><b>" + current.getLocation().getName() + "</b> " + current.getRoomNumber() + "</big><br>"
+            String content = "<big><b>" + current.getName() + "</b></big><br>"
+                    + current.getLocation().getName() + " " + current.getRoomNumber() + "<br>"
                     + getTimeFormat(current.getHour(), current.getMin(), current.getSec()) + " - "
                     + getTimeFormat(current.getEndHour(), current.getEndMin(), current.getEndSec());
-            edu.cwru.students.cwrumapper.user.Location loc = current.getLocation();
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                    .snippet(content));
+
+            // combine info windows of duplicate locations
+            LatLng loc = new LatLng(current.getLocation().getLatitude(), current.getLocation().getLongitude());
+            if (markerMap.containsKey(loc)) {
+                MarkerOptions prev = markerMap.get(loc);
+                content = prev.getSnippet() + "<p>" + content;
+            }
+
+            MarkerOptions newMarker = new MarkerOptions()
+                    .position(loc)
+                    .snippet(content);
+            markerMap.put(loc, newMarker);
+        }
+
+        // add all markers
+        for (LatLng l : markerMap.keySet()) {
+            mMap.addMarker(markerMap.get(l));
         }
     }
 
