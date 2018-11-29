@@ -15,7 +15,8 @@ public class DayItinerary {
     @Embedded
     private ArrayList<Event> events;
 
-    private Route routeInfo;
+    private ArrayList<Double> routeLatitudes;
+    private ArrayList<Double> routeLongitudes;
     private boolean isRouteUpdated;
 
 
@@ -25,7 +26,8 @@ public class DayItinerary {
     public DayItinerary() {
         events = new ArrayList<Event>();
 
-        routeInfo = null;
+        routeLatitudes = null;
+        routeLongitudes = null;
         isRouteUpdated = false;
     }
 
@@ -144,12 +146,15 @@ public class DayItinerary {
      */
     public Event getEvent(int index) {return events.get(index);}
 
-    public Route getRouteInfo() {
-        return routeInfo;
+    public ArrayList<Double> getRouteLatitudes() {
+        return routeLatitudes;
     }
 
-    public void updateRouteInfo(Route newRouteInfo) {
-        routeInfo = newRouteInfo;
+    public ArrayList<Double> getRouteLongitudes() { return routeLongitudes; }
+
+    public void updateRouteInfo(ArrayList<Double> lats, ArrayList<Double> longs) {
+        routeLatitudes = lats;
+        routeLongitudes = longs;
         isRouteUpdated = true;
     }
     /**

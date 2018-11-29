@@ -3,6 +3,8 @@ package edu.cwru.students.cwrumapper;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,10 +38,13 @@ public class Router {
                 -81.602553), 100, "410", 15, 0, 0);
         Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
                 -81.600249), 100, "100", 21, 0, 0);
+        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 22, 0, 0);
         routeEvents.add(one);
         routeEvents.add(two);
         routeEvents.add(three);
         routeEvents.add(four);
+        routeEvents.add(five);
 
         // base for Directions API call
         urlBuilder.append("https://maps.googleapis.com/maps/api/directions/json?");
@@ -80,9 +85,25 @@ public class Router {
                 jsonBuilder.append((char) character);
             }
 
+            // parse JSON for route
             JSONObject json = new JSONObject(jsonBuilder.toString());
-            dayItin.updateRouteInfo(new Route(json));
-//            ((MainActivity) context).showRoute(dayItin);
+            String encodedString = json.getJSONArray("routes")
+                    .getJSONObject(0)
+                    .getJSONObject("overview_polyline")
+                    .getString("points");
+            ArrayList<LatLng> points = decodePoints(encodedString);
+
+            // convert LatLng to Doubles to be stored in database
+            ArrayList<Double> lats = new ArrayList<>();
+            ArrayList<Double> longs = new ArrayList<>();
+            for (int i = 0; i < points.size(); i++) {
+                LatLng l = points.get(i);
+                lats.add(l.latitude);
+                longs.add(l.longitude);
+            }
+
+            // update route
+            dayItin.updateRouteInfo(lats, longs);
         } catch (MalformedURLException e) {
 
         } catch (IOException e) {
@@ -90,5 +111,44 @@ public class Router {
         } catch (JSONException e) {
 
         }
+    }
+
+    private static ArrayList<LatLng> decodePoints(String encodedPoints) {
+        ArrayList<LatLng> decodedPoints = new ArrayList<>();
+        int index = 0;
+        int len = encodedPoints.length();
+        int lat = 0;
+        int lng = 0;
+
+        while (index < len) {
+            int b;
+            int shift = 0;
+            int result = 0;
+            do {
+                b = encodedPoints.charAt(index) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+                index++;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encodedPoints.charAt(index) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+                index++;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+
+            decodedPoints.add(p);
+        }
+        return decodedPoints;
     }
 }
