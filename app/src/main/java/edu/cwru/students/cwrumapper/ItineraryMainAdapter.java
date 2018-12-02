@@ -88,9 +88,11 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
         holder.mEndTimeText.setText(endTimeStr);
         holder.mEventNameText.setText(newEvent.getName());
         StringBuilder eventLocTextBuilder = new StringBuilder()
-                .append(newEvent.getLocation().getName())
-                .append(" ")
+                .append(newEvent.getLocation().getName());
+        if (!newEvent.getRoomNumber().equals("0")) {
+            eventLocTextBuilder.append(" ")
                 .append(newEvent.getRoomNumber());
+        }
         holder.mEventLocText.setText(eventLocTextBuilder);
     }
 

@@ -32,4 +32,10 @@
         app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_action_add_fab" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_itinerary_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16sp" />
+
 </android.support.design.widget.CoordinatorLayout>

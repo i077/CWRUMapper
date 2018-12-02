@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private Date mCurrentDate;
     private DayItinerary mCurrentDayItinerary;
+    private ArrayList<Event> eventsFromNow;
 
     private Repository dataRepo;
 
@@ -149,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshSheet();
     }
 
     private boolean checkGooglePlayServices() {
@@ -238,10 +245,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        // test
-        DayItinerary test = new DayItinerary();    // placeholder
-        Router.findRoute(test, getResources().getString(R.string.google_maps_api_key));    // hardcoded test case in here
-        showRoute(test);
+        // Show route from current day's itinerary
+        Router.findRoute(mCurrentDayItinerary, getResources().getString(R.string.google_maps_api_key));    // hardcoded test case in here
+        showRoute(mCurrentDayItinerary);
     }
 
     @Override
@@ -253,25 +259,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showRoute(@NonNull DayItinerary dayItin) {
         ArrayList<Double> lats = dayItin.getRouteLatitudes();
         ArrayList<Double> longs = dayItin.getRouteLongitudes();
-//        ArrayList<Event> events = dayItin.getEvents();
-
-        // test: Taft -> Millis Schmitt -> Alumni -> Kusch
-        ArrayList<Event> events = new ArrayList<>();
-        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
-        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 12, 0, 0);
-        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                -81.602553), 100, "410", 15, 0, 0);
-        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                -81.600249), 100, "100", 21, 0, 0);
-        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 22, 0, 0);
-        events.add(one);
-        events.add(two);
-        events.add(three);
-        events.add(four);
-        events.add(five);
 
         // draw route
         LatLng start = new LatLng(lats.get(0), longs.get(0));
@@ -283,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .width(5).color(Color.BLUE).geodesic(false));
             start = end;
         }
-        setupMarkers(events);
+        setupMarkers(eventsFromNow);
 
         mCurrentDayItinerary = dayItin;
     }
@@ -331,11 +318,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
+     * Refresh bottom sheet. Called when activity starts or resumes.
+     */
+    private void refreshSheet() {
+        refreshItinerary();
+    }
+
+    /**
      * Refresh Itinerary RecyclerView with list of remaining events for today.
      * Called when activity starts or resumes (from editing the itinerary).
      */
     private void refreshItinerary() {
-        ArrayList<Event> eventsFromNow = new ArrayList<>();
+        eventsFromNow = new ArrayList<>();
 
         // Get remaining events for day
         for (Event e : mCurrentDayItinerary.getEvents()) {
@@ -359,7 +353,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Hide placeholder if necessary
         if (eventsFromNow.size() > 0) {
             TextView mPlaceholderText = findViewById(R.id.text_placeholder_itinerary);
-            ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
+            if (mPlaceholderText != null)
+                ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
         }
     }
 
