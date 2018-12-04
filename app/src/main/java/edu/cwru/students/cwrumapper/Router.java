@@ -103,7 +103,7 @@ public class Router {
             }
 
             // update route
-            dayItin.updateRouteInfo(lats, longs);
+//            dayItin.updateRouteInfo(lats, longs);
         } catch (MalformedURLException e) {
 
         } catch (IOException e) {

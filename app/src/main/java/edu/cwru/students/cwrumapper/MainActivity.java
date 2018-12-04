@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Initialize repository structure from persistent storage
         dataRepo = new Repository(getApplication());
-        User user = dataRepo.fetchUser(0).getValue();
+        User user = dataRepo.getUser(0);
         if (user == null) {
             // TODO Throw to SignInActivity since there is no user
             user = new User(0, "Tester");

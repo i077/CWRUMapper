@@ -34,9 +34,6 @@ public class DayItinerary {
      */
     public DayItinerary() {
         events = new ArrayList<Event>();
-
-        routeLatitudes = null;
-        routeLongitudes = null;
         isRouteUpdated = false;
     }
 
@@ -155,17 +152,6 @@ public class DayItinerary {
      */
     public Event getEvent(int index) {return events.get(index);}
 
-    public ArrayList<Double> getRouteLatitudes() {
-        return routeLatitudes;
-    }
-
-    public ArrayList<Double> getRouteLongitudes() { return routeLongitudes; }
-
-    public void updateRouteInfo(ArrayList<Double> lats, ArrayList<Double> longs) {
-        routeLatitudes = lats;
-        routeLongitudes = longs;
-        isRouteUpdated = true;
-    }
     /**
      * Used for getting a list of all the locations for the day
      * @return returns a list of all the locations for the day
