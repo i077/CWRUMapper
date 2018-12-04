@@ -1,4 +1,4 @@
-package edu.cwru.students.cwrumapper.user.Archived;
+package edu.cwru.students.cwrumapper.Archived;
 
 public class Map {
 

@@ -12,18 +12,16 @@ import edu.cwru.students.cwrumapper.user.*;
 import static org.junit.Assert.*;
 
 /**
- * Test functions of User and Itinerary Classes
+ * Test functions of Route Class
  */
-public class RepositoryTest {
+public class RouteUnitTest {
 
-    Repository repo;
+    private Route r;
 
     @Test
-    public void testRepositoryQuery() {
-        //repo = new Repository(this.application);
-        //constructor testing for student
-
+    public void testRoute(){
     }
+
 
 
 }

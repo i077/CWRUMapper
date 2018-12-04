@@ -1,22 +1,31 @@
 package edu.cwru.students.cwrumapper.user;
 
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * This is an important class that holds a user's day itinerary. This is contains
  * a list of events for the day. This can then be used to create a route. Event manipulation
  * also takes place here.
  */
+@Entity
 public class DayItinerary {
+    private int itineraryID;
 
-    @Embedded
+    @PrimaryKey
+    private int id;
+
+    @Ignore
     private ArrayList<Event> events;
 
-    private ArrayList<Double> routeLatitudes;
-    private ArrayList<Double> routeLongitudes;
+    @Ignore
+    private Route routeInfo;
     private boolean isRouteUpdated;
 
 
@@ -172,5 +181,17 @@ public class DayItinerary {
     public boolean getRouteUpdated(){
         return isRouteUpdated;
     }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
+
+    public int getItineraryID() {return itineraryID;}
+
+    public void setItineraryID(int id) {this.itineraryID = id;}
+
+    public void setEvents(List<Event> events) {this.events = new ArrayList<>(events);}
+
+    public void setRouteUpdated(boolean updated) {this.isRouteUpdated = updated;}
 
 }

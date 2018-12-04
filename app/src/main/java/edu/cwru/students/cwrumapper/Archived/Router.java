@@ -1,4 +1,4 @@
-package edu.cwru.students.cwrumapper.user.Archived;
+package edu.cwru.students.cwrumapper.Archived;
 
 import java.util.Calendar;
 
