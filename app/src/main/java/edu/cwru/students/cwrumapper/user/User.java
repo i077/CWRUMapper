@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import edu.cwru.students.cwrumapper.Archived.ConverterItinerary;
 
@@ -52,7 +53,6 @@ public class User {
      * @param startDate the start date of the itinerary.
      * @param lengthOfStay the length of stay for the guest
      */
-
     @Ignore
     public User(Calendar startDate, int lengthOfStay) {
         itineraries = new ArrayList<>();
@@ -324,4 +324,6 @@ public class User {
     }
 
     public void setId(int id) {this.id = id;}
+
+    public void setItineraries(List<Itinerary> itineraries) {this.itineraries = new ArrayList<>(itineraries);}
 }

@@ -1,11 +1,14 @@
 package edu.cwru.students.cwrumapper.user;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * This class contains a list of day itineraries. It also contains the startDate and length
@@ -15,13 +18,13 @@ import java.util.Calendar;
 @Entity
 public class Itinerary {
     private int userID;
-    private boolean student;
     //type of user, if true, user is a student, if false, user is a guest
 
     @PrimaryKey
     private int id;
-
+    @Ignore
     private ArrayList<DayItinerary> itinerariesForDays;
+    @NonNull
     private Calendar startDate;
     private int lengthOfStay;
 
@@ -34,7 +37,6 @@ public class Itinerary {
      * immutable.
      */
     public Itinerary() {
-        student = true;
         startDate = Calendar.getInstance();
         lengthOfStay = 0;
         itinerariesForDays = new ArrayList<DayItinerary>(7);
@@ -50,8 +52,8 @@ public class Itinerary {
      * @param lengthOfStay this is used to determine the amount of day itineraries needed
      * a max of 7 days can be added.
      */
+    @Ignore
     public Itinerary(Calendar startDate, int lengthOfStay) {
-        student = false;
         this.startDate = startDate;
         if (lengthOfStay > 7){
             lengthOfStay = 7;
@@ -64,11 +66,10 @@ public class Itinerary {
         }
     }
 
-    public Itinerary(int id, int userID, ArrayList<DayItinerary> dayItineraries, boolean student, Calendar cal, int lengthOfStay) {
+    public Itinerary(int id, int userID, ArrayList<DayItinerary> dayItineraries, Calendar cal, int lengthOfStay) {
         this.id = id;
         this.userID = userID;
         this.itinerariesForDays = dayItineraries;
-        this.student = student;
         this.startDate = cal;
         this.lengthOfStay = lengthOfStay;
     }
@@ -132,6 +133,8 @@ public class Itinerary {
         return itinerariesForDays;
     }
 
+    public void setItinerariesForDays(List<DayItinerary> itinerariesForDays) {this.itinerariesForDays = new ArrayList<>(itinerariesForDays);}
+
     public int getId() {return id;}
 
     public void setId(int id) {this.id = id;}
@@ -139,6 +142,10 @@ public class Itinerary {
     public int getUserID() {return userID;}
 
     public void setUserID(int id) {this.userID = id;}
+
+    public void setLengthOfStay(int length) {this.lengthOfStay = length;}
+
+    public void setStartDate(Calendar cal){this.startDate = cal;}
 
 
 }

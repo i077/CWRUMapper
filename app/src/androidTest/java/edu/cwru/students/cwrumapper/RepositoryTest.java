@@ -57,35 +57,42 @@ public class RepositoryTest {
     private Repository repo;
     public User user;
 
+
+
     @Before
     public void createDb() {
         Context context = InstrumentationRegistry.getTargetContext();
 
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
+        /*
         mDb = Room.inMemoryDatabaseBuilder(context, UserDatabase.class)
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build();
         mUserDao = mDb.daoAccess();
+        */
+        repo = new Repository(context);
         user = new User(1,"Amrish");
-        mUserDao.insert(user);
+        repo.insertUser(user);
     }
+    /*
 
     @After
     public void closeDb() {
         mDb.close();
     }
+    */
 
     @Test
     public void insertAndGetUser() throws Exception {
-        User userTest = mUserDao.fetchUserbyID(1);
+        User userTest = repo.getUser(1);
         assertEquals(user.getName(), userTest.getName());
     }
 
     @Test
     public void insertAndGetWrongUser() throws Exception {
-        User userTest = mUserDao.fetchUserbyID(0);
+        User userTest = repo.getUser(0);
         assertNull(userTest);
     }
 
@@ -93,24 +100,29 @@ public class RepositoryTest {
     public void insertTwoUsers() throws Exception {
 
         User user2 = new User(1, "Tim");
-        mUserDao.insert(user2);
-        User userTest = mUserDao.fetchUserbyID(1);
+        repo.insertUser(user2);
+        User userTest = repo.getUser(1);
         assertNotEquals(user.getName(), userTest.getName());;
     }
-/*
+
     @Test
     public void updateUser() throws Exception {
         user.setName("Imran");
         //user.newItinerary();
-        mUserDao.updateUser(user);
-        User userTest = mUserDao.fetchUserbyID(1);
-        //userTest.newItinerary();
-        //userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-        //        -81.607163), 100, "100", 9, 0, 0);
-
-        int a =  mUserDao.updateUser(user);
-        User userTest2 = mUserDao.fetchUserbyID(1);
+        repo.insertUser(user);
+        User userTest = repo.getUser(1);
+        userTest.newItinerary();
+        userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                -81.607163), 100, "100", 9, 0, 0);
+        repo.insertUser(userTest);
+        User userTest2 = repo.getUser(1);
         assertEquals(userTest.getEvents(0).get(0).getName(), userTest2.getEvents(0).get(0).getName());
+    }
+
+    @Test
+    public void testLocation() throws Exception {
+        Location test = repo.getLocation("Taft");
+        assertEquals(test.getLatitude(), 41.512771, .00001);
     }
 /*
     @Test
@@ -135,4 +147,11 @@ public class RepositoryTest {
         assertTrue(allWords.isEmpty());
     }
     */
+
+    @After
+    public void clearALL() {
+        repo.nukeUserTable();
+        repo.nukeLocationsTable();
+    }
+
 }

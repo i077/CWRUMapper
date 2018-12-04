@@ -2,7 +2,9 @@ package edu.cwru.students.cwrumapper.user;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 //import android.arch.persistence.room.TypeConverters;
 
 /**
@@ -20,6 +22,7 @@ public class Event implements Comparable<Event>{
     @Embedded
     private Location location;
     private int length;
+    @NonNull
     private String roomNumber;
     private int hour;
     private int min;
@@ -27,6 +30,7 @@ public class Event implements Comparable<Event>{
     private int endHour;
     private int endMin;
     private int endSec;
+    @NonNull
     private String name;
 
     /**
@@ -67,7 +71,7 @@ public class Event implements Comparable<Event>{
      * @param min The starting minute
      * @param sec The starting second
      */
-    public Event(int id, int dayItineraryId, String name, Location location, int length, String roomNumber, int hour, int min, int sec) {
+    public Event(int id, int dayItineraryId, String name, Location location, int length, String roomNumber, int hour, int min, int sec, int endHour, int endMin, int endSec) {
         this.id = id;
         this.dayItineraryID = dayItineraryId;
         this.location = location;
@@ -76,13 +80,9 @@ public class Event implements Comparable<Event>{
         this.hour = hour;
         this.min = min;
         this.sec = sec;
-        int startTime = sec+min*60+hour*3600;
-        int endTime = startTime+length;
-
-        //finds the end time
-        this.endHour = endTime/3600;
-        this.endMin = (endTime/60)%60;
-        this.endSec = endTime%60;
+        this.endHour = endHour;
+        this.endMin = endMin;
+        this.endSec = endSec;
         this.name = name;
     }
 
@@ -204,7 +204,7 @@ public class Event implements Comparable<Event>{
      * Getter method for the length of the event
      * @return returns the length of the even
      */
-    public int getEventLength() {
+    public int getLength() {
         return length;
     }
 
@@ -228,5 +228,11 @@ public class Event implements Comparable<Event>{
     public void setId(int id) {this.id = id;}
 
     public void setDayItineraryID(int id) {this.dayItineraryID = id;}
+
+    public void setEndHour(int endHour){this.endHour = endHour;}
+
+    public void setEndMin(int endMin){this.endMin = endMin;}
+
+    public void setEndSec(int endSec){this.endSec = endSec;}
 
 }

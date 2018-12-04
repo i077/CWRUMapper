@@ -23,11 +23,30 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface DaoAccess {
 
     @Insert(onConflict = REPLACE)
-    void insert(User user);
+    void insertUser(User user);
+
+    @Insert(onConflict = REPLACE)
+    void insertItineraryList(List<Itinerary> itinList);
+
+    @Insert(onConflict = REPLACE)
+    void insertDayItineraryList(List<DayItinerary> dItinList);
+
+    @Insert(onConflict = REPLACE)
+    void insertEventList(List<Event> eventList);
 
     @Query("SELECT * FROM user_table WHERE id = :userID")
-    User fetchUserbyID(int userID);
+    User getUser(int userID);
 
+    @Query("SELECT * FROM Itinerary WHERE userID = :userID")
+    List<Itinerary> getItineraryList(int userID);
+
+    @Query("SELECT * FROM DayItinerary WHERE itineraryID = :itineraryID")
+    List<DayItinerary> getDayItineraryList(int itineraryID);
+
+    @Query("SELECT * FROM Event WHERE dayItineraryID = :dayItineraryID")
+    List<Event> getEventList(int dayItineraryID);
+
+    /*
     @Update(onConflict = REPLACE)
     int updateUser(User user);
 
@@ -37,5 +56,6 @@ public interface DaoAccess {
 
     @Delete
     void deleteUser(User user);
+    */
 
 }
