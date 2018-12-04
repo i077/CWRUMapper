@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 -81.602553), 100, "410", 15, 0, 0);
         Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
                 -81.600249), 100, "100", 21, 0, 0);
+        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 23, 0, 0);
 
         mCurrentDayItinerary = user.getItineraries().get(0)
                 .getItinerariesForDays()
@@ -124,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mCurrentDayItinerary.addEvent(two);
         mCurrentDayItinerary.addEvent(three);
         mCurrentDayItinerary.addEvent(four);
+        mCurrentDayItinerary.addEvent(five);
 
         // Inflate contents of bottom sheet
         TextView mDateTextView = findViewById(R.id.date_text);
@@ -149,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 MainActivity.this.startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -245,8 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        // Show route from current day's itinerary
-        Router.findRoute(mCurrentDayItinerary, getResources().getString(R.string.google_maps_api_key));    // hardcoded test case in here
+        // Calculate and show route from current day's itinerary
         showRoute(mCurrentDayItinerary);
     }
 
@@ -256,15 +257,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMyLocationClick(@NonNull Location location) { }
 
-    private void showRoute(@NonNull DayItinerary dayItin) {
-        ArrayList<Double> lats = dayItin.getRouteLatitudes();
-        ArrayList<Double> longs = dayItin.getRouteLongitudes();
+    /**
+     * Calculate and display route based on given list of events.
+     * @param dayItin - DayItinerary to be displayed on the map
+     * @return true if route was updated and displayed successfully, otherwise false
+     */
+    public boolean showRoute(@NonNull DayItinerary dayItin) {
+
+        // calculate route
+        ArrayList<LatLng> routePoints = Router.findRoute(dayItin,
+                getResources().getString(R.string.google_maps_api_key));
+        if (routePoints == null) {
+            return false;
+        }
 
         // draw route
-        LatLng start = new LatLng(lats.get(0), longs.get(0));
+        LatLng start = routePoints.get(0);
         LatLng end;
-        for (int i = 1; i < lats.size(); i++) {
-            end = new LatLng(lats.get(i), longs.get(i));
+        for (int i = 1; i < routePoints.size(); i++) {
+            end = routePoints.get(i);
             mMap.addPolyline(new PolylineOptions()
                     .add(start, end)
                     .width(5).color(Color.BLUE).geodesic(false));
@@ -273,8 +284,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupMarkers(eventsFromNow);
 
         mCurrentDayItinerary = dayItin;
+        return true;
     }
 
+    /**
+     * Place Google Map markers on locations of future events.
+     * @param events - list of future events
+     */
     private void setupMarkers(@NonNull ArrayList<Event> events) {
         HashMap<LatLng, MarkerOptions> markerMap = new HashMap<>();
 
@@ -304,6 +320,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Write hours, minutes, and seconds in a digital-clock format.
+     * @param h - hour
+     * @param m - minutes
+     * @param s - seconds
+     * @return String of formatted time
+     */
     @NonNull
     private String getTimeFormat(int h, int m, int s) {
         StringBuilder sb = new StringBuilder();
