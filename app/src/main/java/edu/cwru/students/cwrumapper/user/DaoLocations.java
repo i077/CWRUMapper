@@ -6,6 +6,8 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
 @Dao
 public interface DaoLocations {
 
@@ -16,6 +18,6 @@ public interface DaoLocations {
     @Query("SELECT * FROM Location WHERE LocationName = :name")
     Location getLocation(String name);
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insertAll(Location... locations);
 }
