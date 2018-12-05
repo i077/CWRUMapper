@@ -15,12 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.tasks.Task;
 
 
 /**
@@ -70,6 +72,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setOnClickListener(this);
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -96,31 +99,35 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         // the GoogleSignInAccount will be non-null.
         //TODO: either remove this and put in MainActivity or have this choose landing screen
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly. We can try and retrieve an
-            // authentication code.
-            Log.d(TAG, "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Checking sign in state...");
-            progressDialog.show();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    progressDialog.dismiss();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
+        if (account != null) {
+            // Go back to MainActivity, we're already signed in
+            finish();
         }
+
+
+//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+//        if (opr.isDone()) {
+//            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+//            // and the GoogleSignInResult will be available instantly. We can try and retrieve an
+//            // authentication code.
+//            Log.d(TAG, "Got cached sign-in");
+//            GoogleSignInResult result = opr.get();
+//            handleSignInResult(result);
+//        } else {
+//            // If the user has not previously signed in on this device or the sign-in has expired,
+//            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+//            // single sign-on will occur in this branch.
+//            final ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setMessage("Checking sign in state...");
+//            progressDialog.show();
+//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+//                @Override
+//                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+//                    progressDialog.dismiss();
+//                    handleSignInResult(googleSignInResult);
+//                }
+//            });
+//        }
     }
 
 
@@ -177,6 +184,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
      * @param responseCode Unimportant, an integer used to mark client response.
      * @param intent The Sign-in intent created to complete sign-in flow using google client.
      */
+    @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
         super.onActivityResult(requestCode, responseCode, intent);
         Log.v(TAG, "ActivityResult:" + requestCode);
@@ -186,34 +194,30 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             mConnectionProgressDialog.dismiss();
 
             //Resolve intent into GoogleSignInResult
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            handleSignInResult(result);
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
+            handleSignInResult(task);
         }
     }
 
 
     /**
      * Helper method to trigger retrieving the server auth code if we've signed in.
-     * @param result A GoogleSignInResult that can be read to discern whether sign in
-     *               succeeds/fails.
+     * @param completedTask Task containing Google authentication info.
      */
-    private void handleSignInResult(GoogleSignInResult result ) {
-
-        if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            // If you don't already have a server session, you can now send this code to your
-            // server to authenticate on the backend.
-            String authCode = acct.getServerAuthCode();
-
-
-            //Hide the sign in buttons, show the sign out button.
-            findViewById(R.id.sign_in_button).setVisibility(View.INVISIBLE);
-            findViewById(R.id.guest_sign_in_button).setVisibility(View.INVISIBLE);
-            /*TODO: Hide Sign-out button.
-            findViewById(R.id.sign_out_button)
-                    .setVisibility(View.VISIBLE);
-                    */
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            if (account != null) {
+                // TODO update database and go to MainActivity.
+                mConnectionProgressDialog.dismiss();
+                Log.v(TAG, "Sign in successful! Account: " + account.getEmail());
+                finish();
+            }
+        } catch (ApiException e) {
+            Log.w(TAG, "Signing in failed, code=" + e.getStatusCode());
+            // TODO Alert user of failed sign-in attempt
         }
+        Log.w(TAG, "Signing in failed");
     }
 }
 
