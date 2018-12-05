@@ -274,26 +274,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean showRoute(@NonNull DayItinerary dayItin) {
 
         // calculate route
-        ArrayList<LatLng> routePoints = Router.findRoute(dayItin,
+        ArrayList<ArrayList<LatLng>> routePoints = Router.findRoute(dayItin,
                 getResources().getString(R.string.google_maps_api_key));
         if (routePoints == null) {
             return false;
         }
 
         // draw route TODO change color if event passed
-        LatLng start = routePoints.get(0);
-        LatLng end;
-        for (int i = 1; i < routePoints.size(); i++) {
-            end = routePoints.get(i);
-            mMap.addPolyline(new PolylineOptions()
-                    .add(start, end)
-                    .width(5).color(Color.BLUE).geodesic(false));
-            start = end;
+        LatLng lastPoint = null;
+        for (ArrayList<LatLng> part : routePoints) {
+            lastPoint = drawPartition(part, lastPoint);
         }
         setupMarkers(eventsFromNow);
 
         mCurrentDayItinerary = dayItin;
         return true;
+    }
+
+    /**
+     * Draws the polyline on the Google map using the given points. Also draws a gray line from
+     * the end of the last partition to the beginning of this one (not a super necessary
+     * feature).
+     *
+     * @param points - points to draw this partition polyline
+     * @return last point in the given partition
+     */
+    private LatLng drawPartition(ArrayList<LatLng> points, LatLng prev) {
+        LatLng start = points.get(0);
+        LatLng end;
+
+        // draw cyan line from last partition to this partition, if applicable
+        if (prev != null) {
+            mMap.addPolyline(new PolylineOptions()
+                    .add(prev, start)
+                    .width(5).color(Color.BLACK).geodesic(false));
+        }
+
+        for (int i = 1; i < points.size(); i++) {
+            end = points.get(i);
+            mMap.addPolyline(new PolylineOptions()
+                    .add(start, end)
+                    .width(5).color(Color.BLUE).geodesic(false));
+            start = end;
+        }
+        return points.get(points.size() - 1);
     }
 
     /**
@@ -303,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setupMarkers(@NonNull ArrayList<Event> events) {
         HashMap<LatLng, MarkerOptions> markerMap = new HashMap<>();
 
+        // TODO Either add central point for each building or place markers at same time as drawing route
         for (int i = 0; i < events.size(); i++) {
             Event current = events.get(i);
             String content = "<big><b>" + current.getName() + "</b></big><br>"
