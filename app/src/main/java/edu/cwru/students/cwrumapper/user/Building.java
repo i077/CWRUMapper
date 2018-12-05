@@ -2,32 +2,34 @@ package edu.cwru.students.cwrumapper.user;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 public class Building {
 
     private String name;
 
     // latitudes and longitudes of all entrances to this building
-    private double[] latitudes;
-    private double[] longitudes;
+    private ArrayList<Double> latitudes;
+    private ArrayList<Double> longitudes;
 
     public Building(String n, LatLng[] lls) {
         name = n;
 
-        latitudes = new double[lls.length];
-        longitudes = new double[lls.length];
+        latitudes = new ArrayList<>();
+        longitudes = new ArrayList<>();
         for (int i = 0; i < lls.length; i++) {
             LatLng e = lls[i];
-            latitudes[i] = e.latitude;
-            longitudes[i] = e.longitude;
+            latitudes.add(e.latitude);
+            longitudes.add(e.longitude);
         }
     }
 
     public String getName() { return name; }
 
-    public LatLng[] getEntrances() {
-        LatLng[] latLngs = new LatLng[latitudes.length];
-        for (int i = 0; i < latLngs.length; i++) {
-            latLngs[i] = new LatLng(latitudes[i], longitudes[i]);
+    public ArrayList<LatLng> getEntrances() {
+        ArrayList<LatLng> latLngs = new ArrayList<>();
+        for (int i = 0; i < latitudes.size(); i++) {
+            latLngs.add(new LatLng(latitudes.get(i), longitudes.get(i)));
         }
         return latLngs;
     }
