@@ -23,7 +23,7 @@ import edu.cwru.students.cwrumapper.user.Route;
 
 public class Router {
 
-    public static void findRoute(DayItinerary dayItin, String apiKey) {
+    public static ArrayList<LatLng> findRoute(DayItinerary dayItin, String apiKey) {
 
         StringBuilder urlBuilder = new StringBuilder();
 //        ArrayList<Event> routeEvents = dayItin.getEvents();
@@ -104,6 +104,8 @@ public class Router {
 
             // update route
 //            dayItin.updateRouteInfo(lats, longs);
+
+            return points;
         } catch (MalformedURLException e) {
 
         } catch (IOException e) {
@@ -111,6 +113,8 @@ public class Router {
         } catch (JSONException e) {
 
         }
+
+        return null;
     }
 
     private static ArrayList<LatLng> decodePoints(String encodedPoints) {

@@ -1,7 +1,6 @@
 package edu.cwru.students.cwrumapper;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +52,8 @@ import edu.cwru.students.cwrumapper.user.Event;
 
 import edu.cwru.students.cwrumapper.user.Repository;
 import edu.cwru.students.cwrumapper.user.User;
+
+import static java.time.temporal.ChronoUnit.*;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private Date mCurrentDate;
+    private LocalDateTime mCurrentTime;
     private DayItinerary mCurrentDayItinerary;
     private ArrayList<Event> eventsFromNow;
 
@@ -84,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Calendar mCalendar = Calendar.getInstance();
         mCurrentDate = mCalendar.getTime();
 
+        mCurrentTime = LocalDateTime.now();
+
         // Initialize repository structure from persistent storage
         dataRepo = new Repository(getApplication());
         User user = dataRepo.getUser(0);
@@ -91,8 +98,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // TODO Throw to SignInActivity since there is no user
             user = new User(0, "Tester");
             user.student = true;
-//            dataRepo.insert(user);
+            dataRepo.insertUser(user);
+
+            // TODO Remove hardcoded test events
+            Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+                    -81.607163), 100, "100", 9, 0, 0);
+            Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                    -81.606873), 100, "0", 12, 0, 0);
+            Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+                    -81.602553), 100, "410", 15, 0, 0);
+            Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
+                    -81.600249), 100, "100", 21, 0, 0);
+            Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                    -81.606873), 100, "0", 23, 0, 0);
+
+            mCurrentDayItinerary = user.getItineraries().get(0)
+                    .getItinerariesForDays()
+                    .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
+            mCurrentDayItinerary.addEvent(one);
+            mCurrentDayItinerary.addEvent(two);
+            mCurrentDayItinerary.addEvent(three);
+            mCurrentDayItinerary.addEvent(four);
+            mCurrentDayItinerary.addEvent(five);
+
+            dataRepo.insertUser(user);
         }
+
+        mCurrentDayItinerary = user.getItineraries().get(0)
+                .getItinerariesForDays()
+                .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
 
         // set strict mode to enable API calls
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -107,32 +141,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(600);
 
-        // TODO Remove hardcoded test events
-        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
-        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 12, 0, 0);
-        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                -81.602553), 100, "410", 15, 0, 0);
-        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                -81.600249), 100, "100", 21, 0, 0);
-        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 23, 0, 0);
-
-        mCurrentDayItinerary = user.getItineraries().get(0)
-                .getItinerariesForDays()
-                .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
-        mCurrentDayItinerary.addEvent(one);
-        mCurrentDayItinerary.addEvent(two);
-        mCurrentDayItinerary.addEvent(three);
-        mCurrentDayItinerary.addEvent(four);
-        mCurrentDayItinerary.addEvent(five);
-
-        // Inflate contents of bottom sheet
-        TextView mDateTextView = findViewById(R.id.date_text);
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d");
-        mDateTextView.setText(dateFormat.format(mCurrentDate));
 
         // Inflate RecyclerView for Itinerary
         mItineraryRecyclerView = findViewById(R.id.recyclerview_itinerary);
@@ -141,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Use a linear layout manager to inflate recycler view
         mItineraryLayoutManager = new LinearLayoutManager(this);
         mItineraryRecyclerView.setLayoutManager(mItineraryLayoutManager);
-        refreshItinerary();
+        refreshSheet();
 
         // Set edit button's onClick listener
         Button editButton = findViewById(R.id.button_edit);
@@ -157,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        mCurrentTime = LocalDateTime.now();
         refreshSheet();
     }
 
@@ -271,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return false;
         }
 
-        // draw route
+        // draw route TODO change color if event passed
         LatLng start = routePoints.get(0);
         LatLng end;
         for (int i = 1; i < routePoints.size(); i++) {
@@ -344,7 +353,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Refresh bottom sheet. Called when activity starts or resumes.
      */
     private void refreshSheet() {
+        // Inflate contents of bottom sheet
+        TextView mDateTextView = findViewById(R.id.date_text);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault());
+        mDateTextView.setText(dateFormat.format(mCurrentTime));
+
+        // Refresh itinerary with remaining events, updating eventsFromNow
         refreshItinerary();
+
+        // Get time to next event and update textview
+        TextView mNextEventView = findViewById(R.id.next_event);
+        TextView mNextEventLocView = findViewById(R.id.next_event_location);
+        if (eventsFromNow.isEmpty()) {
+            mNextEventView.setText(R.string.next_event_none_remain);
+            mNextEventLocView.setText("");
+        } else {
+            Event nextEvent = eventsFromNow.get(0);
+            // Construct LocalTime instance to compare time to
+            LocalTime nextEventTime = LocalTime.of(nextEvent.getHour(), nextEvent.getMin());
+            LocalDateTime nextEventDate = nextEventTime.atDate(mCurrentTime.toLocalDate());
+
+            // Set text value
+            long minsUntilEvent = mCurrentTime.until(nextEventDate, MINUTES);
+            mNextEventView.setText(minsUntilEvent + " min to " + nextEvent.getName());
+            mNextEventLocView.setText("at " + nextEvent.getLocation().getName());
+        }
     }
 
     /**
@@ -357,13 +390,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Get remaining events for day
         for (Event e : mCurrentDayItinerary.getEvents()) {
             // Get time for event's current day's instance
-            Calendar eventInstance = Calendar.getInstance();
-            eventInstance.set(Calendar.HOUR, e.getHour());
-            eventInstance.set(Calendar.MINUTE, e.getMin());
-            Date eventInstanceTime = eventInstance.getTime();
+            LocalTime eventTime = LocalTime.of(e.getHour(), e.getMin());
+            LocalDateTime eventDateTime = eventTime.atDate(mCurrentTime.toLocalDate());
 
             // Compare to current time, and add to event set (for RecyclerView) if after
-            if (eventInstanceTime.after(mCurrentDate)) {
+            if (eventDateTime.isAfter(mCurrentTime)) {
                 eventsFromNow.add(e);
                 Log.v(TAG, "Added event " + e.getName());
             }
