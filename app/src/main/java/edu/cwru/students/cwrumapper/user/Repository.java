@@ -30,6 +30,7 @@ public class Repository {
 
     public void insertUser(User user) {
         int userID = user.getId();
+        deleteUser(user);
         List<Itinerary> itineraries = user.getItineraries();
         for (int i = 0; i < itineraries.size(); i++) {
             itineraries.get(i).setUserID(userID);
@@ -53,6 +54,27 @@ public class Repository {
         }
         mDaoAccess.insertItineraryList(itineraries);
         mDaoAccess.insertUser(user);
+    }
+
+    private void deleteUser(User user){
+        int userID = user.getId();
+        List<Itinerary> itineraries = user.getItineraries();
+        for (int i = 0; i < itineraries.size(); i++) {
+            int itineraryID = itineraries.get(i).getId();
+            List<DayItinerary> dayItineraries = itineraries.get(i).getItinerariesForDays();
+            for (int j = 0; j < dayItineraries.size(); j++) {
+                int dayItineraryID = dayItineraries.get(j).getId();
+                List<Event> events = dayItineraries.get(j).getEvents();
+                for (int k = 0; k < events.size(); k++) {
+                    int eventID = events.get(k).getId();
+                    mDaoAccess.deleteEvent(eventID);
+                }
+                mDaoAccess.deleteDayItinerary(dayItineraryID);
+            }
+            mDaoAccess.deleteItinerary(itineraryID);
+        }
+        mDaoAccess.deleteUser(userID);
+
     }
 
     public User getUser(int userID) {
