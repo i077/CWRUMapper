@@ -63,9 +63,9 @@ public class EditItineraryActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 int dayOfWeekSelected = mPager.getCurrentItem();
-                String dayOfWeekStr = DayOfWeek.of(dayOfWeekSelected + 1).toString();
-                Snackbar.make(view, "On page " + dayOfWeekStr, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
+                intent.putExtra("dayOfWeek", dayOfWeekSelected);
+                EditItineraryActivity.this.startActivity(intent);
             }
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

@@ -24,5 +24,7 @@
     <string name="title_activity_edit_itinerary">Edit Itinerary</string>
     <string name="button_edit_text">Edit</string>
     <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
     <string name="edit_no_events_yet">No events for this day. Tap \'+\' to add one!</string>
 </resources>
