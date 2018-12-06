@@ -27,4 +27,6 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_delete">Delete</string>
     <string name="edit_no_events_yet">No events for this day. Tap \'+\' to add one!</string>
+
+    <string name="edit_event_name_default">Enter title</string>
 </resources>

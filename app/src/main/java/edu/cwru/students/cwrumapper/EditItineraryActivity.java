@@ -12,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.view.View;
 import java.time.DayOfWeek;
 import java.util.Objects;
 
+import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Repository;
 import edu.cwru.students.cwrumapper.user.User;
@@ -27,10 +29,14 @@ import edu.cwru.students.cwrumapper.user.User;
 public class EditItineraryActivity extends AppCompatActivity
         implements DayItineraryEditFragment.OnListFragmentInteractionListener {
 
+    private static final String TAG = "EditItineraryActivity";
+
     private Repository dataRepo;
     private User user;
 
     private int mDayOfWeek;
+    private Event mEventSelected;
+    private int mDayOfWeekSelected;
 
     // Pager widget to handle swiping between fragments
     private ViewPager mPager;
@@ -60,18 +66,24 @@ public class EditItineraryActivity extends AppCompatActivity
         // Start at page of current day of week by default
         mPager.setCurrentItem(mDayOfWeek - 1);
 
-        // TODO Configure FAB to add new mEvent
         FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int dayOfWeekSelected = mPager.getCurrentItem();
                 Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
+                intent.putExtra("event", (Event) null);
                 intent.putExtra("dayOfWeek", dayOfWeekSelected);
                 EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
             }
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        refreshItinerary();
+        super.onResume();
     }
 
     @Override
@@ -85,8 +97,7 @@ public class EditItineraryActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                // TODO Write modified User to database
-                // Write edits and go back to main activity
+                dataRepo.insertUser(user);
                 finish();
                 break;
             default:
@@ -103,16 +114,43 @@ public class EditItineraryActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Event item) {
         // An event was tapped, launch EditEventActivity with event bundled in intent
+        mEventSelected = item;
         Intent intent = new Intent(this, EditEventActivity.class);
-        intent.putExtra("dayOfWeek", item.getDayItineraryID());
+        mDayOfWeekSelected = mPager.getCurrentItem();
+        intent.putExtra("dayOfWeek", mDayOfWeekSelected);
         intent.putExtra("event", item);
+//        Snackbar.make(mPager, item.getName() + " was tapped, belonging to " + itemDayOfWeek, Snackbar.LENGTH_LONG)
+//                .show();
         startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
     }
 
+    /**
+     * Take action on the user structure depending on what EditEventActivity returns in its result code
+     * and intent.
+     * @param requestCode The request code matching the activity's request code
+     * @param resultCode The result code returned from the child activity
+     * @param data Intent data, possibly containing an event
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // TODO Read new event from EditEventActivity and write to User
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDIT_EVENT_ACTIVITY_REQUEST_CODE) {
+            switch (resultCode) {
+                case EditEventActivity.EVENT_DELETED:
+                    // TODO Remove event
+                    DayItinerary dayItinerarySelected = user.getItineraries().get(0).getItinerariesForDays()
+                            .get(mDayOfWeekSelected);
+                    dayItinerarySelected.deleteEvent(mEventSelected);
+                    Log.d(TAG, "DayItin " + dayItinerarySelected.getId() + " now has " + dayItinerarySelected.getEvents().size() + " events");
+                    break;
+            }
+        }
+    }
+
+    private void refreshItinerary() {
+        mPagerAdapter = new DayItineraryPagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        // Start at page of current day of week by default
+        mPager.setCurrentItem(mDayOfWeek - 1);
     }
 
     /**
