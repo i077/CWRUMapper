@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.User;
 
@@ -77,12 +78,18 @@ public class DayItineraryEditFragment extends Fragment {
         // Set the adapter
         if (view instanceof LinearLayout) {
             Context context = view.getContext();
+            DayItinerary itineraryForRecyclerView =
+                    mUser.getItineraries().get(mItineraryId).getItinerariesForDays()
+                            .get(mDayOfWeek);
+            TextView noEventsTextView = view.findViewById(R.id.edit_fragment_no_events_text);
             RecyclerView recyclerView = view.findViewById(R.id.recyclerview_itinerary_edit);
+            if (!itineraryForRecyclerView.getEvents().isEmpty()) {
+                noEventsTextView.setVisibility(View.GONE);
+            }
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             // Feed that day's itinerary into our RecyclerViewAdapter
             recyclerView.setAdapter(new MyDayItineraryEditRecyclerViewAdapter(
-                    mUser.getItineraries().get(mItineraryId).getItinerariesForDays().get(mDayOfWeek),
-                    mListener));
+                    itineraryForRecyclerView, mListener));
         }
         return view;
     }
