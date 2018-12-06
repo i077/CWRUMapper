@@ -8,9 +8,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import edu.cwru.students.cwrumapper.user.Event;
+
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int mEventId;
+    private Event mEvent;
     private int mDayOfWeek;
 
     @Override
@@ -21,8 +23,10 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        mEventId = intent.getIntExtra("eventId", -1);
+        // Read event. If this is null, we're creating a new one
+        mEvent = intent.getParcelableExtra("event");
         mDayOfWeek = intent.getIntExtra("dayOfWeek", 0);
+
     }
 
     @Override

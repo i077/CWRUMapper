@@ -2,15 +2,20 @@ package edu.cwru.students.cwrumapper.user;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.Objects;
 
 /**
  * A class for holding the latitude and longitude coordinates for a particular location.
  * Also contains the name of the location.
  */
 @Entity
-public class Location {
+public class Location implements Parcelable {
     @ColumnInfo(name = "LocationName")
     @PrimaryKey
     @NonNull
@@ -24,11 +29,16 @@ public class Location {
      * @param latitude Latitude coordinate of the location
      * @param longitude Longitude coordinate of the location
      */
-
     public Location(String name, double latitude, double longitude) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Location(Parcel in) {
+        this.name = Objects.requireNonNull(in.readString());
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
     }
 
     /**
@@ -74,4 +84,45 @@ public class Location {
 
         };
     }
+
+    /**
+     * Flatten Location data to a Parcel, to be bundled with an Event
+     * @param dest The Parcel to write to
+     * @param flags Flags to modify write behavior (not used here)
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+    }
+
+    /**
+     * Out of scope for this project.
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Ignore
+    public static final Parcelable.Creator<Location> CREATOR
+            = new Parcelable.Creator<Location>() {
+
+        /**
+         * Create a Location from a given Parcel.
+         * @param source Parcel to read from
+         * @return A new Location containing data from {@param source}
+         */
+        @Override
+        public Location createFromParcel(Parcel source) {
+            return new Location(source);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
 }

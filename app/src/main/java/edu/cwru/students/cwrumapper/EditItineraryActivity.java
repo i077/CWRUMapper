@@ -2,6 +2,7 @@ package edu.cwru.students.cwrumapper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,7 @@ public class EditItineraryActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                // TODO Write edits to database
+                // TODO Write modified User to database
                 // Write edits and go back to main activity
                 finish();
                 break;
@@ -94,11 +95,24 @@ public class EditItineraryActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Called when a ViewHolder item in one of ViewPager's RecyclerViews (ie. an Event) is tapped.
+     * This method will bundle the tapped event into an Intent to be sent to EditEventActivity.
+     * @param item Event in ViewHolder that was tapped
+     */
     @Override
     public void onListFragmentInteraction(Event item) {
-        // An event was tapped, launch EditEventActivity with event ID bundled in intent
-        Snackbar.make(mPager, item.getId() + " was tapped", Snackbar.LENGTH_LONG)
-                .show();
+        // An event was tapped, launch EditEventActivity with event bundled in intent
+        Intent intent = new Intent(this, EditEventActivity.class);
+        intent.putExtra("dayOfWeek", item.getDayItineraryID());
+        intent.putExtra("event", item);
+        startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // TODO Read new event from EditEventActivity and write to User
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

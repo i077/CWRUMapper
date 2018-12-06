@@ -4,7 +4,11 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.Objects;
 //import android.arch.persistence.room.TypeConverters;
 
 /**
@@ -15,7 +19,7 @@ import android.support.annotation.NonNull;
  * TODO make this class Parcelable
  */
 @Entity
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event>, Parcelable {
 
     private int dayItineraryID;
     @PrimaryKey
@@ -44,21 +48,16 @@ public class Event implements Comparable<Event>{
      * @param min The starting minute
      * @param sec The starting second
      */
-    public Event(String name, Location location, int length, String roomNumber, int hour, int min, int sec) {
+    public Event(String name, Location location, int length, @NonNull String roomNumber, int hour, int min, int sec) {
         this.location = location;
         this.length = length;
         this.roomNumber = roomNumber;
         this.hour = hour;
         this.min = min;
         this.sec = sec;
-        int startTime = sec+min*60+hour*3600;
-        int endTime = startTime+length;
-
-        //finds the end time
-        this.endHour = endTime/3600;
-        this.endMin = (endTime/60)%60;
-        this.endSec = endTime%60;
         this.name = name;
+
+        getEndTime();
     }
 
     /**
@@ -85,6 +84,35 @@ public class Event implements Comparable<Event>{
         this.endMin = endMin;
         this.endSec = endSec;
         this.name = name;
+    }
+
+    /**
+     * Constructor that takes in a {@link android.os.Parcel} when bundled in an Intent.
+     * Creates a new Event instance given Parcel data.
+     * @param in Parcel to read data from.
+     */
+    public Event(Parcel in) {
+        this.name = Objects.requireNonNull(in.readString());
+        this.location = in.readParcelable(Location.class.getClassLoader());
+        this.length = in.readInt();
+        this.hour = in.readInt();
+        this.min = in.readInt();
+        this.sec = in.readInt();
+
+        getEndTime();
+    }
+
+    /**
+     * Calculate ending event time.
+     */
+    private void getEndTime() {
+        int startTime = sec+min*60+hour*3600;
+        int endTime = startTime+length;
+
+        //finds the end time
+        this.endHour = endTime/3600;
+        this.endMin = (endTime/60)%60;
+        this.endSec = endTime%60;
     }
 
     /**
@@ -146,6 +174,32 @@ public class Event implements Comparable<Event>{
         boolean condition2 = -1 < hour && hour < 24 && endHour < 24;
         boolean condition3 = sec >= 0 &&  min >= 0 && sec < 60 && min < 60;
         return condition1 && condition2 && condition3;
+    }
+
+    /**
+     * Flatten the current event instance data to a Parcel, for use with bundling in an Intent
+     * to another activity.
+     * @param out The Parcel to write data to
+     * @param flags Flags modifying write behavior (not used here)
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(this.name);
+        out.writeParcelable(this.location, flags);
+        out.writeInt(this.length);
+        out.writeString(this.roomNumber);
+        out.writeInt(this.hour);
+        out.writeInt(this.min);
+        out.writeInt(this.sec);
+    }
+
+    /**
+     * Out of scope for this project.
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     /**
@@ -235,5 +289,28 @@ public class Event implements Comparable<Event>{
     public void setEndMin(int endMin){this.endMin = endMin;}
 
     public void setEndSec(int endSec){this.endSec = endSec;}
+
+    @Ignore
+    public static final Parcelable.Creator<Event> CREATOR
+            = new Parcelable.Creator<Event>() {
+
+        /**
+         * Create an Event from a given Parcel.
+         * @param source Parcel to read from
+         * @return A new event containing data from {@param source}
+         */
+        @Override
+        public Event createFromParcel(Parcel source) {
+            return new Event(source);
+        }
+
+        /**
+         * I can't imagine we'll be using this, since we only bundle one event per intent
+         */
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 
 }
