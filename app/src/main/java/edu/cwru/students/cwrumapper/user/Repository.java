@@ -44,7 +44,7 @@ public class Repository {
                 for (int k = 0; k < events.size(); k++) {
                     events.get(k).setDayItineraryID(dayItineraryID);
                     int eventID = userID + FACTOR * (i + 1) + FACTOR * FACTOR * (j + 1) + FACTOR * FACTOR * FACTOR * (k + 1);
-                    Log.v(TAG, "Wrote event " + events.get(k).getName() + " to ID " + eventID);
+                    Log.v(TAG, "Wrote mEvent " + events.get(k).getName() + " to ID " + eventID);
                     events.get(k).setId(eventID);
                 }
                 mDaoAccess.insertEventList(events);
@@ -67,7 +67,7 @@ public class Repository {
             for (int j = 0; j < dayItineraries.size(); j++) {
                 int dayItineraryID = dayItineraries.get(j).getId();
                 List<Event> events = mDaoAccess.getEventList(dayItineraryID);
-                Log.v(TAG, "Read " + events.size() + " event(s) for " + user.getId());
+                Log.v(TAG, "Read " + events.size() + " mEvent(s) for " + user.getId());
                 if (events == null) {
                     events = new ArrayList<Event>();
                 }

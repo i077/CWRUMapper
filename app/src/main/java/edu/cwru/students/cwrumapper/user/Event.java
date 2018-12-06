@@ -9,8 +9,8 @@ import android.support.annotation.NonNull;
 
 /**
  * This class serves to be used as an object that holds a few key details that are
- * described by each event. It contains the name of the event, location, room number,
- * the length of the event, the start time, and the end time. Getter methods can be
+ * described by each mEvent. It contains the name of the mEvent, location, room number,
+ * the length of the mEvent, the start time, and the end time. Getter methods can be
  * called to retrieve information.
  */
 @Entity
@@ -35,9 +35,9 @@ public class Event implements Comparable<Event>{
 
     /**
      * The constructor which passes input values into field names
-     * @param name The name of the event
-     * @param location The location of the event
-     * @param length The length of the event
+     * @param name The name of the mEvent
+     * @param location The location of the mEvent
+     * @param length The length of the mEvent
      * @param roomNumber The room number
      * @param hour The starting hour
      * @param min The starting minute
@@ -62,10 +62,10 @@ public class Event implements Comparable<Event>{
 
     /**
      * The constructor is used for storing purposes
-     * @param id id of event for storing purposes
-     * @param name The name of the event
-     * @param location The location of the event
-     * @param length The length of the event
+     * @param id id of mEvent for storing purposes
+     * @param name The name of the mEvent
+     * @param location The location of the mEvent
+     * @param length The length of the mEvent
      * @param roomNumber The room number
      * @param hour The starting hour
      * @param min The starting minute
@@ -89,10 +89,10 @@ public class Event implements Comparable<Event>{
     /**
      * Used to implement the comparable interface. Used to compare two events by their
      * starting hour. If the events have the same time, the location is compared.
-     * @param other Another event class being compared to
-     * @return Return -1 when the starting time of this event is before the other event.
+     * @param other Another mEvent class being compared to
+     * @return Return -1 when the starting time of this mEvent is before the other mEvent.
      * Will return 0 if the events are the same and have the same location. And will return
-     * 1 if this event occurs after the other event.
+     * 1 if this mEvent occurs after the other mEvent.
      */
     public int compareTo(Event other){
         int hourT = Integer.compare(this.hour, other.getHour());
@@ -114,12 +114,12 @@ public class Event implements Comparable<Event>{
     }
 
     /**
-     * Checks to see if there is a conflict between the length of this event or the length
-     * of the other event. Also checks if the event times are real.
-     * @param other The other event being checked against.
-     * @return If the start time of this event occurs between the start time and end time of the other event,
-     * returns false. If the end time of this event occurs in between the start and end times
-     * of the other event, returns false. Returns false if there is a the end or start time is
+     * Checks to see if there is a conflict between the length of this mEvent or the length
+     * of the other mEvent. Also checks if the mEvent times are real.
+     * @param other The other mEvent being checked against.
+     * @return If the start time of this mEvent occurs between the start time and end time of the other mEvent,
+     * returns false. If the end time of this mEvent occurs in between the start and end times
+     * of the other mEvent, returns false. Returns false if there is a the end or start time is
      * not real. Returns true if none of these cases occur.
      */
     public boolean isConflict(Event other){
@@ -174,34 +174,34 @@ public class Event implements Comparable<Event>{
   
     /**
      * Getter method for the ending hour
-     * @return returns the hour in which the event ends
+     * @return returns the hour in which the mEvent ends
      */
     public int getEndHour() {
         return endHour;
     }
     /**
      * Getter method for the ending minute
-     * @return returns the minute in which the event ends
+     * @return returns the minute in which the mEvent ends
      */
     public int getEndMin() {
         return endMin;
     }
     /**
      * Getter method for the ending second
-     * @return returns the second in which the event ends
+     * @return returns the second in which the mEvent ends
      */
     public int getEndSec() {
         return endSec;
     }
     /**
      * Getter method for the location
-     * @return returns a location object for teh event's location
+     * @return returns a location object for teh mEvent's location
      */
     public Location getLocation() {
         return location;
     }
     /**
-     * Getter method for the length of the event
+     * Getter method for the length of the mEvent
      * @return returns the length of the even
      */
     public int getLength() {
@@ -217,7 +217,7 @@ public class Event implements Comparable<Event>{
     }
     /**
      * Getter method for the name
-     * @return returns the name of the event
+     * @return returns the name of the mEvent
      */
     public String getName() { return name; }
 

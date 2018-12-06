@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list"
+    android:name="edu.cwru.students.cwrumapper.DayItineraryEditFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="24dp"
+    android:layout_marginRight="24dp"
+    app:layoutManager="LinearLayoutManager"
+    tools:context=".DayItineraryEditFragment" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16sp"
+        android:paddingTop="16sp"
+        android:paddingEnd="16sp"
+        android:id="@+id/edit_list_dayofweek"
+        android:text="@string/up_next_text"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_itinerary_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="16sp"
+        android:paddingTop="16sp"
+        android:paddingEnd="16sp"
+        tools:listitem="@layout/fragment_dayitineraryedit"
+        />
+
+
+</LinearLayout>

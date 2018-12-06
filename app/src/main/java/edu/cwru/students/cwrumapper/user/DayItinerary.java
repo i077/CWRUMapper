@@ -38,18 +38,18 @@ public class DayItinerary {
     }
 
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
+     * This method is called to edit an mEvent within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new mEvent is valid. If it is not
+     * the mEvent will not be valid, and false would be returned.
      * @param name the new name of the even
-     * @param index the index of the event within the list
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param index the index of the mEvent within the list
+     * @param newLocation the new location of the mEvent
+     * @param newLength the new length of the mEvent
+     * @param newRoomNumber the new room number of the mEvent
+     * @param newHour the new starting hour of the mEvent
+     * @param newMin the new starting minute of the mEvent
+     * @param newSec the new starting second of the mEvent
+     * @return Returns true if the added mEvent is valid. If not no change occurs and false is returned.
      */
     public boolean editEvent(String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
@@ -58,7 +58,7 @@ public class DayItinerary {
             return false;
         }
 
-        //calls internal check to see if the new event is valid
+        //calls internal check to see if the new mEvent is valid
         if(isValid(newEvent)){
             events.add(index,newEvent);
             Collections.sort(events);
@@ -71,17 +71,17 @@ public class DayItinerary {
 
     }
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
+     * This method is called to edit an mEvent within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new mEvent is valid. If it is not
+     * the mEvent will not be valid, and false would be returned.
      * @param name the new name of the even
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param newLocation the new location of the mEvent
+     * @param newLength the new length of the mEvent
+     * @param newRoomNumber the new room number of the mEvent
+     * @param newHour the new starting hour of the mEvent
+     * @param newMin the new starting minute of the mEvent
+     * @param newSec the new starting second of the mEvent
+     * @return Returns true if the added mEvent is valid. If not no change occurs and false is returned.
      */
     public boolean addEvent(String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
@@ -90,8 +90,8 @@ public class DayItinerary {
 
     /**
      * Add an Event to the DayItinerary.
-     * @param newEvent structure containing the event to add
-     * @return true if added event is valid, and if not no change occurs
+     * @param newEvent structure containing the mEvent to add
+     * @return true if added mEvent is valid, and if not no change occurs
      */
     public boolean addEvent(Event newEvent) {
         if (isValid(newEvent)) {
@@ -106,8 +106,8 @@ public class DayItinerary {
     }
 
     /**
-     * Method used to delete an event, removes the event from the array
-     * @param index index of teh event that is desired to be deleted
+     * Method used to delete an mEvent, removes the mEvent from the array
+     * @param index index of teh mEvent that is desired to be deleted
      * @return Returns true if the index is valid, if not, false is returned
      */
     public boolean deleteEvent(int index) {
@@ -119,10 +119,10 @@ public class DayItinerary {
     }
 
     /**
-     * Checks to see if the event is valid. It makes sure no conflicts exist between
-     * the event and any events stored in the array.
-     * @param event the event being checked against the current arraylist
-     * @return returns false if the event is not real or conflicts with an event from
+     * Checks to see if the mEvent is valid. It makes sure no conflicts exist between
+     * the mEvent and any events stored in the array.
+     * @param event the mEvent being checked against the current arraylist
+     * @return returns false if the mEvent is not real or conflicts with an mEvent from
      * the arraylist
      */
     private boolean isValid(Event event) {
@@ -146,9 +146,9 @@ public class DayItinerary {
     }
 
     /**
-     * Getter method for retrieving a particular event from the arraylist
-     * @param index the index at which the desired event is within the arraylist
-     * @return returns the event
+     * Getter method for retrieving a particular mEvent from the arraylist
+     * @param index the index at which the desired mEvent is within the arraylist
+     * @return returns the mEvent
      */
     public Event getEvent(int index) {return events.get(index);}
 
