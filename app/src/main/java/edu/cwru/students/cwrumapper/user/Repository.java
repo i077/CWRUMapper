@@ -45,7 +45,7 @@ public class Repository {
                     events.get(k).setDayItineraryID(dayItineraryID);
                     int eventID = userID + FACTOR * (i + 1) + FACTOR * FACTOR * (j + 1) + FACTOR * FACTOR * FACTOR * (k + 1);
                     Log.v(TAG, "Wrote event " + events.get(k).getName() + " to ID " + eventID);
-                    dayItineraries.get(k).setId(eventID);
+                    events.get(k).setId(eventID);
                 }
                 mDaoAccess.insertEventList(events);
             }
