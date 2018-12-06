@@ -151,10 +151,15 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
             case R.id.guest_sign_in_button:
                 Log.v(TAG, "Guest Sign-in tapped");
+                // Alert user that guest sign-in not fully implemented
+                Snackbar.make(v, "Guest sign in not fully implemented yet", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+
                 //Show dialog while signing in
-                mConnectionProgressDialog.show();
-                 Intent guestSignInIntent = new Intent(SignInActivity.this, GuestSignInActivity.class);
-                 startActivityForResult(guestSignInIntent, OUR_REQUEST_CODE);
+//                mConnectionProgressDialog.show();
+//                 Intent guestSignInIntent = new Intent(SignInActivity.this, GuestSignInActivity.class);
+//                 startActivityForResult(guestSignInIntent, OUR_REQUEST_CODE);
                 break;
 
             //TODO: the same but with a sign-out button
