@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
  * described by each mEvent. It contains the name of the mEvent, location, room number,
  * the length of the mEvent, the start time, and the end time. Getter methods can be
  * called to retrieve information.
+ * TODO make this class Parcelable
  */
 @Entity
 public class Event implements Comparable<Event>{

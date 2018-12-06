@@ -36,6 +36,8 @@ public class EditItineraryActivity extends AppCompatActivity
     // Provides pages to ViewPager
     private PagerAdapter mPagerAdapter;
 
+    private static final int EDIT_EVENT_ACTIVITY_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +67,7 @@ public class EditItineraryActivity extends AppCompatActivity
                 int dayOfWeekSelected = mPager.getCurrentItem();
                 Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
                 intent.putExtra("dayOfWeek", dayOfWeekSelected);
-                EditItineraryActivity.this.startActivity(intent);
+                EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
             }
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -95,7 +97,7 @@ public class EditItineraryActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Event item) {
         // An event was tapped, launch EditEventActivity with event ID bundled in intent
-        Snackbar.make(mPager, item.getName() + " was tapped", Snackbar.LENGTH_LONG)
+        Snackbar.make(mPager, item.getId() + " was tapped", Snackbar.LENGTH_LONG)
                 .show();
     }
 
