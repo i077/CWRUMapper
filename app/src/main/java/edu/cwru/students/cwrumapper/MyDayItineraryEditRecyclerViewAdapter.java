@@ -12,6 +12,7 @@ import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * {@link RecyclerView.Adapter} that displays a DayItinerary and makes a call to the
@@ -47,8 +48,20 @@ public class MyDayItineraryEditRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.mEvent = mEvents.get(position);
+        // Fill text views
         holder.mEventNameView.setText(mEvents.get(position).getName());
         holder.mEventLocView.setText(mEvents.get(position).getLocation().getName());
+
+        // Add leading zeros if necessary
+        String properStartHour = String.format(Locale.getDefault(), "%02d", holder.mEvent.getHour());
+        String properStartMin = String.format(Locale.getDefault(), "%02d", holder.mEvent.getMin());
+        String properEndHour = String.format(Locale.getDefault(), "%02d", holder.mEvent.getEndHour());
+        String properEndMin = String.format(Locale.getDefault(), "%02d", holder.mEvent.getEndMin());
+
+        String startTimeStr = properStartHour + ":" + properStartMin;
+        holder.mEventStartTimeView.setText(startTimeStr);
+        String endTimeStr = properEndHour + ":" + properEndMin;
+        holder.mEventEndTimeView.setText(endTimeStr);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
