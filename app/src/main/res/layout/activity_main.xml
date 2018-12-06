@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="4sp"
-                    android:text="@string/next_event_sample"
+                    android:text="@string/next_event_none_remain"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="30sp" />
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="4sp"
-                    android:text="@string/next_event_loc_sample"
+                    android:text=""
                     android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textColor="@color/gray5"

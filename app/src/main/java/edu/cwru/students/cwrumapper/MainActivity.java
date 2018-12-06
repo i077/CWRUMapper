@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final LatLng CWRU_CAMPUS_CENTER = CWRU_CAMPUS_BOUNDS.getCenter();
 
     private GoogleMap mMap;
-    private Date mCurrentDate;
     private LocalDateTime mCurrentTime;
     private DayItinerary mCurrentDayItinerary;
     private ArrayList<Event> eventsFromNow;
@@ -86,9 +85,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         // Get current time
-        Calendar mCalendar = Calendar.getInstance();
-        mCurrentDate = mCalendar.getTime();
-
         mCurrentTime = LocalDateTime.now();
 
         // Initialize repository structure from persistent storage
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             mCurrentDayItinerary = user.getItineraries().get(0)
                     .getItinerariesForDays()
-                    .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
+                    .get(mCurrentTime.getDayOfWeek().getValue() - 1);
             mCurrentDayItinerary.addEvent(one);
             mCurrentDayItinerary.addEvent(two);
             mCurrentDayItinerary.addEvent(three);
@@ -122,11 +118,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCurrentDayItinerary.addEvent(five);
 
             dataRepo.insertUser(user);
+            user = dataRepo.getUser(0);
         }
 
         mCurrentDayItinerary = user.getItineraries().get(0)
                 .getItinerariesForDays()
-                .get(mCalendar.get(Calendar.DAY_OF_WEEK) - 1);
+                .get(mCurrentTime.getDayOfWeek().getValue() - 1);
 
         // set strict mode to enable API calls
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -398,10 +395,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             LocalTime nextEventTime = LocalTime.of(nextEvent.getHour(), nextEvent.getMin());
             LocalDateTime nextEventDate = nextEventTime.atDate(mCurrentTime.toLocalDate());
 
-            // Set text value
+            // Set text values
             long minsUntilEvent = mCurrentTime.until(nextEventDate, MINUTES);
-            mNextEventView.setText(minsUntilEvent + " min to " + nextEvent.getName());
-            mNextEventLocView.setText("at " + nextEvent.getLocation().getName());
+            StringBuilder nextEventTextBuilder = new StringBuilder()
+                    .append(minsUntilEvent)
+                    .append(getResources().getString(R.string.next_event_min_to))
+                    .append(nextEvent.getName());
+            mNextEventView.setText(nextEventTextBuilder);
+
+            StringBuilder nextEventLocTextBuilder = new StringBuilder()
+                    .append("at ")
+                    .append(nextEvent.getLocation().getName());
+            mNextEventLocView.setText(nextEventLocTextBuilder);
         }
     }
 
