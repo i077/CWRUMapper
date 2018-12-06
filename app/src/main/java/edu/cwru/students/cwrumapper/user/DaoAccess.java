@@ -50,14 +50,14 @@ public interface DaoAccess {
     @Query("DELETE FROM user_table WHERE id = :userID")
     void deleteUser(int userID);
 
-    @Query("DELETE FROM Itinerary WHERE id = :itineraryID")
-    void deleteItinerary(int itineraryID);
+    @Query("DELETE FROM Itinerary WHERE userID = :userID")
+    void deleteItinerary(int userID);
 
-    @Query("DELETE FROM DayItinerary WHERE id = :dayItineraryID")
-    void deleteDayItinerary(int dayItineraryID);
+    @Query("DELETE FROM DayItinerary WHERE itineraryID = :itineraryID")
+    void deleteDayItinerary(int itineraryID);
 
-    @Query("DELETE FROM Event WHERE id = :eventID")
-    void deleteEvent(int eventID);
+    @Query("DELETE FROM Event WHERE dayItineraryID = :dayItineraryID")
+    void deleteEvent(int dayItineraryID);
 
     /*
     @Update(onConflict = REPLACE)

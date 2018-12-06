@@ -116,7 +116,10 @@ public class RepositoryTest {
                 -81.607163), 100, "100", 9, 0, 0);
         repo.insertUser(userTest);
         User userTest2 = repo.getUser(1);
-        assertEquals(userTest.getEvents(0).get(0).getName(), userTest2.getEvents(0).get(0).getName());
+        userTest.deleteEvent(0,0);
+        repo.insertUser(userTest);
+        User userTest3 = repo.getUser(1);
+        assertEquals(userTest3.getEvents(0).size(), 0);
     }
 
     @Test

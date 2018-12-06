@@ -64,15 +64,11 @@ public class Repository {
             List<DayItinerary> dayItineraries = itineraries.get(i).getItinerariesForDays();
             for (int j = 0; j < dayItineraries.size(); j++) {
                 int dayItineraryID = dayItineraries.get(j).getId();
-                List<Event> events = dayItineraries.get(j).getEvents();
-                for (int k = 0; k < events.size(); k++) {
-                    int eventID = events.get(k).getId();
-                    mDaoAccess.deleteEvent(eventID);
-                }
-                mDaoAccess.deleteDayItinerary(dayItineraryID);
+                mDaoAccess.deleteEvent(dayItineraryID);
             }
-            mDaoAccess.deleteItinerary(itineraryID);
+            mDaoAccess.deleteDayItinerary(itineraryID);
         }
+        mDaoAccess.deleteItinerary(userID);
         mDaoAccess.deleteUser(userID);
 
     }
