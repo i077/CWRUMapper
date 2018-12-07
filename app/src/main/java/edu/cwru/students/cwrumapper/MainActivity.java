@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             new LatLng(41.499054, -81.615440), new LatLng(41.515922, -81.598960));
     private static final LatLng CWRU_CAMPUS_CENTER = CWRU_CAMPUS_BOUNDS.getCenter();
 
+    private static final int PEEK_HEIGHT = 600;
+
     private GoogleMap mMap;
     private LocalDateTime mCurrentTime;
     private DayItinerary mCurrentDayItinerary;
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Inflate bottom sheet
         View bottomSheet = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setPeekHeight(600);
+        bottomSheetBehavior.setPeekHeight(PEEK_HEIGHT);
 
 
         // Inflate RecyclerView for Itinerary
@@ -211,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initializeMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+
+        // re-size map fragment so that elements are centered in visible portion of the map view
+        ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
+        params.height = getApplicationContext().getResources().getDisplayMetrics().heightPixels - PEEK_HEIGHT;
+        mapFragment.getView().setLayoutParams(params);
+
         mapFragment.getMapAsync(MainActivity.this);
     }
 
@@ -233,10 +241,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // enable map touch gestures
         mMap.getUiSettings().setAllGesturesEnabled(true);
 
-        // set camera and view settings TODO Account for bottom sheet in camera view
+        // set camera and view settings
         mMap.setLatLngBoundsForCameraTarget(CWRU_CAMPUS_BOUNDS);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CWRU_CAMPUS_CENTER, 15));
-        mMap.setMinZoomPreference(14.0f);    // TODO Test this value
+        mMap.setMinZoomPreference(14.0f);
 
         // enable info windows when clicking on markers
         mMap.setOnMarkerClickListener(this);
