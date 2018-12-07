@@ -1,5 +1,7 @@
 package edu.cwru.students.cwrumapper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,11 +27,12 @@ public class EventUnitTest {
 
     @Before
     public void createEvent() {
-        tomlinson = new Location("Tomlinson", 41.504099, -81.609537);
+        tomlinson = new Location("Tomlinson", new LatLng[]{
+                new LatLng(41.504188, -81.609537)});
         e1 = new Event("Lunch", tomlinson, 3539, "B100", 12, 10, 5);
         e2 = new Event("Lunch", tomlinson, 3600, "B100", 11, 0, 61);
         e3 = new Event("Lunch", tomlinson, 3600, "B100", 23, 0, 0);
-        e4 = new Event(1,1,"Lunch", tomlinson, 3600, "B100", 12, 0, 1);
+        e4 = new Event(1,1,"Lunch", tomlinson, 3600, "B100", 12, 0, 1,13,0,1);
         e3.setId(2);
         e3.setDayItineraryID(3);
     }
@@ -42,7 +45,7 @@ public class EventUnitTest {
         int emin = e1.getEndMin();
         int ehour = e1.getEndHour();
         int esec  = e1.getEndSec();
-        int length = e1.getEventLength();
+        int length = e1.getLength();
         String name = e1.getName();
         String room = e1.getRoomNumber();
         Location loc = e1.getLocation();

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import edu.cwru.students.cwrumapper.user.Building;
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
+import edu.cwru.students.cwrumapper.user.Location;
 
 public class Router {
 
@@ -56,16 +57,20 @@ public class Router {
 //                -81.602553), 100, "410", 23, 0, 0);
 
         // TODO Remove hardcoded test events
-        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
-        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 12, 0, 0);
-        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                -81.602553), 100, "410", 15, 0, 0);
-        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                -81.600249), 100, "100", 21, 0, 0);
-        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                -81.606873), 100, "0", 23, 0, 0);
+        edu.cwru.students.cwrumapper.user.Location taft = new Location("Taft", new LatLng[]{
+                new LatLng(41.512756, -81.607186)});
+        edu.cwru.students.cwrumapper.user.Location mshmitt = new Location("Millis Schmitt", new LatLng[]{
+                new LatLng(41.504099, -81.606873),
+                new LatLng(41.503729, -81.607005)});
+        edu.cwru.students.cwrumapper.user.Location kusch = new Location("Kusch", new LatLng[]{
+                new LatLng(41.500787, -81.600249)});
+        edu.cwru.students.cwrumapper.user.Location alumni = new Location("Alumni", new LatLng[]{                    // SRV
+                new LatLng(41.500547, -81.602553)});
+        Event one = new Event("Dorm", taft, 100, "100", 9, 0, 0);
+        Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
+        Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
+        Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
+        Event five = new Event("EECS 132 (again)", mshmitt, 100, "0", 23, 0, 0);
 
         ArrayList<Event> routeEvents = new ArrayList<>();
         routeEvents.add(one);

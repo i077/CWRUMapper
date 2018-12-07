@@ -1,8 +1,11 @@
 package edu.cwru.students.cwrumapper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,14 +23,17 @@ public class LocationUnitTest {
 
     @Test
     public void testLocation(){
-        loc = new Location("Tomlinson",41.504099,-81.609537 );
-        double lat = loc.getLatitude();
-        double lon = loc.getLongitude();
+        loc = new Location("Millis Schmitt", new LatLng[]{
+                new LatLng(41.504099, -81.606873),
+                new LatLng(-81.607005, -81.607005)});
+        ArrayList<Double> lat = loc.getLatitudes();
+        ArrayList<Double> lon = loc.getLongitudes();
         String name = loc.getName();
+        Location[] locations = Location.populateData();
 
-        assertEquals(41.504099,lat,.00001);
-        assertEquals(-81.609537,lon,.00001);
-        assertEquals("Tomlinson",name);
+        assertEquals(-81.607005,lat.get(1),.00001);
+        assertEquals(-81.607005,lon.get(1),.00001);
+        assertEquals("Millis Schmitt",name);
     }
 
 

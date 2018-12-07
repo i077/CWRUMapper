@@ -3,6 +3,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.Executors;
 
 
 @Database(entities = {Location.class}, version = 1, exportSchema = false)
+@TypeConverters({DataTypeConverter.class})
 public abstract class LocationsDatabase extends RoomDatabase {
 
     private static LocationsDatabase INSTANCE;

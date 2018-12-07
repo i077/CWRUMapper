@@ -35,7 +35,7 @@ public class ItineraryUnitTest {
         temp = new Itinerary(cal,3);
         temp = new Itinerary(cal, 10);
         ArrayList<DayItinerary> dayItineraries = temp.getItinerariesForDays();
-        temp = new Itinerary(1,2,dayItineraries,false,cal,0);
+        temp = new Itinerary(1,2,dayItineraries,cal,0);
         int id = temp.getId();
         int userId = temp.getUserID();
         assertEquals(1,id);

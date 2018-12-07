@@ -23,6 +23,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -112,8 +114,9 @@ public class RepositoryTest {
         repo.insertUser(user);
         User userTest = repo.getUser(1);
         userTest.newItinerary();
-        userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
+        userTest.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", new LatLng[]{
+                new LatLng(41.504099, -81.606873),
+                new LatLng(41.503729, -81.607005)}), 100, "100", 9, 0, 0);
         repo.insertUser(userTest);
         User userTest2 = repo.getUser(1);
         assertEquals(userTest.getEvents(0).get(0).getName(), userTest2.getEvents(0).get(0).getName());
@@ -121,8 +124,8 @@ public class RepositoryTest {
 
     @Test
     public void testLocation() throws Exception {
-        Location test = repo.getLocation("Taft");
-        assertEquals(test.getLatitude(), 41.512771, .00001);
+        Location test = repo.getLocation("Millis Scmitt");
+        assertEquals(test.getLatitudes().get(1), 41.503729, .00001);
     }
 /*
     @Test

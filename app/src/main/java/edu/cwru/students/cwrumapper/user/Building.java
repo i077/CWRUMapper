@@ -12,6 +12,12 @@ public class Building {
     private ArrayList<Double> latitudes;
     private ArrayList<Double> longitudes;
 
+    public Building(String n, ArrayList<Double> latitudes, ArrayList<Double> longitudes){
+        this.name = n;
+        this.latitudes = latitudes;
+        this.longitudes = longitudes;
+    }
+
     public Building(String n, LatLng[] lls) {
         name = n;
 

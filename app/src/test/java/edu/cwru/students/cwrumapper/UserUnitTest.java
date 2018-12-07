@@ -1,5 +1,7 @@
 package edu.cwru.students.cwrumapper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +27,8 @@ public class UserUnitTest {
     public void startUp(){
         cal = Calendar.getInstance();
 
-        tomlinson = new Location("Tomlinson",41.504099,-81.609537 );
+        tomlinson = new Location("Tomlinson", new LatLng[]{
+                new LatLng(41.504188, -81.609537)});
     }
 
     @Test
@@ -42,8 +45,9 @@ public class UserUnitTest {
         //constructor testing for student
 
         assertEquals("Amrish", user.getName());
-        user.addEvent(0,"Jolly", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                -81.607163), 100, "100", 9, 0, 0);
+        Location taft = new Location("Taft", new LatLng[]{
+                new LatLng(41.512756, -81.607186)});
+        user.addEvent(0,"Jolly", taft, 100, "100", 9, 0, 0);
         assertEquals(1,user.getId());
         assertTrue(user.isStudent());
         assertEquals(7,user.getItineraries().get(0).getItinerariesForDays().size());

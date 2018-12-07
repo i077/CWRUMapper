@@ -99,16 +99,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             dataRepo.insertUser(user);
 
             // TODO Remove hardcoded test events
-            Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-                    -81.607163), 100, "100", 9, 0, 0);
-            Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                    -81.606873), 100, "0", 12, 0, 0);
-            Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-                    -81.602553), 100, "410", 15, 0, 0);
-            Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                    -81.600249), 100, "100", 21, 0, 0);
-            Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                    -81.606873), 100, "0", 23, 0, 0);
+
+            edu.cwru.students.cwrumapper.user.Location taft = dataRepo.getLocation("Taft");
+            edu.cwru.students.cwrumapper.user.Location mshmitt = dataRepo.getLocation("Millis Schmitt");
+            edu.cwru.students.cwrumapper.user.Location kusch = dataRepo.getLocation("Kusch");
+            edu.cwru.students.cwrumapper.user.Location alumni = dataRepo.getLocation("Alumni");
+            Event one = new Event("Dorm", taft, 100, "100", 9, 0, 0);
+            Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
+            Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
+            Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
+            Event five = new Event("EECS 132 (again)", mshmitt, 100, "0", 23, 0, 0);
 
             mCurrentDayItinerary = user.getItineraries().get(0)
                     .getItinerariesForDays()
