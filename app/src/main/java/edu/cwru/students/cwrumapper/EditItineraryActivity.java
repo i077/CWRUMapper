@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,9 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import java.time.DayOfWeek;
 import java.util.Objects;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
@@ -69,15 +66,12 @@ public class EditItineraryActivity extends AppCompatActivity
         mPager.setCurrentItem(mDayOfWeek - 1);
 
         FloatingActionButton fab =  findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int dayOfWeekSelected = mPager.getCurrentItem();
-                Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
-                intent.putExtra("event", (Event) null);
-                intent.putExtra("dayItineraryNum", dayOfWeekSelected);
-                EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
-            }
+        fab.setOnClickListener(view -> {
+            int dayOfWeekSelected = mPager.getCurrentItem();
+            Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
+            intent.putExtra("event", (Event) null);
+            intent.putExtra("dayItineraryNum", dayOfWeekSelected);
+            EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }

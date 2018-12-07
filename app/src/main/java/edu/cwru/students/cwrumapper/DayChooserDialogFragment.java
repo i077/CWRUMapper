@@ -3,7 +3,6 @@ package edu.cwru.students.cwrumapper;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
         import java.util.ArrayList;
         import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Itinerary;
@@ -27,7 +25,7 @@ public class DayChooserDialogFragment extends DialogFragment {
      * which item was selected, if any.
      */
     interface DayChooserDialogListener {
-        void onDialogItemClick(DialogFragment dialog, int which);
+        void onDayChooserDialogItemClick(DialogFragment dialog, int which);
     }
 
     DayChooserDialogListener mListener;
@@ -67,7 +65,7 @@ public class DayChooserDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.edit_event_dayitin_default)
                 .setAdapter(adapter, (dialog, which) -> {
-                    mListener.onDialogItemClick(this, which);
+                    mListener.onDayChooserDialogItemClick(this, which);
                     dismiss();
                 })
                 .setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss());
