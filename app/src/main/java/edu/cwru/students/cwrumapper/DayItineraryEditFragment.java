@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.time.DayOfWeek;
  */
 public class DayItineraryEditFragment extends Fragment {
 
+    private static final String TAG = "DayItineraryEditFragment";
     private static final String ARG_DAYOFWEEK = "dayofweek";
     private static final String ARG_ITINERARYID = "itineraryid";
     private int mItineraryId, mDayOfWeek;
@@ -78,6 +80,7 @@ public class DayItineraryEditFragment extends Fragment {
         // Set the adapter
         if (view instanceof LinearLayout) {
             Context context = view.getContext();
+            Log.d(TAG, "Loaded user " + mUser);
             DayItinerary itineraryForRecyclerView =
                     mUser.getItineraries().get(mItineraryId).getItinerariesForDays()
                             .get(mDayOfWeek);

@@ -1,6 +1,7 @@
 package edu.cwru.students.cwrumapper;
 
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,12 +18,13 @@ import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Repository;
 
-public class EditEventActivity extends AppCompatActivity {
+public class EditEventActivity extends AppCompatActivity implements
+        DayChooserDialogFragment.DayChooserDialogListener {
 
     public static final int EVENT_CANCELLED = 0,
             EVENT_MODIFIED = 1,
             EVENT_DELETED = 2;
-    public static final String TAG = "EditEventActivity";
+    private static final String TAG = "EditEventActivity";
 
     private Event mEventRecvd;
     private int mDayItineraryNum;
@@ -46,7 +48,8 @@ public class EditEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Read event. If this is null, we're creating a new one
         mEventRecvd = intent.getParcelableExtra("event");
-        mDayItineraryNum = intent.getIntExtra("dayItineraryNum", 0);
+        mDayItineraryNum = intent.getIntExtra("dayItineraryNum", -1);
+        Log.d(TAG, "Read in day " + mDayItineraryNum);
 
         // Initialize layout views
         mEventNameView = findViewById(R.id.edit_event_name);
@@ -60,13 +63,10 @@ public class EditEventActivity extends AppCompatActivity {
             mEventDayItinText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
         }
 
-        mEventDayItinView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v(TAG, "Showing day itinerary dialog");
-                DayChooserDialogFragment dialogFragment = new DayChooserDialogFragment();
-                dialogFragment.show(getSupportFragmentManager(), "dayitinchooser");
-            }
+        mEventDayItinView.setOnClickListener(v -> {
+            Log.v(TAG, "Showing day itinerary dialog");
+            DayChooserDialogFragment dialogFragment = new DayChooserDialogFragment();
+            dialogFragment.show(getSupportFragmentManager(), "dayitinchooser");
         });
     }
 
@@ -86,7 +86,6 @@ public class EditEventActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_done:
-
                 break;
         }
         return false;
@@ -98,16 +97,9 @@ public class EditEventActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        Log.v(TAG, "Click!");
-//        switch (v.getId()) {
-//            case R.id.edit_event_dayitinerary_layout:
-//                Log.v(TAG, "Showing day itinerary dialog");
-//                DayChooserDialogFragment dialogFragment = new DayChooserDialogFragment();
-//                dialogFragment.show(getSupportFragmentManager(), "dayitinchooser");
-//                break;
-//        }
-//    }
-
+    @Override
+    public void onDialogItemClick(DialogFragment dialog, int which) {
+        mDayItineraryNum = which;
+        mEventDayItinText.setText(DayItinerary.intToWeekday(mDayItineraryNum));
+    }
 }

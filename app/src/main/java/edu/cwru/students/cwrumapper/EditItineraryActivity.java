@@ -58,6 +58,8 @@ public class EditItineraryActivity extends AppCompatActivity
         dataRepo = new Repository(getApplication());
         int userID = recvIntent.getIntExtra("userID", 0);
         user = dataRepo.getUser(userID);
+        if (user == null)
+            user = dataRepo.getUser(0);
 
         // Get resources
         mPager = findViewById(R.id.edit_pager);
@@ -117,10 +119,8 @@ public class EditItineraryActivity extends AppCompatActivity
         mEventSelected = item;
         Intent intent = new Intent(this, EditEventActivity.class);
         mDayOfWeekSelected = mPager.getCurrentItem();
-        intent.putExtra("dayOfWeek", mDayOfWeekSelected);
+        intent.putExtra("dayItineraryNum", mDayOfWeekSelected);
         intent.putExtra("event", item);
-//        Snackbar.make(mPager, item.getName() + " was tapped, belonging to " + itemDayOfWeek, Snackbar.LENGTH_LONG)
-//                .show();
         startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
     }
 
@@ -136,7 +136,6 @@ public class EditItineraryActivity extends AppCompatActivity
         if (requestCode == EDIT_EVENT_ACTIVITY_REQUEST_CODE) {
             switch (resultCode) {
                 case EditEventActivity.EVENT_DELETED:
-                    // TODO Remove event
                     DayItinerary dayItinerarySelected = user.getItineraries().get(0).getItinerariesForDays()
                             .get(mDayOfWeekSelected);
                     dayItinerarySelected.deleteEvent(mEventSelected);
