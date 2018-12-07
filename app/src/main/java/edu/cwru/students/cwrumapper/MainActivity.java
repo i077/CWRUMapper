@@ -102,11 +102,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
                     -81.606873), 100, "0", 12, 0, 0);
             Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547,
-                    -81.602553), 100, "410", 15, 0, 0);
+                    -81.602553), 60, "410", 15, 0, 0);
             Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
-                    -81.600249), 100, "100", 21, 0, 0);
+                    -81.600249), 75, "100", 21, 0, 0);
             Event five = new Event("Really late class", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-                    -81.606873), 100, "0", 23, 0, 0);
+                    -81.606873), 50, "0", 23, 0, 0);
 
             mCurrentDayItinerary = user.getItineraries().get(0)
                     .getItinerariesForDays()

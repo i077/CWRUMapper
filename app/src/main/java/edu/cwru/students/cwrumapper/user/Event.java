@@ -106,13 +106,13 @@ public class Event implements Comparable<Event>, Parcelable {
      * Calculate ending event time.
      */
     private void getEndTime() {
-        int startTime = sec+min*60+hour*3600;
+        int startTime = min+60*hour;
         int endTime = startTime+length;
 
         //finds the end time
-        this.endHour = endTime/3600;
-        this.endMin = (endTime/60)%60;
-        this.endSec = endTime%60;
+        this.endHour = endTime/60;
+        this.endMin = endTime%60;
+//        this.endSec = endTime%60;
     }
 
     /**
