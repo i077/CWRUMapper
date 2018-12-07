@@ -4,6 +4,7 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 public class DayItinerary {
     private int itineraryID;
+    private static final String TAG = "DayItinerary";
 
     @PrimaryKey
     private int id;
@@ -38,18 +40,18 @@ public class DayItinerary {
     }
 
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
+     * This method is called to edit an Event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new Event is valid. If it is not
+     * the Event will not be valid, and false would be returned.
      * @param name the new name of the even
-     * @param index the index of the event within the list
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param index the index of the Event within the list
+     * @param newLocation the new location of the Event
+     * @param newLength the new length of the Event
+     * @param newRoomNumber the new room number of the Event
+     * @param newHour the new starting hour of the Event
+     * @param newMin the new starting minute of the Event
+     * @param newSec the new starting second of the Event
+     * @return Returns true if the added Event is valid. If not no change occurs and false is returned.
      */
     public boolean editEvent(String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
@@ -58,7 +60,7 @@ public class DayItinerary {
             return false;
         }
 
-        //calls internal check to see if the new event is valid
+        //calls internal check to see if the new Event is valid
         if(isValid(newEvent)){
             events.add(index,newEvent);
             Collections.sort(events);
@@ -71,17 +73,17 @@ public class DayItinerary {
 
     }
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
+     * This method is called to edit an Event within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new Event is valid. If it is not
+     * the Event will not be valid, and false would be returned.
      * @param name the new name of the even
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param newLocation the new location of the Event
+     * @param newLength the new length of the Event
+     * @param newRoomNumber the new room number of the Event
+     * @param newHour the new starting hour of the Event
+     * @param newMin the new starting minute of the Event
+     * @param newSec the new starting second of the Event
+     * @return Returns true if the added Event is valid. If not no change occurs and false is returned.
      */
     public boolean addEvent(String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         Event newEvent = new Event(name, newLocation, newLength, newRoomNumber, newHour, newMin, newSec);
@@ -90,8 +92,8 @@ public class DayItinerary {
 
     /**
      * Add an Event to the DayItinerary.
-     * @param newEvent structure containing the event to add
-     * @return true if added event is valid, and if not no change occurs
+     * @param newEvent structure containing the Event to add
+     * @return true if added Event is valid, and if not no change occurs
      */
     public boolean addEvent(Event newEvent) {
         if (isValid(newEvent)) {
@@ -106,8 +108,8 @@ public class DayItinerary {
     }
 
     /**
-     * Method used to delete an event, removes the event from the array
-     * @param index index of teh event that is desired to be deleted
+     * Method used to delete an Event, removes the Event from the array
+     * @param index index of teh Event that is desired to be deleted
      * @return Returns true if the index is valid, if not, false is returned
      */
     public boolean deleteEvent(int index) {
@@ -119,10 +121,28 @@ public class DayItinerary {
     }
 
     /**
-     * Checks to see if the event is valid. It makes sure no conflicts exist between
-     * the event and any events stored in the array.
-     * @param event the event being checked against the current arraylist
-     * @return returns false if the event is not real or conflicts with an event from
+     * Remove an Event by ID.
+     * Searches the list of events for a match
+     * @param eventToRemove Event whose ID should match
+     * @return True if successful, false if no matching event was found
+     */
+    public boolean deleteEvent(Event eventToRemove) {
+        Log.d(TAG, "Attempting to remove event " + eventToRemove.getId());
+        for (Event e : events) {
+            if (eventToRemove.getId() == e.getId()) {
+                events.remove(e);
+                return true;
+            }
+        }
+        Log.w(TAG, "Failed to remove event " + eventToRemove.getId());
+        return false;
+    }
+
+    /**
+     * Checks to see if the Event is valid. It makes sure no conflicts exist between
+     * the Event and any events stored in the array.
+     * @param event the Event being checked against the current arraylist
+     * @return returns false if the Event is not real or conflicts with an Event from
      * the arraylist
      */
     private boolean isValid(Event event) {
@@ -146,9 +166,9 @@ public class DayItinerary {
     }
 
     /**
-     * Getter method for retrieving a particular event from the arraylist
-     * @param index the index at which the desired event is within the arraylist
-     * @return returns the event
+     * Getter method for retrieving a particular Event from the arraylist
+     * @param index the index at which the desired Event is within the arraylist
+     * @return returns the Event
      */
     public Event getEvent(int index) {return events.get(index);}
 
@@ -162,6 +182,19 @@ public class DayItinerary {
             routeLocations.add(event.getLocation());
         }
         return routeLocations;
+    }
+
+    public static String intToWeekday(int weekdayNum) {
+        switch (weekdayNum) {
+            case 0: return "Monday";
+            case 1: return "Tuesday";
+            case 2: return "Wednesday";
+            case 3: return "Thursday";
+            case 4: return "Friday";
+            case 5: return "Saturday";
+            case 6: return "Sunday";
+            default: return "";
+        }
     }
 
     public boolean getRouteUpdated(){

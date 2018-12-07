@@ -46,6 +46,19 @@ public interface DaoAccess {
     @Query("SELECT * FROM Event WHERE dayItineraryID = :dayItineraryID")
     List<Event> getEventList(int dayItineraryID);
 
+
+    @Query("DELETE FROM user_table WHERE id = :userID")
+    void deleteUser(int userID);
+
+    @Query("DELETE FROM Itinerary WHERE userID = :userID")
+    void deleteItinerary(int userID);
+
+    @Query("DELETE FROM DayItinerary WHERE itineraryID = :itineraryID")
+    void deleteDayItinerary(int itineraryID);
+
+    @Query("DELETE FROM Event WHERE dayItineraryID = :dayItineraryID")
+    void deleteEvent(int dayItineraryID);
+
     /*
     @Update(onConflict = REPLACE)
     int updateUser(User user);

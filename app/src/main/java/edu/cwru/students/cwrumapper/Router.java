@@ -64,7 +64,7 @@ public class Router {
 
     /**
      * Each pair represents a movement between two different events (therefore the second entry
-     * of a certain pair corresponds to the same event/building as the first entry of the
+     * of a certain pair corresponds to the same mEvent/building as the first entry of the
      * next pair).
      *
      * @param events - user Events specified in the DayItinerary
@@ -120,7 +120,7 @@ public class Router {
 
     /**
      * An API call will be partitioned in the case that the optimal route states the user
-     * should enter and exit an event/building at different locations. Splitting the call
+     * should enter and exit an mEvent/building at different locations. Splitting the call
      * at this point prevents unnecessary routing between entrances/exits of a single building.
      *
      * @param segments - list of LatLng pairs, each representing movement between two Events

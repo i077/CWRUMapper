@@ -4,17 +4,22 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import java.util.Objects;
 //import android.arch.persistence.room.TypeConverters;
 
 /**
  * This class serves to be used as an object that holds a few key details that are
- * described by each event. It contains the name of the event, location, room number,
- * the length of the event, the start time, and the end time. Getter methods can be
+ * described by each mEvent. It contains the name of the mEvent, location, room number,
+ * the length of the mEvent, the start time, and the end time. Getter methods can be
  * called to retrieve information.
+ * TODO make this class Parcelable
  */
 @Entity
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event>, Parcelable {
 
     private int dayItineraryID;
     @PrimaryKey
@@ -35,37 +40,32 @@ public class Event implements Comparable<Event>{
 
     /**
      * The constructor which passes input values into field names
-     * @param name The name of the event
-     * @param location The location of the event
-     * @param length The length of the event
+     * @param name The name of the mEvent
+     * @param location The location of the mEvent
+     * @param length The length of the mEvent
      * @param roomNumber The room number
      * @param hour The starting hour
      * @param min The starting minute
      * @param sec The starting second
      */
-    public Event(String name, Location location, int length, String roomNumber, int hour, int min, int sec) {
+    public Event(String name, Location location, int length, @NonNull String roomNumber, int hour, int min, int sec) {
         this.location = location;
         this.length = length;
         this.roomNumber = roomNumber;
         this.hour = hour;
         this.min = min;
         this.sec = sec;
-        int startTime = sec+min*60+hour*3600;
-        int endTime = startTime+length;
-
-        //finds the end time
-        this.endHour = endTime/3600;
-        this.endMin = (endTime/60)%60;
-        this.endSec = endTime%60;
         this.name = name;
+
+        updateEndTime();
     }
 
     /**
      * The constructor is used for storing purposes
-     * @param id id of event for storing purposes
-     * @param name The name of the event
-     * @param location The location of the event
-     * @param length The length of the event
+     * @param id id of mEvent for storing purposes
+     * @param name The name of the mEvent
+     * @param location The location of the mEvent
+     * @param length The length of the mEvent
      * @param roomNumber The room number
      * @param hour The starting hour
      * @param min The starting minute
@@ -87,12 +87,42 @@ public class Event implements Comparable<Event>{
     }
 
     /**
+     * Constructor that takes in a {@link android.os.Parcel} when bundled in an Intent.
+     * Creates a new Event instance given Parcel data.
+     * @param in Parcel to read data from.
+     */
+    public Event(Parcel in) {
+        this.name = Objects.requireNonNull(in.readString());
+        this.location = in.readParcelable(Location.class.getClassLoader());
+        this.length = in.readInt();
+        this.roomNumber = Objects.requireNonNull(in.readString());
+        this.hour = in.readInt();
+        this.min = in.readInt();
+        this.sec = in.readInt();
+
+        updateEndTime();
+    }
+
+    /**
+     * Calculate ending event time.
+     */
+    private void updateEndTime() {
+        int startTime = min+60*hour;
+        int endTime = startTime+length;
+
+        //finds the end time
+        this.endHour = endTime/60;
+        this.endMin = endTime%60;
+//        this.endSec = endTime%60;
+    }
+
+    /**
      * Used to implement the comparable interface. Used to compare two events by their
      * starting hour. If the events have the same time, the location is compared.
-     * @param other Another event class being compared to
-     * @return Return -1 when the starting time of this event is before the other event.
+     * @param other Another mEvent class being compared to
+     * @return Return -1 when the starting time of this mEvent is before the other mEvent.
      * Will return 0 if the events are the same and have the same location. And will return
-     * 1 if this event occurs after the other event.
+     * 1 if this mEvent occurs after the other mEvent.
      */
     public int compareTo(Event other){
         int hourT = Integer.compare(this.hour, other.getHour());
@@ -114,12 +144,12 @@ public class Event implements Comparable<Event>{
     }
 
     /**
-     * Checks to see if there is a conflict between the length of this event or the length
-     * of the other event. Also checks if the event times are real.
-     * @param other The other event being checked against.
-     * @return If the start time of this event occurs between the start time and end time of the other event,
-     * returns false. If the end time of this event occurs in between the start and end times
-     * of the other event, returns false. Returns false if there is a the end or start time is
+     * Checks to see if there is a conflict between the length of this mEvent or the length
+     * of the other mEvent. Also checks if the mEvent times are real.
+     * @param other The other mEvent being checked against.
+     * @return If the start time of this mEvent occurs between the start time and end time of the other mEvent,
+     * returns false. If the end time of this mEvent occurs in between the start and end times
+     * of the other mEvent, returns false. Returns false if there is a the end or start time is
      * not real. Returns true if none of these cases occur.
      */
     public boolean isConflict(Event other){
@@ -145,6 +175,32 @@ public class Event implements Comparable<Event>{
         boolean condition2 = -1 < hour && hour < 24 && endHour < 24;
         boolean condition3 = sec >= 0 &&  min >= 0 && sec < 60 && min < 60;
         return condition1 && condition2 && condition3;
+    }
+
+    /**
+     * Flatten the current event instance data to a Parcel, for use with bundling in an Intent
+     * to another activity.
+     * @param out The Parcel to write data to
+     * @param flags Flags modifying write behavior (not used here)
+     */
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(this.name);
+        out.writeParcelable(this.location, flags);
+        out.writeInt(this.length);
+        out.writeString(this.roomNumber);
+        out.writeInt(this.hour);
+        out.writeInt(this.min);
+        out.writeInt(this.sec);
+    }
+
+    /**
+     * Out of scope for this project.
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     /**
@@ -174,34 +230,34 @@ public class Event implements Comparable<Event>{
   
     /**
      * Getter method for the ending hour
-     * @return returns the hour in which the event ends
+     * @return returns the hour in which the mEvent ends
      */
     public int getEndHour() {
         return endHour;
     }
     /**
      * Getter method for the ending minute
-     * @return returns the minute in which the event ends
+     * @return returns the minute in which the mEvent ends
      */
     public int getEndMin() {
         return endMin;
     }
     /**
      * Getter method for the ending second
-     * @return returns the second in which the event ends
+     * @return returns the second in which the mEvent ends
      */
     public int getEndSec() {
         return endSec;
     }
     /**
      * Getter method for the location
-     * @return returns a location object for teh event's location
+     * @return returns a location object for teh mEvent's location
      */
     public Location getLocation() {
         return location;
     }
     /**
-     * Getter method for the length of the event
+     * Getter method for the length of the mEvent
      * @return returns the length of the even
      */
     public int getLength() {
@@ -217,7 +273,7 @@ public class Event implements Comparable<Event>{
     }
     /**
      * Getter method for the name
-     * @return returns the name of the event
+     * @return returns the name of the mEvent
      */
     public String getName() { return name; }
 
@@ -234,5 +290,28 @@ public class Event implements Comparable<Event>{
     public void setEndMin(int endMin){this.endMin = endMin;}
 
     public void setEndSec(int endSec){this.endSec = endSec;}
+
+    @Ignore
+    public static final Parcelable.Creator<Event> CREATOR
+            = new Parcelable.Creator<Event>() {
+
+        /**
+         * Create an Event from a given Parcel.
+         * @param source Parcel to read from
+         * @return A new event containing data from {@param source}
+         */
+        @Override
+        public Event createFromParcel(Parcel source) {
+            return new Event(source);
+        }
+
+        /**
+         * I can't imagine we'll be using this, since we only bundle one event per intent
+         */
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 
 }

@@ -18,7 +18,7 @@ public class Repository {
     private DaoLocations mDaoLocations;
     private static int FACTOR = 100;
 
-//    private static String TAG = "Repository";
+    private static String TAG = "Repository";
 
     public Repository(Context context) {
         db = UserDatabase.getDatabase(context);
@@ -30,6 +30,7 @@ public class Repository {
 
     public void insertUser(User user) {
         int userID = user.getId();
+        deleteUser(user);
         List<Itinerary> itineraries = user.getItineraries();
         for (int i = 0; i < itineraries.size(); i++) {
             itineraries.get(i).setUserID(userID);
@@ -44,7 +45,7 @@ public class Repository {
                 for (int k = 0; k < events.size(); k++) {
                     events.get(k).setDayItineraryID(dayItineraryID);
                     int eventID = userID + FACTOR * (i + 1) + FACTOR * FACTOR * (j + 1) + FACTOR * FACTOR * FACTOR * (k + 1);
- //                   Log.v(TAG, "Wrote event " + events.get(k).getName() + " to ID " + eventID);
+                    Log.v(TAG, "Wrote event " + events.get(k).getName() + " to ID " + eventID);
                     events.get(k).setId(eventID);
                 }
                 mDaoAccess.insertEventList(events);
@@ -53,6 +54,23 @@ public class Repository {
         }
         mDaoAccess.insertItineraryList(itineraries);
         mDaoAccess.insertUser(user);
+    }
+
+    private void deleteUser(User user){
+        int userID = user.getId();
+        List<Itinerary> itineraries = user.getItineraries();
+        for (int i = 0; i < itineraries.size(); i++) {
+            int itineraryID = itineraries.get(i).getId();
+            List<DayItinerary> dayItineraries = itineraries.get(i).getItinerariesForDays();
+            for (int j = 0; j < dayItineraries.size(); j++) {
+                int dayItineraryID = dayItineraries.get(j).getId();
+                mDaoAccess.deleteEvent(dayItineraryID);
+            }
+            mDaoAccess.deleteDayItinerary(itineraryID);
+        }
+        mDaoAccess.deleteItinerary(userID);
+        mDaoAccess.deleteUser(userID);
+
     }
 
     public User getUser(int userID) {
@@ -67,7 +85,7 @@ public class Repository {
             for (int j = 0; j < dayItineraries.size(); j++) {
                 int dayItineraryID = dayItineraries.get(j).getId();
                 List<Event> events = mDaoAccess.getEventList(dayItineraryID);
- //               Log.v(TAG, "Read " + events.size() + " event(s) for " + user.getId());
+                Log.v(TAG, "Read " + events.size() + " event(s) for " + user.getId());
                 if (events == null) {
                     events = new ArrayList<Event>();
                 }

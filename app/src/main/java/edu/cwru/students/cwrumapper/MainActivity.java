@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Initialize repository structure from persistent storage
         dataRepo = new Repository(getApplication());
-        User user = dataRepo.getUser(0);
-        if (user == null) {
+        final User user;
+        if (dataRepo.getUser(0) == null) { // No user -- user database is empty.
             // TODO Throw to SignInActivity since there is no user
             user = new User(0, "Tester");
             user.student = true;
@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mCurrentDayItinerary.addEvent(five);
 
             dataRepo.insertUser(user);
+        } else { // We have a user, so load it
             user = dataRepo.getUser(0);
         }
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Inflate RecyclerView for Itinerary
         mItineraryRecyclerView = findViewById(R.id.recyclerview_itinerary);
-        // Each event will take up the same space
+        // Each mEvent will take up the same space
         mItineraryRecyclerView.setHasFixedSize(true);
         // Use a linear layout manager to inflate recycler view
         mItineraryLayoutManager = new LinearLayoutManager(this);
@@ -158,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EditItineraryActivity.class);
+                intent.putExtra("userID", user.getId());
+                intent.putExtra("dayOfWeek", mCurrentTime.getDayOfWeek().getValue());
                 MainActivity.this.startActivity(intent);
             }
         });
@@ -411,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Refresh itinerary with remaining events, updating eventsFromNow
         refreshItinerary();
 
-        // Get time to next event and update textview
+        // Get time to next mEvent and update textview
         TextView mNextEventView = findViewById(R.id.next_event);
         TextView mNextEventLocView = findViewById(R.id.next_event_location);
         if (eventsFromNow.isEmpty()) {
@@ -427,7 +430,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             long minsUntilEvent = mCurrentTime.until(nextEventDate, MINUTES);
             StringBuilder nextEventTextBuilder = new StringBuilder()
                     .append(minsUntilEvent)
+                    .append(" ")
                     .append(getResources().getString(R.string.next_event_min_to))
+                    .append(" ")
                     .append(nextEvent.getName());
             mNextEventView.setText(nextEventTextBuilder);
 
@@ -447,27 +452,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Get remaining events for day
         for (Event e : mCurrentDayItinerary.getEvents()) {
-            // Get time for event's current day's instance
+            // Get time for mEvent's current day's instance
             LocalTime eventTime = LocalTime.of(e.getHour(), e.getMin());
             LocalDateTime eventDateTime = eventTime.atDate(mCurrentTime.toLocalDate());
 
-            // Compare to current time, and add to event set (for RecyclerView) if after
+            // Compare to current time, and add to mEvent set (for RecyclerView) if after
             if (eventDateTime.isAfter(mCurrentTime)) {
                 eventsFromNow.add(e);
-                Log.v(TAG, "Added event " + e.getName());
+                Log.v(TAG, "Added mEvent " + e.getName());
             }
         }
 
-        // Update adapter to plug new event set to RecyclerView,
+        // Update adapter to plug new mEvent set to RecyclerView,
         // passing in all events for today from now
         mItineraryAdapter = new ItineraryMainAdapter(eventsFromNow);
         mItineraryRecyclerView.setAdapter(mItineraryAdapter);
         // Hide placeholder if necessary
-        if (eventsFromNow.size() > 0) {
-            TextView mPlaceholderText = findViewById(R.id.text_placeholder_itinerary);
-            if (mPlaceholderText != null)
-                ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
-        }
+//        if (eventsFromNow.size() > 0) {
+//            TextView mPlaceholderText = findViewById(R.id.text_placeholder_itinerary);
+//            if (mPlaceholderText != null)
+//                ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
+//        }
     }
 
     @Override

@@ -107,12 +107,12 @@
                     android:layout_height="wrap_content"
                     android:padding="16sp" />
 
-                <TextView
-                    android:id="@+id/text_placeholder_itinerary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16sp"
-                    android:text="@string/ipsum5" />
+                <!--<TextView-->
+                    <!--android:id="@+id/text_placeholder_itinerary"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="16sp"-->
+                    <!--android:text="@string/ipsum5" />-->
 
             </LinearLayout>
 

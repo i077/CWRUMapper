@@ -17,7 +17,8 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -43,6 +44,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.cwru.students.cwrumapper.MainActivity" />
         </activity>
+        <activity
+            android:name=".EditEventActivity"
+            android:label=""
+            android:parentActivityName=".EditItineraryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

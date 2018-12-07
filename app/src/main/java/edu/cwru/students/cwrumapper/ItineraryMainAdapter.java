@@ -16,14 +16,14 @@ import edu.cwru.students.cwrumapper.user.Itinerary;
 
 /**
  * Class to feed data to itinerary recycler view in main activity.
- * This object creates ItemEventMain views for each event in the current day's itinerary
+ * This object creates ItemEventMain views for each mEvent in the current day's itinerary
  * and recycles views when not visible.
  */
 public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdapter.ItineraryMainViewHolder> {
     private List<Event> mEventList;
 
     /**
-     * Inner class to reference views for each event item.
+     * Inner class to reference views for each mEvent item.
      * Items are represented in the layout's root LinearLayout object.
      */
     public class ItineraryMainViewHolder extends RecyclerView.ViewHolder {
@@ -54,7 +54,7 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
      * Used by the layout manager when not enough view holders exist to hold events on screen.
      * @param parent The parent view
      * @param viewType
-     * @return A new ViewHolder holding what will be event information
+     * @return A new ViewHolder holding what will be mEvent information
      */
     @NonNull
     @Override
@@ -66,7 +66,7 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
     }
 
     /**
-     * (Re-)inflate contents of generated view with new event data.
+     * (Re-)inflate contents of generated view with new mEvent data.
      * Used by layout manager when view becomes (nearly) visible.
      * @param holder ViewHolder to reference said view
      * @param pos New position of view in layout
@@ -98,7 +98,7 @@ public class ItineraryMainAdapter extends RecyclerView.Adapter<ItineraryMainAdap
 
     /**
      * Return size of dataset. Used by the layout manager when inflating recycler view.
-     * @return Size of the event list
+     * @return Size of the mEvent list
      */
     @Override
     public int getItemCount() {

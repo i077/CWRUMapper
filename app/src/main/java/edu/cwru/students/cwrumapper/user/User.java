@@ -230,19 +230,19 @@ public class User {
         return itinerary.getItinerariesForDays().get(day).getEvents();
     }
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
-     * @param day the day of the week or day of the event that the itinerary is being modified for
+     * This method is called to edit an mEvent within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new mEvent is valid. If it is not
+     * the mEvent will not be valid, and false would be returned.
+     * @param day the day of the week or day of the mEvent that the itinerary is being modified for
      * @param name the new name of the even
-     * @param index the index of the event within the list
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param index the index of the mEvent within the list
+     * @param newLocation the new location of the mEvent
+     * @param newLength the new length of the mEvent
+     * @param newRoomNumber the new room number of the mEvent
+     * @param newHour the new starting hour of the mEvent
+     * @param newMin the new starting minute of the mEvent
+     * @param newSec the new starting second of the mEvent
+     * @return Returns true if the added mEvent is valid. If not no change occurs and false is returned.
      */
     public boolean editEvent(int day, String name, int index, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
@@ -256,18 +256,18 @@ public class User {
     }
 
     /**
-     * This method is called to edit an event within the itinerary, all params are necessary.
-     * It also carries the important function of checking if the new event is valid. If it is not
-     * the event will not be valid, and false would be returned.
-     * @param day the day of the week or day of the event that the itinerary is being modified for
+     * This method is called to edit an mEvent within the itinerary, all params are necessary.
+     * It also carries the important function of checking if the new mEvent is valid. If it is not
+     * the mEvent will not be valid, and false would be returned.
+     * @param day the day of the week or day of the mEvent that the itinerary is being modified for
      * @param name the new name of the even
-     * @param newLocation the new location of the event
-     * @param newLength the new length of the event
-     * @param newRoomNumber the new room number of the event
-     * @param newHour the new starting hour of the event
-     * @param newMin the new starting minute of the event
-     * @param newSec the new starting second of the event
-     * @return Returns true if the added event is valid. If not no change occurs and false is returned.
+     * @param newLocation the new location of the mEvent
+     * @param newLength the new length of the mEvent
+     * @param newRoomNumber the new room number of the mEvent
+     * @param newHour the new starting hour of the mEvent
+     * @param newMin the new starting minute of the mEvent
+     * @param newSec the new starting second of the mEvent
+     * @return Returns true if the added mEvent is valid. If not no change occurs and false is returned.
      */
     public boolean addEvent(int day, String name, Location newLocation, int newLength, String newRoomNumber, int newHour, int newMin, int newSec) {
         if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
@@ -281,10 +281,10 @@ public class User {
     }
 
     /**
-     * Method used to delte an event, removes the event from the array
-     * @param day the day of the week or day of the event that the itinerary is being modified for
-     * @param index index of the event that is desired to be deleted
-     * @return Returns true if the deleted event day and event index is valid. If not no change occurs and false is returned.
+     * Method used to delte an mEvent, removes the mEvent from the array
+     * @param day the day of the week or day of the mEvent that the itinerary is being modified for
+     * @param index index of the mEvent that is desired to be deleted
+     * @return Returns true if the deleted mEvent day and mEvent index is valid. If not no change occurs and false is returned.
      */
     public boolean deleteEvent(int day, int index) {
         if (!student && (day+1 > itineraries.get(0).getLengthOfStay() || day < 0)){
