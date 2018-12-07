@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final int ERROR_REQUEST_CODE = 9001;
 
+    private static final int SIGNIN_REQUEST_CODE = 2;
+
     private static final int LOCATION_PERMISSIONS_REQUEST_CODE = 1111;
     private static final LatLngBounds CWRU_CAMPUS_BOUNDS = new LatLngBounds(
             new LatLng(41.499054, -81.615440), new LatLng(41.515922, -81.598960));
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocalDateTime mCurrentTime;
     private DayItinerary mCurrentDayItinerary;
     private ArrayList<Event> eventsFromNow;
+    private User mUser;
 
     private Repository dataRepo;
 
@@ -95,38 +99,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         dataRepo = new Repository(getApplication());
         final User user;
         if (dataRepo.getUser(0) == null) { // No user -- user database is empty.
-            // TODO Throw to SignInActivity since there is no user
-            user = new User(0, "Tester");
-            user.student = true;
-            dataRepo.insertUser(user);
+            Intent signInIntent = new Intent(this, SignInActivity.class);
+            startActivityForResult(signInIntent, SIGNIN_REQUEST_CODE);
 
-            // TODO Remove hardcoded test events
-
-            edu.cwru.students.cwrumapper.user.Location taft = dataRepo.getLocation("Taft");
-            edu.cwru.students.cwrumapper.user.Location mshmitt = dataRepo.getLocation("Millis Schmitt");
-            edu.cwru.students.cwrumapper.user.Location kusch = dataRepo.getLocation("Kusch");
-            edu.cwru.students.cwrumapper.user.Location alumni = dataRepo.getLocation("Alumni");
-            Event one = new Event("Dorm", taft, 100, "100", 9, 0, 0);
-            Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
-            Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
-            Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
-            Event five = new Event("EECS 132 (again)", mshmitt, 50, "0", 23, 0, 0);
-
-            mCurrentDayItinerary = user.getItineraries().get(0)
-                    .getItinerariesForDays()
-                    .get(mCurrentTime.getDayOfWeek().getValue() - 1);
-            mCurrentDayItinerary.addEvent(one);
-            mCurrentDayItinerary.addEvent(two);
-            mCurrentDayItinerary.addEvent(three);
-            mCurrentDayItinerary.addEvent(four);
-            mCurrentDayItinerary.addEvent(five);
-
-            dataRepo.insertUser(user);
+//            // TODO Remove hardcoded test events
+//
+//            edu.cwru.students.cwrumapper.user.Location taft = dataRepo.getLocation("Taft");
+//            edu.cwru.students.cwrumapper.user.Location mshmitt = dataRepo.getLocation("Millis Schmitt");
+//            edu.cwru.students.cwrumapper.user.Location kusch = dataRepo.getLocation("Kusch");
+//            edu.cwru.students.cwrumapper.user.Location alumni = dataRepo.getLocation("Alumni");
+//            Event one = new Event("Dorm", taft, 100, "100", 9, 0, 0);
+//            Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
+//            Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
+//            Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
+//            Event five = new Event("EECS 132 (again)", mshmitt, 50, "0", 23, 0, 0);
+//
+//            mCurrentDayItinerary = user.getItineraries().get(0)
+//                    .getItinerariesForDays()
+//                    .get(mCurrentTime.getDayOfWeek().getValue() - 1);
+//            mCurrentDayItinerary.addEvent(one);
+//            mCurrentDayItinerary.addEvent(two);
+//            mCurrentDayItinerary.addEvent(three);
+//            mCurrentDayItinerary.addEvent(four);
+//            mCurrentDayItinerary.addEvent(five);
+//
+//            dataRepo.insertUser(user);
         } else { // We have a user, so load it
             user = dataRepo.getUser(0);
         }
 
-        mCurrentDayItinerary = user.getItineraries().get(0)
+    }
+
+    private void setupActivity() {
+        mCurrentDayItinerary = mUser.getItineraries().get(0)
                 .getItinerariesForDays()
                 .get(mCurrentTime.getDayOfWeek().getValue() - 1);
 
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button editButton = findViewById(R.id.button_edit);
         editButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, EditItineraryActivity.class);
-            intent.putExtra("userID", user.getId());
+            intent.putExtra("userID", mUser.getId());
             intent.putExtra("dayOfWeek", mCurrentTime.getDayOfWeek().getValue());
             MainActivity.this.startActivity(intent);
         });
@@ -167,7 +172,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         mCurrentTime = LocalDateTime.now();
-        refreshSheet();
+        if (mUser != null)
+            refreshSheet();
     }
 
     private boolean checkGooglePlayServices() {
@@ -470,6 +476,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            if (mPlaceholderText != null)
 //                ((ViewGroup) mPlaceholderText.getParent()).removeView(mPlaceholderText);
 //        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == SIGNIN_REQUEST_CODE) {
+            if (resultCode == SignInActivity.SIGNIN_OK) {
+                assert data != null;
+                String name = data.getStringExtra("name");
+                mUser = new User(0, name);
+                dataRepo.insertUser(mUser);
+                setupActivity();
+            }
+        }
     }
 
     @Override

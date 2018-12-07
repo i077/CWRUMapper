@@ -33,6 +33,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         OnClickListener {
 
     private static final String TAG = "SignInActivity";
+    public static final int SIGNIN_OK = 1;
+    public static final int SIGNIN_FAILED = 2;
 
     //Request Code to make sure sign-in error validation is complete
     private static final int OUR_REQUEST_CODE = 49404;
@@ -216,6 +218,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 // TODO update database and go to MainActivity.
                 mConnectionProgressDialog.dismiss();
                 Log.v(TAG, "Sign in successful! Account: " + account.getEmail());
+                Intent signInData = new Intent();
+                signInData.putExtra("name", account.getDisplayName());
+                setResult(SIGNIN_OK, signInData);
                 finish();
             }
         } catch (ApiException e) {
@@ -223,6 +228,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             // TODO Alert user of failed sign-in attempt
         }
         Log.w(TAG, "Signing in failed");
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing
     }
 }
 
