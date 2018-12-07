@@ -2,6 +2,7 @@ package edu.cwru.students.cwrumapper;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,8 +22,16 @@ public class Router {
 
     private final static String URL_BASE = "https://maps.googleapis.com/maps/api/directions/json?";
 
+    // TODO Consider changing method parameters to take ArrayList<Event> instead of DayItinerary
     /**
      * Calculates the route that corresponds to the Events in the given DayItinerary.
+     *
+     * A note about terminology:
+     * Routes can be broken down into segments or partitions. A segment is a portion of a route
+     * that goes between two consecutive events. Therefore, an n-event route will always be
+     * comprised of (n-1) segments. A partition consists of one or more segments. A route is
+     * partitioned if it is optimal to enter and exit a building associated with an event at
+     * different locations. So partition boundaries occur only at these types of buildings.
      *
      * @param dayItin - DayItinerary whose events are being routed
      * @param apiKey - API key needed to complete Directions API call
@@ -39,27 +48,42 @@ public class Router {
 
         // TODO Remove hardcoded test cases, uncomment lines above after implementing Building in Event
         // This route does not correspond to hardcoded test case in MainActivity.
+//        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
+//                -81.607163), 100, "100", 9, 0, 0);
+//        Event two = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+//                -81.606873), 100, "0", 12, 0, 0);
+//        Event three = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+//                -81.602553), 100, "410", 23, 0, 0);
+
+        // TODO Remove hardcoded test events
         Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
                 -81.607163), 100, "100", 9, 0, 0);
-        Event two = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+        Event two = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
                 -81.606873), 100, "0", 12, 0, 0);
-        Event three = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
+        Event three = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
                 -81.602553), 100, "410", 15, 0, 0);
+        Event four = new Event("DANK 420", new edu.cwru.students.cwrumapper.user.Location("Kusch", 41.500787,
+                -81.600249), 100, "100", 21, 0, 0);
+        Event five = new Event("EECS 132 (again)", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
+                -81.606873), 100, "0", 23, 0, 0);
+
         ArrayList<Event> routeEvents = new ArrayList<>();
         routeEvents.add(one);
         routeEvents.add(two);
         routeEvents.add(three);
+        routeEvents.add(four);
+        routeEvents.add(five);
 
-        ArrayList<LatLng[]> routeSegments = findRoutePoints(routeEvents);
+        ArrayList<LatLng[]> routeSegments = findRouteSegments(routeEvents);
         ArrayList<ArrayList<LatLng>> routePartitions = partitionRoute(routeSegments);
         ArrayList<ArrayList<LatLng>> routePolyline = new ArrayList<>();
 
         for (ArrayList<LatLng> part : routePartitions) {
-            ArrayList<LatLng> partPolyline = getPartitionPolyline(part, apiKey);
+            ArrayList<ArrayList<LatLng>> partPolyline = getPartitionPolyline(part, apiKey);
             if (partPolyline == null) {
                 return null;
             } else {
-                routePolyline.add(partPolyline);    // add polyline partition
+                routePolyline.addAll(partPolyline);    // add polyline partition
             }
         }
         return routePolyline;
@@ -73,7 +97,7 @@ public class Router {
      * @param events - user Events specified in the DayItinerary
      * @return a list of pairs of points for the entire route
      */
-    private static ArrayList<LatLng[]> findRoutePoints(ArrayList<Event> events) {
+    private static ArrayList<LatLng[]> findRouteSegments(ArrayList<Event> events) {
 
         // TODO Remove hardcoded test cases.
         // test buildings correspond to events in findRoute (Event class cannot support Building)
@@ -83,8 +107,13 @@ public class Router {
         Building tink = new Building("Tinkham Veale", tinkArray);
         LatLng[] millisArray = {new LatLng(41.504099,-81.606873)};
         Building millis = new Building("Millis Schmitt", millisArray);
+        LatLng[] alumniArray = {new LatLng(41.500547,-81.602553)};
+        Building alumni = new Building("Alumni", alumniArray);
+        LatLng[] dank420Array = {new LatLng(41.500787,-81.600249)};
+        Building kusch = new Building("Kusch", dank420Array);
 
-        Building[] buildings = {taft, tink, millis};
+//        Building[] buildings = {taft, tink, millis};
+        Building[] buildings = {taft, millis, alumni, kusch, millis};
 
         ArrayList<LatLng[]> pairs = new ArrayList<>();
         Event prev = events.get(0);
@@ -165,7 +194,7 @@ public class Router {
         part.add(segments.get(segments.size() - 1)[1]);    // add final point
         partitions.add(part);
 
-        System.out.println("Size: " + partitions.size());
+        System.out.println("Partitions: " + partitions.size());
         for (ArrayList<LatLng> l : partitions) {
             System.out.println(l.get(1) + " -> " + l.get(l.size() - 1));
         }
@@ -178,9 +207,10 @@ public class Router {
      *
      * @param routePoints - coordinates of points that must be routed in this partition
      * @param key - Google API key needed to complete Directions API request
-     * @return list of coordinates needed to draw this partition of the entire route
+     * @return list of coordinates needed to draw this partition of the entire route, each
+     * element of the returned list is a segment of the partition
      */
-    private static ArrayList<LatLng> getPartitionPolyline(ArrayList<LatLng> routePoints, String key) {
+    private static ArrayList<ArrayList<LatLng>> getPartitionPolyline(ArrayList<LatLng> routePoints, String key) {
 
         StringBuilder urlBuilder = new StringBuilder();
 
@@ -237,11 +267,26 @@ public class Router {
 
             // parse JSON for route
             JSONObject json = new JSONObject(jsonBuilder.toString());
-            String encodedString = json.getJSONArray("routes")
+            JSONArray legs = json.getJSONArray("routes")
                     .getJSONObject(0)
-                    .getJSONObject("overview_polyline")
-                    .getString("points");
-            return decodePoints(encodedString);
+                    .getJSONArray("legs");
+
+            ArrayList<ArrayList<LatLng>> segments = new ArrayList<>();    // segments in partition
+            ArrayList<LatLng> seg = new ArrayList<>();    // individual segment
+
+            for (int i = 0; i < legs.length(); i++) {
+                JSONArray steps = legs.getJSONObject(i)
+                        .getJSONArray("steps");
+                for (int j = 0; j < steps.length(); j++) {
+                    String encodedString = steps.getJSONObject(j)
+                            .getJSONObject("polyline")
+                            .getString("points");
+                    seg.addAll(decodePoints(encodedString));
+                }
+                segments.add(seg);
+                seg = new ArrayList<>();
+            }
+            return segments;    // return segments in this partition
         } catch (MalformedURLException e) {
 
         } catch (IOException e) {

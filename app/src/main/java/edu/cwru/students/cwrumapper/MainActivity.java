@@ -30,6 +30,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -231,9 +233,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // enable map touch gestures
         mMap.getUiSettings().setAllGesturesEnabled(true);
 
-        // set camera bounds and default camera position
+        // set camera and view settings TODO Account for bottom sheet in camera view
         mMap.setLatLngBoundsForCameraTarget(CWRU_CAMPUS_BOUNDS);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CWRU_CAMPUS_CENTER, 15));
+        mMap.setMinZoomPreference(14.0f);    // TODO Test this value
 
         // enable info windows when clicking on markers
         mMap.setOnMarkerClickListener(this);
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View window = inflater.inflate(R.layout.info_window, null);
                 TextView info = window.findViewById(R.id.info_window_content);
-                info.setText(Html.fromHtml(marker.getSnippet()));
+                info.setText(Html.fromHtml(marker.getSnippet(), Html.FROM_HTML_MODE_LEGACY));
                 return window;
             }
 
@@ -271,18 +274,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean showRoute(@NonNull DayItinerary dayItin) {
 
         // calculate route
-        ArrayList<ArrayList<LatLng>> routePoints = Router.findRoute(dayItin,
+        ArrayList<ArrayList<LatLng>> routeSegments = Router.findRoute(dayItin,
                 getResources().getString(R.string.google_maps_api_key));
-        if (routePoints == null) {
+        if (routeSegments == null) {
             return false;
         }
 
-        // draw route TODO change color if event passed
-        LatLng lastPoint = null;
-        for (ArrayList<LatLng> part : routePoints) {
-            lastPoint = drawPartition(part, lastPoint);
+        ArrayList<LatLng> routePoints = new ArrayList<>();
+        routePoints.add(routeSegments.get(0).get(0));    // add location of first event
+
+        int nextEvent = dayItin.getEvents().size() - eventsFromNow.size() - 1;    // index of next event at the time method is called
+        int segColor;
+
+        for (int i = 0; i < routeSegments.size(); i++) {
+            ArrayList<LatLng> seg = routeSegments.get(i);
+
+            // segments associated with elapsed events are grayed out
+            if (i < nextEvent) {
+                segColor = Color.GRAY;
+            } else {
+                segColor = Color.BLUE;
+            }
+            routePoints.add(drawSegment(seg, segColor));
         }
-        setupMarkers(eventsFromNow);
+        setupMarkers(dayItin.getEvents(), routePoints);
 
         mCurrentDayItinerary = dayItin;
         return true;
@@ -294,55 +309,60 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      * feature).
      *
      * @param points - points to draw this partition polyline
-     * @return last point in the given partition
      */
-    private LatLng drawPartition(ArrayList<LatLng> points, LatLng prev) {
+    private LatLng drawSegment(ArrayList<LatLng> points, int color) {
         LatLng start = points.get(0);
-        LatLng end;
-
-        // draw cyan line from last partition to this partition, if applicable
-        if (prev != null) {
-            mMap.addPolyline(new PolylineOptions()
-                    .add(prev, start)
-                    .width(5).color(Color.BLACK).geodesic(false));
-        }
+        LatLng end = points.get(1);
 
         for (int i = 1; i < points.size(); i++) {
             end = points.get(i);
             mMap.addPolyline(new PolylineOptions()
                     .add(start, end)
-                    .width(5).color(Color.BLUE).geodesic(false));
+                    .width(5).color(color).geodesic(false));
             start = end;
         }
-        return points.get(points.size() - 1);
+        return end;
     }
 
     /**
      * Place Google Map markers on locations of future events.
      * @param events - list of future events
      */
-    private void setupMarkers(@NonNull ArrayList<Event> events) {
+    private void setupMarkers(@NonNull ArrayList<Event> events, ArrayList<LatLng> points) {
         HashMap<LatLng, MarkerOptions> markerMap = new HashMap<>();
 
-        // TODO Either add central point for each building or place markers at same time as drawing route
-        for (int i = 0; i < events.size(); i++) {
-            Event current = events.get(i);
-            String content = "<big><b>" + current.getName() + "</b></big><br>"
-                    + current.getLocation().getName() + " " + current.getRoomNumber() + "<br>"
-                    + getTimeFormat(current.getHour(), current.getMin(), current.getSec()) + " - "
-                    + getTimeFormat(current.getEndHour(), current.getEndMin(), current.getEndSec());
+        int nextEvent = events.size() - eventsFromNow.size();    // index of next event at the time method is called
+        float opacity;
+
+        System.out.println("Upcoming events: " + eventsFromNow.size());
+
+        for (int i = 0; i < points.size(); i++) {
+            Event currEvent = events.get(i);
+
+            // markers corresponding to past events are faded
+            if (i < nextEvent) {
+                opacity = 0.3f;
+            } else {
+                opacity = 1;
+            }
+
+            String content = "<big><b>" + currEvent.getName() + "</b></big><br>"
+                    + currEvent.getLocation().getName() + " " + currEvent.getRoomNumber() + "<br>"
+                    + getTimeFormat(currEvent.getHour(), currEvent.getMin(), currEvent.getSec()) + " - "
+                    + getTimeFormat(currEvent.getEndHour(), currEvent.getEndMin(), currEvent.getEndSec());
 
             // combine info windows of duplicate locations
-            LatLng loc = new LatLng(current.getLocation().getLatitude(), current.getLocation().getLongitude());
-            if (markerMap.containsKey(loc)) {
-                MarkerOptions prev = markerMap.get(loc);
+            LatLng currPoint = points.get(i);
+            if (markerMap.containsKey(currPoint)) {
+                MarkerOptions prev = markerMap.get(currPoint);
                 content = prev.getSnippet() + "<p>" + content;
             }
 
             MarkerOptions newMarker = new MarkerOptions()
-                    .position(loc)
-                    .snippet(content);
-            markerMap.put(loc, newMarker);
+                    .position(currPoint)
+                    .snippet(content)
+                    .alpha(opacity);
+            markerMap.put(currPoint, newMarker);
         }
 
         // add all markers
