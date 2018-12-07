@@ -95,6 +95,7 @@ public class Event implements Comparable<Event>, Parcelable {
         this.name = Objects.requireNonNull(in.readString());
         this.location = in.readParcelable(Location.class.getClassLoader());
         this.length = in.readInt();
+        this.roomNumber = Objects.requireNonNull(in.readString());
         this.hour = in.readInt();
         this.min = in.readInt();
         this.sec = in.readInt();
