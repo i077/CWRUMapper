@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Initialize repository structure from persistent storage
         dataRepo = new Repository(getApplication());
-        final User user;
         if (dataRepo.getUser(0) == null) { // No user -- user database is empty.
             Intent signInIntent = new Intent(this, SignInActivity.class);
             startActivityForResult(signInIntent, SIGNIN_REQUEST_CODE);
@@ -125,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //
 //            dataRepo.insertUser(user);
         } else { // We have a user, so load it
-            user = dataRepo.getUser(0);
+            mUser = dataRepo.getUser(0);
+            setupActivity();
         }
-
     }
 
     private void setupActivity() {
@@ -172,8 +171,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         mCurrentTime = LocalDateTime.now();
+        mUser = dataRepo.getUser(0);
+        mCurrentDayItinerary = mUser.getItineraries().get(0)
+                .getItinerariesForDays()
+                .get(mCurrentTime.getDayOfWeek().getValue() - 1);
         if (mUser != null)
             refreshSheet();
+        initializeMap();
+//        showRoute(mCurrentDayItinerary);
     }
 
     private boolean checkGooglePlayServices() {
@@ -222,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // re-size map fragment so that elements are centered in visible portion of the map view
         ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
-        params.height = getApplicationContext().getResources().getDisplayMetrics().heightPixels - PEEK_HEIGHT;
+        params.height = getApplicationContext().getResources().getDisplayMetrics().heightPixels - PEEK_HEIGHT + 100;
         mapFragment.getView().setLayoutParams(params);
 
         mapFragment.getMapAsync(MainActivity.this);

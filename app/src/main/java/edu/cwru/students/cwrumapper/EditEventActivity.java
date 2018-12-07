@@ -165,15 +165,21 @@ public class EditEventActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
+        View thisView = findViewById(android.R.id.content);
         switch (item.getItemId()) {
             case R.id.action_delete:
-                setResult(EVENT_DELETED);
-                finish();
+                if (mEventRecvd != null) {
+                    setResult(EVENT_DELETED);
+                    finish();
+                } else {
+                    Snackbar.make(thisView, R.string.errormsg_delete_newevent,
+                            Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
                 break;
             case R.id.action_done:
                 // Validate first, and alert user if location name is invalid
                 if (!updateNewEventFields()) {
-                    View thisView = findViewById(android.R.id.content);
                     Snackbar.make(thisView, R.string.errormsg_locationedit_invalid,
                             Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();

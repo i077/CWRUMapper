@@ -39,6 +39,7 @@
     <string name="edit_event_location_default">Pick location</string>
     <string name="edit_event_roomnumber_default">Room #</string>
     <string name="errormsg_locationedit_invalid">Location name invalid. Use the suggestions when typing a location.</string>
+    <string name="errormsg_delete_newevent">This event doesn\'t exist yet!</string>
 
     <string name="warnmsg_unsaved_edits">Unsaved changes, continue?</string>
     <string name="title_activity_sign_in">Sign in</string>
