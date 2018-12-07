@@ -13,5 +13,47 @@
 
         Donec id eros vulputate, sodales est eget, mattis ipsum. Nam nec odio eu odio aliquet mattis et nec neque. Aliquam ornare eros laoreet justo scelerisque, maximus interdum purus mollis. Pellentesque cursus gravida nulla, nec porttitor ipsum bibendum ut. Duis erat lectus, viverra sit amet mollis quis, pharetra in justo. Phasellus quis magna lacus. Duis condimentum, elit quis elementum mollis, urna ipsum egestas tellus, vel ultricies arcu nisi id risus. Praesent sed lorem imperdiet, efficitur eros sit amet, bibendum dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce vitae mauris vitae nulla condimentum pretium quis eget mi. Duis tempus sapien magna, vitae congue odio dictum et. Fusce id viverra lectus. Etiam congue lorem eu odio convallis commodo sit amet eget nibh. Proin finibus iaculis justo non rhoncus. Nunc felis tellus, rutrum ac justo vitae, mattis porta dui. Ut eu ex et augue posuere iaculis. </string>
     <string name="next_event_sample">10 min to EECS 393</string>
+    <string name="next_event_min_to">min to</string>
     <string name="next_event_loc_sample">at White 324</string>
+    <string name="next_event_none_remain">No more events for today</string>
+    <string name="event_name_sample">Event Name</string>
+    <string name="event_time_sample">0:00</string>
+    <string name="event_loc_sample">Event location</string>
+    <string name="event_time_separator">–</string>
+    <string name="up_next_text">Today</string>
+    <string name="event_length_suffix">minutes</string>
+
+    <string name="title_activity_edit_itinerary">Edit Itinerary</string>
+    <string name="button_edit_text">Edit</string>
+    <string name="action_done">Done</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="edit_no_events_yet">No events for this day. Tap \'+\' to add one!</string>
+
+    <string name="title_activity_edit_event">Event</string>
+    <string name="edit_event_name_default">Enter title</string>
+    <string name="edit_event_dayitin_default">Choose a day</string>
+    <string name="edit_event_start_time_default">Start time</string>
+    <string name="edit_event_length_default">Enter length</string>
+    <string name="edit_event_location_default">Pick location</string>
+    <string name="edit_event_roomnumber_default">Room #</string>
+    <string name="errormsg_locationedit_invalid">Location name invalid. Use the suggestions when typing a location.</string>
+    <string name="errormsg_delete_newevent">This event doesn\'t exist yet!</string>
+
+    <string name="warnmsg_unsaved_edits">Unsaved changes, continue?</string>
+    <string name="title_activity_sign_in">Sign in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_guest_sign_in">GuestSignInActivity</string>
 </resources>
