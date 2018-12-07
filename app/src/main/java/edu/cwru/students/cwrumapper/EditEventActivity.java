@@ -1,28 +1,38 @@
 package edu.cwru.students.cwrumapper;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
+import edu.cwru.students.cwrumapper.user.Repository;
 
-public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditEventActivity extends AppCompatActivity {
 
     public static final int EVENT_CANCELLED = 0,
             EVENT_MODIFIED = 1,
             EVENT_DELETED = 2;
+    public static final String TAG = "EditEventActivity";
 
     private Event mEventRecvd;
-    private int mDayOfWeek;
+    private int mDayItineraryNum;
     private int mResult;
 
+    private Repository dataRepo;
+
     private TextView mEventNameView;
+    private LinearLayout mEventDayItinView;
+    private TextView mEventDayItinText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +41,33 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dataRepo = new Repository(getApplicationContext());
+
         Intent intent = getIntent();
         // Read event. If this is null, we're creating a new one
         mEventRecvd = intent.getParcelableExtra("event");
-        mDayOfWeek = intent.getIntExtra("dayOfWeek", 0);
+        mDayItineraryNum = intent.getIntExtra("dayItineraryNum", 0);
 
         // Initialize layout views
         mEventNameView = findViewById(R.id.edit_event_name);
+        mEventDayItinView = findViewById(R.id.edit_event_dayitinerary_layout);
+        mEventDayItinText = findViewById(R.id.edit_event_dayitinerary_text);
 
         // Inflate views with event content if needed
         if (mEventRecvd != null) {
             mEventNameView.setText(mEventRecvd.getName());
+            mEventDayItinText.setText(DayItinerary.intToWeekday(mDayItineraryNum));
+            mEventDayItinText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
         }
+
+        mEventDayItinView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG, "Showing day itinerary dialog");
+                DayChooserDialogFragment dialogFragment = new DayChooserDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), "dayitinchooser");
+            }
+        });
     }
 
     @Override
@@ -73,10 +98,16 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         super.onBackPressed();
     }
 
-    // TODO Use intents to send Event back to parent when finished
-    @Override
-    public void onClick(View v) {
-
-    }
+//    @Override
+//    public void onClick(View v) {
+//        Log.v(TAG, "Click!");
+//        switch (v.getId()) {
+//            case R.id.edit_event_dayitinerary_layout:
+//                Log.v(TAG, "Showing day itinerary dialog");
+//                DayChooserDialogFragment dialogFragment = new DayChooserDialogFragment();
+//                dialogFragment.show(getSupportFragmentManager(), "dayitinchooser");
+//                break;
+//        }
+//    }
 
 }

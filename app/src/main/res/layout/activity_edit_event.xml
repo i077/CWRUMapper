@@ -23,7 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="16sp"
+            android:paddingVertical="24dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -50,6 +50,32 @@
                     android:background="@null"
                     />
 
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/gray3"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_event_dayitinerary_layout"
+                android:paddingVertical="24dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_event_dayitinerary"
+                    android:paddingHorizontal="@dimen/edit_icon_margin"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/edit_event_dayitinerary_text"
+                    android:textSize="16sp"
+                    android:hint="@string/edit_event_dayitin_default" />
 
             </LinearLayout>
         </LinearLayout>

@@ -73,7 +73,7 @@ public class EditItineraryActivity extends AppCompatActivity
                 int dayOfWeekSelected = mPager.getCurrentItem();
                 Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
                 intent.putExtra("event", (Event) null);
-                intent.putExtra("dayOfWeek", dayOfWeekSelected);
+                intent.putExtra("dayItineraryNum", dayOfWeekSelected);
                 EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
             }
         });
