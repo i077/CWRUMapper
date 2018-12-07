@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {Location.class}, version = 1, exportSchema = false)
+@Database(entities = {Location.class}, version = 2, exportSchema = false)
 @TypeConverters({DataTypeConverter.class})
 public abstract class LocationsDatabase extends RoomDatabase {
 

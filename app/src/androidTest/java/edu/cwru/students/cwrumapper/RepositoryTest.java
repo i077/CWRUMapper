@@ -124,7 +124,7 @@ public class RepositoryTest {
 
     @Test
     public void testLocation() throws Exception {
-        Location test = repo.getLocation("Millis Scmitt");
+        Location test = repo.getLocation("Millis Schmitt");
         assertEquals(test.getLatitudes().get(1), 41.503729, .00001);
     }
 /*
