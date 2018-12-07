@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         setupMarkers(dayItin.getEvents(), routePoints);
 
-        mCurrentDayItinerary = dayItin;
+//        mCurrentDayItinerary = dayItin;
         return true;
     }
 

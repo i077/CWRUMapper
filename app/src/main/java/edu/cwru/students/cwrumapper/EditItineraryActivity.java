@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -34,6 +35,9 @@ public class EditItineraryActivity extends AppCompatActivity
     private int mDayOfWeek;
     private Event mEventSelected;
     private int mDayOfWeekSelected;
+
+    // False if new event is being created, true if old event is being modified
+    private boolean eventModifiedOrCreated;
 
     // Pager widget to handle swiping between fragments
     private ViewPager mPager;
@@ -69,6 +73,7 @@ public class EditItineraryActivity extends AppCompatActivity
         fab.setOnClickListener(view -> {
             int dayOfWeekSelected = mPager.getCurrentItem();
             Intent intent = new Intent(EditItineraryActivity.this, EditEventActivity.class);
+            eventModifiedOrCreated = false;
             intent.putExtra("event", (Event) null);
             intent.putExtra("dayItineraryNum", dayOfWeekSelected);
             EditItineraryActivity.this.startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
@@ -102,6 +107,16 @@ public class EditItineraryActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext())
+//                .setTitle(R.string.warnmsg_unsaved_edits)
+//                .setPositiveButton(R.string.action_ok, (dialog, which) -> finish())
+//                .setNegativeButton(R.string.action_cancel, (dialog, which) -> {});
+//        alertDialog.show();
+    }
+
     /**
      * Called when a ViewHolder item in one of ViewPager's RecyclerViews (ie. an Event) is tapped.
      * This method will bundle the tapped event into an Intent to be sent to EditEventActivity.
@@ -113,6 +128,7 @@ public class EditItineraryActivity extends AppCompatActivity
         mEventSelected = item;
         Intent intent = new Intent(this, EditEventActivity.class);
         mDayOfWeekSelected = mPager.getCurrentItem();
+        eventModifiedOrCreated = true;
         intent.putExtra("dayItineraryNum", mDayOfWeekSelected);
         intent.putExtra("event", item);
         startActivityForResult(intent, EDIT_EVENT_ACTIVITY_REQUEST_CODE);
@@ -139,7 +155,9 @@ public class EditItineraryActivity extends AppCompatActivity
                     assert data != null;
                     Event newEvent = data.getParcelableExtra("newEvent");
                     int newDayItin = data.getIntExtra("newDayItinerary", mDayOfWeekSelected);
-                    dayItinerarySelected.deleteEvent(mEventSelected);
+                    if (eventModifiedOrCreated) {
+                        dayItinerarySelected.deleteEvent(mEventSelected);
+                    }
                     user.getItineraries().get(0).getItinerariesForDays().get(newDayItin)
                             .addEvent(newEvent);
             }
