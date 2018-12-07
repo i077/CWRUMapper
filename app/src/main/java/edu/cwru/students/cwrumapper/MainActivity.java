@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
             Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
             Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
-            Event five = new Event("EECS 132 (again)", mshmitt, 100, "0", 23, 0, 0);
+            Event five = new Event("EECS 132 (again)", mshmitt, 50, "0", 23, 0, 0);
 
             mCurrentDayItinerary = user.getItineraries().get(0)
                     .getItinerariesForDays()

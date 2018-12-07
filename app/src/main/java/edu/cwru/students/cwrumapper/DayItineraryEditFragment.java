@@ -91,7 +91,7 @@ public class DayItineraryEditFragment extends Fragment {
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             // Feed that day's itinerary into our RecyclerViewAdapter
-            recyclerView.setAdapter(new MyDayItineraryEditRecyclerViewAdapter(
+            recyclerView.setAdapter(new DayItineraryEditRecyclerViewAdapter(
                     itineraryForRecyclerView, mListener));
         }
         return view;

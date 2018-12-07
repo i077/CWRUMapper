@@ -93,7 +93,7 @@ public class Event implements Comparable<Event>, Parcelable {
      */
     public Event(Parcel in) {
         this.name = Objects.requireNonNull(in.readString());
-        this.location = in.readParcelable(Location.class.getClassLoader());
+        this.location = Location.getLocationByName(in.readString());
         this.length = in.readInt();
         this.roomNumber = Objects.requireNonNull(in.readString());
         this.hour = in.readInt();
@@ -186,7 +186,7 @@ public class Event implements Comparable<Event>, Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.name);
-        out.writeParcelable(this.location, flags);
+        out.writeString(this.location.getName());
         out.writeInt(this.length);
         out.writeString(this.roomNumber);
         out.writeInt(this.hour);

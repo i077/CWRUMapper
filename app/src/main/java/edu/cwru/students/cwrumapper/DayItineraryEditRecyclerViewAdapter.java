@@ -18,14 +18,14 @@ import java.util.Locale;
  * {@link RecyclerView.Adapter} that displays a DayItinerary and makes a call to the
  * specified {@link OnListFragmentInteractionListener}, editing the selected event.
  */
-public class MyDayItineraryEditRecyclerViewAdapter extends RecyclerView.Adapter<MyDayItineraryEditRecyclerViewAdapter.ViewHolder> {
+public class DayItineraryEditRecyclerViewAdapter extends RecyclerView.Adapter<DayItineraryEditRecyclerViewAdapter.ViewHolder> {
 
     private final DayItinerary mDayItinerary;
     private final OnListFragmentInteractionListener mListener;
 
     private List<Event> mEvents;
 
-    public MyDayItineraryEditRecyclerViewAdapter(DayItinerary dayItinerary, OnListFragmentInteractionListener listener) {
+    public DayItineraryEditRecyclerViewAdapter(DayItinerary dayItinerary, OnListFragmentInteractionListener listener) {
         mDayItinerary = dayItinerary;
         mEvents = dayItinerary.getEvents();
         mListener = listener;
