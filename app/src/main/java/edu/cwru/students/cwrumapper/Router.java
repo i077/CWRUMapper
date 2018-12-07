@@ -104,29 +104,11 @@ public class Router {
      */
     private static ArrayList<LatLng[]> findRouteSegments(ArrayList<Event> events) {
 
-        // TODO Remove hardcoded test cases.
-        // test buildings correspond to events in findRoute (Event class cannot support Building)
-        LatLng[] taftArray = {new LatLng(41.512771,-81.607163)};
-        Building taft = new Building("Taft", taftArray);
-        LatLng[] tinkArray = {new LatLng(41.508757, -81.608493), new LatLng(41.507596, -81.608756)};
-        Building tink = new Building("Tinkham Veale", tinkArray);
-        LatLng[] millisArray = {new LatLng(41.504099,-81.606873)};
-        Building millis = new Building("Millis Schmitt", millisArray);
-        LatLng[] alumniArray = {new LatLng(41.500547,-81.602553)};
-        Building alumni = new Building("Alumni", alumniArray);
-        LatLng[] dank420Array = {new LatLng(41.500787,-81.600249)};
-        Building kusch = new Building("Kusch", dank420Array);
-
-//        Building[] buildings = {taft, tink, millis};
-        Building[] buildings = {taft, millis, alumni, kusch, millis};
-
         ArrayList<LatLng[]> pairs = new ArrayList<>();
         Event prev = events.get(0);
         for (int i = 1; i < events.size(); i++) {
             Event current = events.get(i);
-//            pairs.add(closestPair(prev.getBuilding(), current.getBuilding()));
-            // TODO Remove line below and uncomment line above after implementing Building in Event
-            pairs.add(closestPair(buildings[i - 1], buildings[i]));
+            pairs.add(closestPair(prev.getLocation(), current.getLocation()));
             prev = current;
         }
         for (LatLng[] l : pairs) {
@@ -148,7 +130,7 @@ public class Router {
      * @return the pair of entrances between the two buildings with the shortest straight-line
      * distance between them
      */
-    private static LatLng[] closestPair(Building first, Building second) {
+    private static LatLng[] closestPair(Location first, Location second) {
 
         LatLng firstEnt = null;
         LatLng secondEnt = null;
