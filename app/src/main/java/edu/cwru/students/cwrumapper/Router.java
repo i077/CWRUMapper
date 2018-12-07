@@ -272,8 +272,11 @@ public class Router {
 
             // parse JSON for route
             JSONObject json = new JSONObject(jsonBuilder.toString());
-            JSONArray legs = json.getJSONArray("routes")
-                    .getJSONObject(0)
+            JSONArray routes = json.getJSONArray("routes");
+            if (routes.length() <= 0) {
+                return null;
+            }
+            JSONArray legs = routes.getJSONObject(0)
                     .getJSONArray("legs");
 
             ArrayList<ArrayList<LatLng>> segments = new ArrayList<>();    // segments in partition
