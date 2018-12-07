@@ -40,44 +40,12 @@ public class Router {
      * partitions
      */
     public static ArrayList<ArrayList<LatLng>> findRoute(DayItinerary dayItin, String apiKey) {
-//        ArrayList<Event> routeEvents = dayItin.getEvents();
-//
-//        // DayItinerary must consist of at least 2 events
-//        if (routeEvents.size() < 2) {
-//            return null;
-//        }
+        ArrayList<Event> routeEvents = dayItin.getEvents();
 
-        // TODO Remove hardcoded test cases, uncomment lines above after implementing Building in Event
-        // This route does not correspond to hardcoded test case in MainActivity.
-//        Event one = new Event("Dorm", new edu.cwru.students.cwrumapper.user.Location("Taft", 41.512771,
-//                -81.607163), 100, "100", 9, 0, 0);
-//        Event two = new Event("Club Meeting", new edu.cwru.students.cwrumapper.user.Location("Millis Schmitt", 41.504099,
-//                -81.606873), 100, "0", 12, 0, 0);
-//        Event three = new Event("EECS 132", new edu.cwru.students.cwrumapper.user.Location("Alumni", 41.500547 ,
-//                -81.602553), 100, "410", 23, 0, 0);
-
-        // TODO Remove hardcoded test events
-        edu.cwru.students.cwrumapper.user.Location taft = new Location("Taft", new LatLng[]{
-                new LatLng(41.512756, -81.607186)});
-        edu.cwru.students.cwrumapper.user.Location mshmitt = new Location("Millis Schmitt", new LatLng[]{
-                new LatLng(41.504099, -81.606873),
-                new LatLng(41.503729, -81.607005)});
-        edu.cwru.students.cwrumapper.user.Location kusch = new Location("Kusch", new LatLng[]{
-                new LatLng(41.500787, -81.600249)});
-        edu.cwru.students.cwrumapper.user.Location alumni = new Location("Alumni", new LatLng[]{                    // SRV
-                new LatLng(41.500547, -81.602553)});
-        Event one = new Event("Dorm", taft, 100, "100", 9, 0, 0);
-        Event two = new Event("EECS 132", mshmitt, 100, "0", 12, 0, 0);
-        Event three = new Event("Club Meeting", alumni, 100, "410", 15, 0, 0);
-        Event four = new Event("DANK 420", kusch, 100, "100", 21, 0, 0);
-        Event five = new Event("EECS 132 (again)", mshmitt, 100, "0", 23, 0, 0);
-
-        ArrayList<Event> routeEvents = new ArrayList<>();
-        routeEvents.add(one);
-        routeEvents.add(two);
-        routeEvents.add(three);
-        routeEvents.add(four);
-        routeEvents.add(five);
+        // DayItinerary must consist of at least 2 events
+        if (routeEvents.size() < 2) {
+            return null;
+        }
 
         ArrayList<LatLng[]> routeSegments = findRouteSegments(routeEvents);
         ArrayList<ArrayList<LatLng>> routePartitions = partitionRoute(routeSegments);
@@ -255,7 +223,7 @@ public class Router {
             // parse JSON for route
             JSONObject json = new JSONObject(jsonBuilder.toString());
             JSONArray routes = json.getJSONArray("routes");
-            if (routes.length() <= 0) {
+            if (routes.length() <= 0) {    // API key is invalid, or some other error occurred
                 return null;
             }
             JSONArray legs = routes.getJSONObject(0)
