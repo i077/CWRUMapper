@@ -1,6 +1,7 @@
 package edu.cwru.students.cwrumapper;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
@@ -35,14 +37,16 @@ public class EditEventActivity extends AppCompatActivity implements
     private static final String TAG = "EditEventActivity";
 
     private Event mEventRecvd;
+
+    // Fields that will be parcelized to new Event
     private int mDayItineraryNum;
-    private String mEventNewName;
+    private String mEventNewName, mEventNewRoomNumber;
     private int mEventNewHour, mEventNewMin, mEventNewLength;
-    private int mResult;
     private String mEventNewLocationName;
 
     private Repository dataRepo;
 
+    // Fields to keep track of layouts
     private TextView mEventNameView;
     private LinearLayout mEventDayItinView;
     private TextView mEventDayItinText;
@@ -52,6 +56,7 @@ public class EditEventActivity extends AppCompatActivity implements
     private TextView mEventLengthText;
     private LinearLayout mEventLocationView;
     private AutoCompleteTextView mEventLocationText;
+    private TextView mEventRoomNumberText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class EditEventActivity extends AppCompatActivity implements
         mEventLengthText = findViewById(R.id.edit_event_length);
         mEventLocationView = findViewById(R.id.edit_event_location_layout);
         mEventLocationText = findViewById(R.id.edit_event_location);
+        mEventRoomNumberText = findViewById(R.id.edit_event_roomnumber);
 
         // Inflate views and fields with event content if needed
         if (mEventRecvd != null) {
@@ -103,6 +109,9 @@ public class EditEventActivity extends AppCompatActivity implements
             mEventNewLocationName = mEventRecvd.getLocation().getName();
             mEventLocationText.setText(mEventNewLocationName);
             mEventLocationText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            mEventNewRoomNumber = mEventRecvd.getRoomNumber();
+            mEventRoomNumberText.setText(mEventNewRoomNumber);
         }
 
         // Set up DayItinerary chooser dialog
@@ -162,6 +171,18 @@ public class EditEventActivity extends AppCompatActivity implements
                 finish();
                 break;
             case R.id.action_done:
+                // Validate first, and alert user if location name is invalid
+                if (!updateNewEventFields()) {
+                    View thisView = findViewById(android.R.id.content);
+                    Snackbar.make(thisView, R.string.errormsg_locationedit_invalid,
+                            Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+                } else {
+                    intent.putExtra("newEvent", constructNewEvent());
+                    intent.putExtra("newDayItinerary", mDayItineraryNum);
+                    setResult(EVENT_MODIFIED, intent);
+                    finish();
+                }
                 break;
         }
         return false;
@@ -208,5 +229,21 @@ public class EditEventActivity extends AppCompatActivity implements
         String lengthStr = mEventNewLength + " " + getResources().getString(R.string.event_length_suffix);
         mEventLengthText.setText(lengthStr);
         mEventLengthText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+    }
+
+    private boolean updateNewEventFields() {
+        mEventNewName = mEventNameView.getText().toString();
+        mEventNewLocationName = mEventLocationText.getText().toString();
+        // Validate location name
+        if (Stream.of(Location.getLocationNames()).noneMatch(n -> n.equals(mEventNewLocationName))) {
+            return false;
+        }
+        mEventNewRoomNumber = mEventRoomNumberText.getText().toString();
+        return true;
+    }
+
+    private Event constructNewEvent() {
+        Location newLocation = Location.getLocationByName(mEventNewLocationName);
+        return new Event(mEventNewName, newLocation, mEventNewLength, mEventNewRoomNumber, mEventNewHour, mEventNewMin, 0);
     }
 }

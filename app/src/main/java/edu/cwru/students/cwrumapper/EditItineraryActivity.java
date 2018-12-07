@@ -128,13 +128,20 @@ public class EditItineraryActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == EDIT_EVENT_ACTIVITY_REQUEST_CODE) {
+            DayItinerary dayItinerarySelected = user.getItineraries().get(0).getItinerariesForDays()
+                    .get(mDayOfWeekSelected);
             switch (resultCode) {
                 case EditEventActivity.EVENT_DELETED:
-                    DayItinerary dayItinerarySelected = user.getItineraries().get(0).getItinerariesForDays()
-                            .get(mDayOfWeekSelected);
                     dayItinerarySelected.deleteEvent(mEventSelected);
                     Log.d(TAG, "DayItin " + dayItinerarySelected.getId() + " now has " + dayItinerarySelected.getEvents().size() + " events");
                     break;
+                case EditEventActivity.EVENT_MODIFIED:
+                    assert data != null;
+                    Event newEvent = data.getParcelableExtra("newEvent");
+                    int newDayItin = data.getIntExtra("newDayItinerary", mDayOfWeekSelected);
+                    dayItinerarySelected.deleteEvent(mEventSelected);
+                    user.getItineraries().get(0).getItinerariesForDays().get(newDayItin)
+                            .addEvent(newEvent);
             }
         }
     }
