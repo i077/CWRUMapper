@@ -3,6 +3,7 @@ package edu.cwru.students.cwrumapper;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +23,8 @@ import edu.cwru.students.cwrumapper.user.Repository;
 
 public class EditEventActivity extends AppCompatActivity implements
         DayChooserDialogFragment.DayChooserDialogListener,
-        StartTimePickerFragment.StartTimePickerListener {
+        StartTimePickerFragment.StartTimePickerListener,
+        LengthPickerFragment.LengthPickerListener {
 
     public static final int EVENT_CANCELLED = 0,
             EVENT_MODIFIED = 1,
@@ -32,7 +34,7 @@ public class EditEventActivity extends AppCompatActivity implements
     private Event mEventRecvd;
     private int mDayItineraryNum;
     private String mEventNewName;
-    private int mEventNewHour, mEventNewMin;
+    private int mEventNewHour, mEventNewMin, mEventNewLength;
     private int mResult;
 
     private Repository dataRepo;
@@ -42,6 +44,8 @@ public class EditEventActivity extends AppCompatActivity implements
     private TextView mEventDayItinText;
     private LinearLayout mEventStartTimeView;
     private TextView mEventStartTimeText;
+    private LinearLayout mEventLengthView;
+    private TextView mEventLengthText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class EditEventActivity extends AppCompatActivity implements
         mEventDayItinText = findViewById(R.id.edit_event_dayitinerary_text);
         mEventStartTimeText = findViewById(R.id.edit_event_start_time);
         mEventStartTimeView = findViewById(R.id.edit_event_start_layout);
+        mEventLengthView = findViewById(R.id.edit_event_length_layout);
+        mEventLengthText = findViewById(R.id.edit_event_length);
 
         // Inflate views and fields with event content if needed
         if (mEventRecvd != null) {
@@ -80,6 +86,11 @@ public class EditEventActivity extends AppCompatActivity implements
             String startTimeStr = properStartHour + ":" + properStartMin;
             mEventStartTimeText.setText(startTimeStr);
             mEventStartTimeText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            mEventNewLength = mEventRecvd.getLength();
+            String lengthStr = mEventNewLength + " " + getResources().getString(R.string.event_length_suffix);
+            mEventLengthText.setText(lengthStr);
+            mEventLengthText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
         }
 
         // Set up DayItinerary chooser dialog
@@ -101,6 +112,20 @@ public class EditEventActivity extends AppCompatActivity implements
             if (mEventRecvd != null)
                 pickerFragment.setArguments(startTimePickerArgs);
             pickerFragment.show(getSupportFragmentManager(), "starttimepicker");
+        });
+
+        // Set up LengthPicker dialog
+        Bundle lengthPickerArgs = new Bundle();
+        if (mEventRecvd != null) {
+            lengthPickerArgs.putInt("length", mEventRecvd.getLength());
+        }
+
+        mEventLengthView.setOnClickListener(v -> {
+            // Bundle event length
+            LengthPickerFragment pickerFragment = new LengthPickerFragment();
+            if (mEventRecvd != null)
+                pickerFragment.setArguments(lengthPickerArgs);
+            pickerFragment.show(getSupportFragmentManager(), "lengthpicker");
         });
     }
 
@@ -158,5 +183,13 @@ public class EditEventActivity extends AppCompatActivity implements
         String startTimeStr = properStartHour + ":" + properStartMin;
         mEventStartTimeText.setText(startTimeStr);
         mEventStartTimeText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+    }
+
+    @Override
+    public void onLengthPicked(DialogFragment dialog, int length) {
+        mEventNewLength = length;
+        String lengthStr = mEventNewLength + " " + getResources().getString(R.string.event_length_suffix);
+        mEventLengthText.setText(lengthStr);
+        mEventLengthText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
     }
 }
