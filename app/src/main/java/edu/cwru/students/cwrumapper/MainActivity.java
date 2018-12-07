@@ -304,6 +304,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         int nextEvent = dayItin.getEvents().size() - eventsFromNow.size() - 1;    // index of next event at the time method is called
         int segColor;
+        int segIndex;
+        ArrayList<LatLng> nextSeg = routeSegments.get(nextEvent);
 
         for (int i = 0; i < routeSegments.size(); i++) {
             ArrayList<LatLng> seg = routeSegments.get(i);
@@ -311,11 +313,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // segments associated with elapsed events are grayed out
             if (i < nextEvent) {
                 segColor = Color.GRAY;
+                segIndex = 0;
+            } else if (i == nextEvent) {
+                segColor = Color.GREEN;
+                segIndex = 2;
             } else {
                 segColor = Color.BLUE;
+                segIndex = 1;
             }
-            routePoints.add(drawSegment(seg, segColor));
+            routePoints.add(drawSegment(seg, segColor, segIndex));
         }
+
+        // draw black polylines between entrances of the same building
+        ArrayList<LatLng> start = routeSegments.get(0);
+        ArrayList<LatLng> end;
+        for (int i = 1; i < routeSegments.size(); i++) {
+            end = routeSegments.get(i);
+            mMap.addPolyline(new PolylineOptions()
+                    .add(start.get(start.size() - 1), end.get(0))
+                    .width(5).color(Color.BLACK).geodesic(false));
+            start = end;
+        }
+
+        // next route segment must b re-drawn "on top" of all other segments
+//        drawSegment(nextSeg, Color.GREEN);
+
         setupMarkers(dayItin.getEvents(), routePoints);
 
 //        mCurrentDayItinerary = dayItin;
@@ -329,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      *
      * @param points - points to draw this partition polyline
      */
-    private LatLng drawSegment(ArrayList<LatLng> points, int color) {
+    private LatLng drawSegment(ArrayList<LatLng> points, int color, int index) {
         LatLng start = points.get(0);
         LatLng end = points.get(1);
 
@@ -337,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             end = points.get(i);
             mMap.addPolyline(new PolylineOptions()
                     .add(start, end)
-                    .width(5).color(color).geodesic(false));
+                    .width(5).color(color).zIndex(index).geodesic(false));
             start = end;
         }
         return end;
