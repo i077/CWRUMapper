@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".GuestSignInActivity">
+
+    <!--All part of the Start date: the words, datepicker, textview-->
+    <TextView
+        android:id="@+id/arrival_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I am a guest arriving on..."
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/start_date_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/start_date_button"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/start_date_text"
+        app:layout_constraintEnd_toEndOf="@+id/start_date_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/start_date_text"
+        app:layout_constraintTop_toTopOf="@id/start_date_text" />
+
+
+    <TextView
+        android:id="@+id/start_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MM/DD/YY"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/arrival_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--All part of the End date: the words, datepicker, textview-->
+    <TextView
+        android:id="@+id/departure_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="and departing on..."
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_date_text" />
+
+    <Button
+        android:id="@+id/end_date_button"
+        android:layout_width="164dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/end_date_text"
+        app:layout_constraintEnd_toEndOf="@+id/end_date_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/end_date_text"
+        app:layout_constraintTop_toTopOf="@id/end_date_text" />
+
+
+    <TextView
+        android:id="@+id/end_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MM/DD/YY"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/departure_text" />
+
+</android.support.constraint.ConstraintLayout>
