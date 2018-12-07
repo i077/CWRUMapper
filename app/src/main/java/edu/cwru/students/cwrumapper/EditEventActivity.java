@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import java.util.Locale;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
+import edu.cwru.students.cwrumapper.user.Location;
 import edu.cwru.students.cwrumapper.user.Repository;
 
 public class EditEventActivity extends AppCompatActivity implements
@@ -36,6 +39,7 @@ public class EditEventActivity extends AppCompatActivity implements
     private String mEventNewName;
     private int mEventNewHour, mEventNewMin, mEventNewLength;
     private int mResult;
+    private String mEventNewLocationName;
 
     private Repository dataRepo;
 
@@ -46,6 +50,8 @@ public class EditEventActivity extends AppCompatActivity implements
     private TextView mEventStartTimeText;
     private LinearLayout mEventLengthView;
     private TextView mEventLengthText;
+    private LinearLayout mEventLocationView;
+    private AutoCompleteTextView mEventLocationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,8 @@ public class EditEventActivity extends AppCompatActivity implements
         mEventStartTimeView = findViewById(R.id.edit_event_start_layout);
         mEventLengthView = findViewById(R.id.edit_event_length_layout);
         mEventLengthText = findViewById(R.id.edit_event_length);
+        mEventLocationView = findViewById(R.id.edit_event_location_layout);
+        mEventLocationText = findViewById(R.id.edit_event_location);
 
         // Inflate views and fields with event content if needed
         if (mEventRecvd != null) {
@@ -91,6 +99,10 @@ public class EditEventActivity extends AppCompatActivity implements
             String lengthStr = mEventNewLength + " " + getResources().getString(R.string.event_length_suffix);
             mEventLengthText.setText(lengthStr);
             mEventLengthText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+
+            mEventNewLocationName = mEventRecvd.getLocation().getName();
+            mEventLocationText.setText(mEventNewLocationName);
+            mEventLocationText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
         }
 
         // Set up DayItinerary chooser dialog
@@ -127,6 +139,11 @@ public class EditEventActivity extends AppCompatActivity implements
                 pickerFragment.setArguments(lengthPickerArgs);
             pickerFragment.show(getSupportFragmentManager(), "lengthpicker");
         });
+
+        // Set up Location autocomplete
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, Location.getLocationNames());
+        mEventLocationText.setAdapter(adapter);
     }
 
     @Override

@@ -35,5 +35,6 @@
     <string name="edit_event_name_default">Enter title</string>
     <string name="edit_event_dayitin_default">Choose a day</string>
     <string name="edit_event_start_time_default">Start time</string>
-    <string name="edit_event_length_default">Length</string>
+    <string name="edit_event_length_default">Enter length</string>
+    <string name="edit_event_location_default">Pick location</string>
 </resources>

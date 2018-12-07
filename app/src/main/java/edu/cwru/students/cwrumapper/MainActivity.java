@@ -155,14 +155,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Set edit button's onClick listener
         Button editButton = findViewById(R.id.button_edit);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditItineraryActivity.class);
-                intent.putExtra("userID", user.getId());
-                intent.putExtra("dayOfWeek", mCurrentTime.getDayOfWeek().getValue());
-                MainActivity.this.startActivity(intent);
-            }
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, EditItineraryActivity.class);
+            intent.putExtra("userID", user.getId());
+            intent.putExtra("dayOfWeek", mCurrentTime.getDayOfWeek().getValue());
+            MainActivity.this.startActivity(intent);
         });
     }
 

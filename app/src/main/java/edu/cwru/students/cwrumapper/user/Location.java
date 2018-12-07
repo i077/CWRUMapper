@@ -366,6 +366,10 @@ public class Location {
         return builtInLocations;
     }
 
+    public static String[] getLocationNames() {
+        return Stream.of(builtInLocations).map(Location::getName).toArray(String[]::new);
+    }
+
     public static Location getLocationByName(String name) {
         return Stream.of(builtInLocations).filter(l -> l.getName().equals(name))
                 .findFirst().get();
