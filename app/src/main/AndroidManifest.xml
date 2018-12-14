@@ -25,7 +25,7 @@
         <activity
             android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in" />
-        <activity android:name=".GuestSignInActivity"></activity>
+        <activity android:name=".GuestSignInActivity" />
     </application>
 
 </manifest>

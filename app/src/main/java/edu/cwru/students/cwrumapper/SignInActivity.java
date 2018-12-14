@@ -19,9 +19,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.Task;
 
 
@@ -33,6 +30,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         OnClickListener {
 
     private static final String TAG = "SignInActivity";
+    public static final int SIGNIN_OK = 1;
+    public static final int SIGNIN_FAILED = 2;
 
     //Request Code to make sure sign-in error validation is complete
     private static final int OUR_REQUEST_CODE = 49404;
@@ -57,11 +56,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         setContentView( R.layout.activity_sign_in);
 
         // Connect buttons with OnClickListeners
-        // TODO: sign out button.
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.guest_sign_in_button).setOnClickListener(this);
-        //findViewById(R.id.sign_out_button).setOnClickListener(this);
-        //findViewById(R.id.sign_out_button).setVisibility(View.INVISIBLE);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -97,37 +93,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        //TODO: either remove this and put in MainActivity or have this choose landing screen
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             // Go back to MainActivity, we're already signed in
             finish();
         }
-
-
-//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-//        if (opr.isDone()) {
-//            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-//            // and the GoogleSignInResult will be available instantly. We can try and retrieve an
-//            // authentication code.
-//            Log.d(TAG, "Got cached sign-in");
-//            GoogleSignInResult result = opr.get();
-//            handleSignInResult(result);
-//        } else {
-//            // If the user has not previously signed in on this device or the sign-in has expired,
-//            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-//            // single sign-on will occur in this branch.
-//            final ProgressDialog progressDialog = new ProgressDialog(this);
-//            progressDialog.setMessage("Checking sign in state...");
-//            progressDialog.show();
-//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-//                @Override
-//                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-//                    progressDialog.dismiss();
-//                    handleSignInResult(googleSignInResult);
-//                }
-//            });
-//        }
     }
 
 
@@ -151,13 +121,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
             case R.id.guest_sign_in_button:
                 Log.v(TAG, "Guest Sign-in tapped");
-                //Show dialog while signing in
-                mConnectionProgressDialog.show();
-                 Intent guestSignInIntent = new Intent(SignInActivity.this, GuestSignInActivity.class);
-                 startActivityForResult(guestSignInIntent, OUR_REQUEST_CODE);
+                // Alert user that guest sign-in is not fully implemented
+                Snackbar.make(v, "Guest sign in not fully implemented yet", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
                 break;
-
-            //TODO: the same but with a sign-out button
 
             default:
                 //Unknown button press, for debugging purposes
@@ -208,16 +176,23 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
-                // TODO update database and go to MainActivity.
                 mConnectionProgressDialog.dismiss();
                 Log.v(TAG, "Sign in successful! Account: " + account.getEmail());
+                Intent signInData = new Intent();
+                signInData.putExtra("name", account.getDisplayName());
+                setResult(SIGNIN_OK, signInData);
                 finish();
             }
-        } catch (ApiException e) {
+        }
+        catch (ApiException e) {
             Log.w(TAG, "Signing in failed, code=" + e.getStatusCode());
-            // TODO Alert user of failed sign-in attempt
         }
         Log.w(TAG, "Signing in failed");
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing
     }
 }
 
