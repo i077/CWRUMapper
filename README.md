@@ -8,7 +8,7 @@ A mapping application for Android targeted at students attending Case Western Re
 
 You will need:
 
-- An Android device (8.0+)
+- An Android device (8.0+). You'll need a physical device, emulators might not play well with Google's sign-in process.
 - A Google account (preferably under the @case.edu domain)
 - A schedule of classes/meetings at CWRU
 
@@ -17,7 +17,7 @@ You will need:
 ## How to Install + Use
 
 - Download the APK from the [Releases](http://github.com/i077/CWRUMapper/releases) tab to your Android phone
-- Install (sideload) the APK. You may need to grant permission to install apps from outside sources to do this. Your phone will notify you if this is necessary.
+- Install (sideload) the APK by opening the file on your phone. You may need to grant permission to install apps from outside sources to do this. Your phone will notify you if this is necessary.
 - Open CWRUMapper, and sign in with a Google account
 
 ### Setting up a weekly schedule
@@ -36,4 +36,6 @@ This is the event editing screen. Add a title and the day of the week the event 
 
 Once you're done, optionally enter a room number and save by tapping the check icon at the top right.
 
-Do this for each event on each day of the week. Once you're done, at the edit itinerary screen, hit save! (If you just hit 'back', your changes will be lost.) The app will take you back to the mapping screen with your newly updated route for the day.
+Do this for each event on each day of the week. Once you're done, at the edit itinerary screen, hit save! (If you just hit 'back', your changes will be lost.) The app will take you back to the mapping screen with your newly updated route for the day. 
+
+You can tap each marker to view events that take place at that building, and you can tap the button at the top right (as in the first screenshot) to center the map on your location.
