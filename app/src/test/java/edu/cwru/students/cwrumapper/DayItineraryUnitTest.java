@@ -1,5 +1,8 @@
 package edu.cwru.students.cwrumapper;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,15 +20,14 @@ public class DayItineraryUnitTest {
 
     DayItinerary temp;
 
-    @BeforeClass
-    public static void setup(){
+    @Before
+    public void setup(){
+        temp = new DayItinerary();
+
     }
 
     @Test
     public void eventsCreated() {
-        //check constructor
-        temp = new DayItinerary();
-
         ArrayList<Event> events = temp.getEvents();
         assertNotNull(events);
     }
@@ -34,7 +36,8 @@ public class DayItineraryUnitTest {
     public void testAddEventCorrect(){
         //test for simple adding of event
         temp = new DayItinerary();
-        Location tomlinson = new Location("Tomlinson",41.504099,-81.609537 );
+        Location tomlinson = new Location("Tomlinson", new LatLng[]{
+                new LatLng(41.504188, -81.609537)});
         temp.addEvent("Lunch",tomlinson,36000,"B100" ,12,0,0);
         assertEquals(1,temp.getEvents().size());
     }
@@ -43,7 +46,8 @@ public class DayItineraryUnitTest {
     public void testDddEventIncorrectTime(){
         //test for adding of event with invalid time
         temp = new DayItinerary();
-        Location tomlinson = new Location("Tomlinson",41.504099,-81.609537 );
+        Location tomlinson = new Location("Tomlinson", new LatLng[]{
+                new LatLng(41.504188, -81.609537)});
         temp.addEvent("Lunch",tomlinson,36000,"B100" ,25,1000,0);
         assertEquals(0,temp.getEvents().size());
     }
@@ -51,9 +55,12 @@ public class DayItineraryUnitTest {
     @Test
     public void testItineraryManipulation(){
         temp = new DayItinerary();
-        Location tomlinson = new Location("Tomlinson",41.504099,-81.609537 );
-        Location strosacker = new Location("Strosacker",41.503236, -81.607529 );
-        Location veale = new Location("Veale",41.501090, -81.606373);
+        Location tomlinson = new Location("Tomlinson", new LatLng[]{
+                new LatLng(41.504188, -81.609537)});
+        Location strosacker = new Location("Strosacker", new LatLng[]{
+                new LatLng(41.503236, -81.607529)});
+        Location veale = new Location("Veale", new LatLng[]{
+                new LatLng(41.501090, -81.606373)});
         temp.addEvent("Lunch",tomlinson,3600,"B100" ,12,0,0);
         assertEquals(1,temp.getEvents().size());
 
@@ -86,6 +93,27 @@ public class DayItineraryUnitTest {
         temp.editEvent("LunchNew",0,tomlinson,3600,"B100" ,15,30,0);
         assertEquals(3,temp.getEvents().size());
         assertEquals("LunchNew", temp.getEvent(2).getName());
+
+        /*
+        Route routeInfo = temp.getRouteInfo();
+
+        boolean check = temp.getRouteUpdated();
+        temp.updateRouteInfo(routeInfo);
+        boolean check2 = temp.getRouteUpdated();
+
+        ArrayList<Location> locations = temp.getLocation();
+        temp.setId(1);
+        temp.setItineraryID(2);
+        int id = temp.getId();
+        int itineraryID = temp.getItineraryID();
+        ArrayList<Event> events = temp.getEvents();
+        temp = new DayItinerary(1,1,events,routeInfo,false);
+
+        assertEquals(1,id);
+        assertEquals(2,itineraryID);
+        assertNotNull(events);
+        */
+
 
     }
 
