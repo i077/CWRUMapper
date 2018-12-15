@@ -119,10 +119,8 @@ public class RepositoryTest {
                 new LatLng(41.503729, -81.607005)}), 100, "100", 9, 0, 0);
         repo.insertUser(userTest);
         User userTest2 = repo.getUser(1);
-        userTest.deleteEvent(0,0);
-        repo.insertUser(userTest);
-        User userTest3 = repo.getUser(1);
-        assertEquals(userTest3.getEvents(0).size(), 0);
+        assertEquals(userTest.getEvents(0).get(0).getName(), userTest2.getEvents(0).get(0).getName());
+        assertEquals(userTest.getEvents(0).get(0).getLocation().getLatitudes().get(1), userTest2.getEvents(0).get(0).getLocation().getLatitudes().get(1), .001);
     }
 
     @Test

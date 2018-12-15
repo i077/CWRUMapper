@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import edu.cwru.students.cwrumapper.user.DataTypeConverter;
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Itinerary;
@@ -61,6 +63,8 @@ public class ItineraryUnitTest {
         assertEquals(2,userId);
         assertEquals(0,length);
 
+
+
     }
 
     @Test
@@ -72,6 +76,8 @@ public class ItineraryUnitTest {
         Calendar cal2 = temp.getStartDate();
         temp.setId(1);
         temp.setUserID(0);
+        Calendar cal3 = DataTypeConverter.toCalendar(DataTypeConverter.toLong(cal2));
+        assertEquals(cal2,cal3);
 
         boolean add = temp.addDay();
         int length = temp.getLengthOfStay();
@@ -86,6 +92,13 @@ public class ItineraryUnitTest {
         assertEquals(1,id);
         assertEquals(0,userId);
         assertEquals(3,length);
+
+        List<DayItinerary> dI = new ArrayList<DayItinerary>();
+
+        temp.setLengthOfStay(1);
+        temp.setStartDate(cal);
+        temp.setItinerariesForDays(dI);
+        assertEquals(1,temp.getLengthOfStay());
 
     }
 

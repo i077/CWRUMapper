@@ -1,4 +1,4 @@
-package edu.cwru.students.cwrumapper.user;
+package edu.cwru.students.cwrumapper.user.Archived;
 
 import com.google.android.gms.maps.model.LatLng;
 

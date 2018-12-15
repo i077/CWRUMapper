@@ -127,14 +127,14 @@ public class DayItinerary {
      * @return True if successful, false if no matching event was found
      */
     public boolean deleteEvent(Event eventToRemove) {
-        Log.d(TAG, "Attempting to remove event " + eventToRemove.getId());
+       // Log.d(TAG, "Attempting to remove event " + eventToRemove.getId());
         for (Event e : events) {
             if (eventToRemove.getId() == e.getId()) {
                 events.remove(e);
                 return true;
             }
         }
-        Log.w(TAG, "Failed to remove event " + eventToRemove.getId());
+     //   Log.w(TAG, "Failed to remove event " + eventToRemove.getId());
         return false;
     }
 

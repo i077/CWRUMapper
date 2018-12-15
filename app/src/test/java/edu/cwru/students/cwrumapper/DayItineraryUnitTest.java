@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.*;
@@ -38,7 +39,7 @@ public class DayItineraryUnitTest {
         temp = new DayItinerary();
         Location tomlinson = new Location("Tomlinson", new LatLng[]{
                 new LatLng(41.504188, -81.609537)});
-        temp.addEvent("Lunch",tomlinson,36000,"B100" ,12,0,0);
+        temp.addEvent("Lunch",tomlinson,10,"B100" ,12,0,0);
         assertEquals(1,temp.getEvents().size());
     }
 
@@ -48,7 +49,7 @@ public class DayItineraryUnitTest {
         temp = new DayItinerary();
         Location tomlinson = new Location("Tomlinson", new LatLng[]{
                 new LatLng(41.504188, -81.609537)});
-        temp.addEvent("Lunch",tomlinson,36000,"B100" ,25,1000,0);
+        temp.addEvent("Lunch",tomlinson,10,"B100" ,25,1000,0);
         assertEquals(0,temp.getEvents().size());
     }
 
@@ -61,20 +62,20 @@ public class DayItineraryUnitTest {
                 new LatLng(41.503236, -81.607529)});
         Location veale = new Location("Veale", new LatLng[]{
                 new LatLng(41.501090, -81.606373)});
-        temp.addEvent("Lunch",tomlinson,3600,"B100" ,12,0,0);
+        temp.addEvent("Lunch",tomlinson,60,"B100" ,12,0,0);
         assertEquals(1,temp.getEvents().size());
 
-        temp.addEvent("Physics",strosacker,3600,"B100" ,12,30,0);
+        temp.addEvent("Physics",strosacker,60,"B100" ,12,30,0);
         assertEquals(1,temp.getEvents().size());
 
-        temp.addEvent("Physics",strosacker,48000,"B100" ,13,30,0);
+        temp.addEvent("Physics",strosacker,800,"B100" ,13,30,0);
         assertEquals(1,temp.getEvents().size());
 
-        temp.addEvent("Physics",strosacker,3600,"Auditorium" ,13,30,0);
+        temp.addEvent("Physics",strosacker,60,"Auditorium" ,13,30,0);
         assertEquals(2,temp.getEvents().size());
 
         //PE will be added properly between Lunch and
-        temp.addEvent("PE",veale,1800,"Gym" ,13,0,0);
+        temp.addEvent("PE",veale,30,"Gym" ,13,0,0);
         assertEquals(3,temp.getEvents().size());
 
         //This makes sure that physics was sorted properly to the middle of the itinerary
@@ -83,16 +84,45 @@ public class DayItineraryUnitTest {
         temp.deleteEvent(0);
         assertEquals("PE", temp.getEvent(0).getName());
 
-        temp.addEvent("Lunch",tomlinson,3600,"B100" ,12,0,0);
+        temp.addEvent("Lunch",tomlinson,60,"B100" ,12,0,0);
         assertEquals("Lunch", temp.getEvent(0).getName());
 
-        temp.editEvent("LunchNew",0,tomlinson,3600,"B100" ,12,30,0);
+        temp.editEvent("LunchNew",0,tomlinson,60,"B100" ,12,30,0);
         assertEquals(3,temp.getEvents().size());
         assertEquals("Lunch", temp.getEvent(0).getName());
 
-        temp.editEvent("LunchNew",0,tomlinson,3600,"B100" ,15,30,0);
+        temp.editEvent("LunchNew",0,tomlinson,60,"B100" ,15,30,0);
         assertEquals(3,temp.getEvents().size());
         assertEquals("LunchNew", temp.getEvent(2).getName());
+
+        Event event = new Event("LunchNew",tomlinson,60,"B100" ,20,30,0);
+        temp.addEvent(event);
+        temp.deleteEvent(event);
+        String day = DayItinerary.intToWeekday(0);
+        assertEquals(day, "Monday");
+        day = DayItinerary.intToWeekday(1);
+        assertEquals(day, "Tuesday");
+        day = DayItinerary.intToWeekday(2);
+        assertEquals(day, "Wednesday");
+        day = DayItinerary.intToWeekday(3);
+        assertEquals(day, "Thursday");
+        day = DayItinerary.intToWeekday(4);
+        assertEquals(day, "Friday");
+        day = DayItinerary.intToWeekday(5);
+        assertEquals(day, "Saturday");
+        day = DayItinerary.intToWeekday(6);
+        assertEquals(day, "Sunday");
+
+        List<Event> events = new ArrayList<Event>();
+
+        temp.setId(2);
+        temp.setItineraryID(1);
+        temp.setEvents(events);
+        temp.setRouteUpdated(true);
+        assertTrue(temp.getRouteUpdated());
+        assertEquals(1, temp.getItineraryID());
+        assertEquals(2, temp.getId());
+
 
         /*
         Route routeInfo = temp.getRouteInfo();

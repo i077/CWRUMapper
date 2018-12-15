@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import edu.cwru.students.cwrumapper.user.Building;
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.Event;
 import edu.cwru.students.cwrumapper.user.Location;
