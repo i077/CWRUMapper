@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import edu.cwru.students.cwrumapper.user.DayItinerary;
 import edu.cwru.students.cwrumapper.user.*;
@@ -65,9 +66,9 @@ public class UserUnitTest {
         assertTrue(newI);
         newI = user.newItinerary(cal, 5);
         assertFalse(newI);
-        boolean addE = user.addEvent(1,"Lunch",tomlinson,3600,"B100" ,15,30,0);
-        boolean addE2 = user.addEvent(1,"Dinner",tomlinson,3600,"B100" ,12,30,0);
-        boolean editE = user.editEvent(1,"DinnerNew",0,tomlinson,3600,"B100" ,12,30,0);
+        boolean addE = user.addEvent(1,"Lunch",tomlinson,60,"B100" ,15,30,0);
+        boolean addE2 = user.addEvent(1,"Dinner",tomlinson,60,"B100" ,12,30,0);
+        boolean editE = user.editEvent(1,"DinnerNew",0,tomlinson,60,"B100" ,12,30,0);
         boolean add = user.addDay();
         assertFalse(add);
         boolean delete = user.deleteDay();
@@ -104,11 +105,12 @@ public class UserUnitTest {
         ArrayList<Itinerary> itineraries = user.getItineraries();
         boolean newI = user.newItinerary();
         assertFalse(newI);
+        user.setItineraries(itineraries);
         newI = user.newItinerary(cal, 5);
         assertTrue(newI);
-        boolean addE = user.addEvent(1,"Lunch",tomlinson,3600,"B100" ,15,30,0);
-        boolean addE2 = user.addEvent(1,"Dinner",tomlinson,3600,"B100" ,12,30,0);
-        boolean editE = user.editEvent(1,"DinnerNew",0,tomlinson,3600,"B100" ,12,30,0);
+        boolean addE = user.addEvent(1,"Lunch",tomlinson,60,"B100" ,15,30,0);
+        boolean addE2 = user.addEvent(1,"Dinner",tomlinson,60,"B100" ,12,30,0);
+        boolean editE = user.editEvent(1,"DinnerNew",0,tomlinson,60,"B100" ,12,30,0);
         boolean add = user.addDay();
         assertTrue(add);
         boolean delete = user.deleteDay();
@@ -124,6 +126,7 @@ public class UserUnitTest {
         assertTrue(addE);
         assertTrue(addE2);
         assertTrue(editE);
+
     }
 
 
